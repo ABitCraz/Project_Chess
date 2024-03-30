@@ -1,7 +1,12 @@
-
-public class Avenue : ILandscape
+[System.Serializable]
+public class Avenue : Landscape
 {
-    public void EffectChess(ref Chess stepchess)
+    public Avenue(){
+        this.LandscapeName = "Avenue";
+        this.LandscapeType = LandscapeType.Avenue;
+    }
+    
+    public override void EffectChess(ref Chess stepchess)
     {
         stepchess.Movement += 1;
     }

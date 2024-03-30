@@ -3,6 +3,6 @@ public enum LandscapeType
     Plain,
     Avenue,
     Highland,
-    Forget,
+    Forest,
     River
 }

@@ -1,7 +1,12 @@
-
-public class Plain : ILandscape
+[System.Serializable]
+public class Plain : Landscape
 {
-    public void EffectChess(ref Chess stepchess)
+    public Plain(){
+        this.LandscapeName = "Plain";
+        this.LandscapeType = LandscapeType.Plain;
+    }
+    
+    public override void EffectChess(ref Chess stepchess)
     {
         return;
     }

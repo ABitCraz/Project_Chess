@@ -1,6 +1,6 @@
 public enum ChessType
 {
-    King,
-    Queen,
-    Servant
+    Infantry,
+    Tank,
+    Artillery
 }

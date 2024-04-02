@@ -3,6 +3,7 @@ using UnityEngine;
 [System.Serializable]
 public class Slot
 {
+    public const string EmptySlotTagName = "EmptySlot";
     public Landscape Landscape;
     public Chess Chess;
     [HideInInspector]

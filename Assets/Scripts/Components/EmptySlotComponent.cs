@@ -4,5 +4,7 @@ using UnityEngine;
 
 public class EmptySlotComponent : MonoBehaviour
 {
-    public Slot emptyslot = new();
+    public Slot thisSlot = new();
+    
+    public GameObject SlotContainer;
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 public class Slot
 {
     public const string EmptySlotTagName = "EmptySlot";
+    public const string LandscapeContainerTagName = "LandscapeContainer";
     public Landscape Landscape;
     public Chess Chess;
     [HideInInspector]

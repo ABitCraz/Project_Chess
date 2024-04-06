@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class LandscapeChooseComponent : MonoBehaviour
 {
-    public LandscapeType thisLandscapeType;
+    public Landscape thisLandscape;
 }

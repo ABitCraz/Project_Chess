@@ -55,12 +55,14 @@ public class ChooseSlot : MonoBehaviour
             Transform choicecontainer = chosenslotobject.transform.GetChild(2);
             choicecontainer.gameObject.SetActive(true);
             int lstypecount = Enum.GetValues(typeof(LandscapeType)).Length;
+
             GameObject positioncontainer = new("Position_Container");
             positioncontainer.transform.parent = choicecontainer;
             positioncontainer.transform.localPosition = Vector3.zero;
             GameObject positionleader = new("Position_Leader");
             positionleader.transform.parent = positioncontainer.transform;
             positionleader.transform.localPosition = new Vector2(0, 1);
+            
             GameObject landscapeobject = Resources.Load("Prefabs/Landscapes/Landscape") as GameObject;
             for (int i = 0; i < lstypecount; i++)
             {

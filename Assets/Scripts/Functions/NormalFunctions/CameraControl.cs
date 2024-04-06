@@ -34,30 +34,30 @@ public class CameraControl : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
         {
-            maincamera.transform.Translate(Vector2.left * Time.deltaTime * speed);
+            maincamera.transform.Translate(speed * Time.deltaTime * Vector2.left);
         }
         if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
         {
-            maincamera.transform.Translate(Vector2.right * Time.deltaTime * speed);
+            maincamera.transform.Translate(speed * Time.deltaTime * Vector2.right);
         }
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
         {
-            maincamera.transform.Translate(Vector2.up * Time.deltaTime * speed);
+            maincamera.transform.Translate(speed * Time.deltaTime * Vector2.up);
         }
         if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
         {
-            maincamera.transform.Translate(Vector2.down * Time.deltaTime * speed);
+            maincamera.transform.Translate(speed * Time.deltaTime * Vector2.down);
         }
     }
 
     private void ShiftControl()
     {
-        if (Input.GetKey(KeyCode.Q) || Input.GetAxis("Mouse ScrollWheel") < 0 && speed < 5f)
+        if ((Input.GetKeyDown(KeyCode.Q) || Input.GetAxis("Mouse ScrollWheel") < 0) && speed > 0.25f)
         {
             speed /= 1.5f;
             CalibrateSpeedToggle(speed);
         }
-        if (Input.GetKey(KeyCode.E) || Input.GetAxis("Mouse ScrollWheel") > 0 && speed > 0.25f)
+        if ((Input.GetKeyDown(KeyCode.E) || Input.GetAxis("Mouse ScrollWheel") > 0) && speed < 10f)
         {
             speed *= 1.5f;
             CalibrateSpeedToggle(speed);
@@ -67,7 +67,7 @@ public class CameraControl : MonoBehaviour
     private void CalibrateSpeedToggle(float speed)
     {
         int speedlog = (int)Mathf.Log(speed, 1.5f);
-        speeddashboard.GetComponent<TMP_Text>().text = string.Format("x1.5(^{0})",speedlog);
+        speeddashboard.GetComponent<TMP_Text>().text = string.Format("x1.5(^{0})", speedlog);
         cameraspeed.GetComponent<Slider>().value = (speedlog + 5f) / 10f;
     }
 }

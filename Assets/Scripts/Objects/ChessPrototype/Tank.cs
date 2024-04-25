@@ -6,6 +6,6 @@ public class Tank : Chess
         this.Movement = 3;
         this.AttackRange = 2;
         this.Vision = 2;
-        this.ChessType = ChessType.Tank;
+        this.ChessType = ChessType.Heavy;
     }
 }

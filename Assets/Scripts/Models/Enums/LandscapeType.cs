@@ -1,8 +1,9 @@
 public enum LandscapeType
 {
-    Plain,
-    Avenue,
-    Highland,
-    Forest,
-    River
+    Wildlessness,
+    Highground,
+    Ancient,
+    Ruin,
+    Desert,
+    Canyon
 }

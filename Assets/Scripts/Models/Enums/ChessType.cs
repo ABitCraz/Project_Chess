@@ -3,8 +3,8 @@ public enum ChessType
 {
     Infantry,
     AA_Infantry,
-    Chariot,
-    Tank,
+    Light,
+    Heavy,
     Mortar,
     Artillery,
     Commander

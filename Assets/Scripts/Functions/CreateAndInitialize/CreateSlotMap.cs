@@ -4,11 +4,14 @@ using UnityEngine;
 using TMPro;
 using System;
 using UnityEngine.UI;
+using UnityEditor.SceneManagement;
 
 public class CreateSlotMap : MonoBehaviour
 {
     public GameObject X_Slot_Input;
     public GameObject Y_Slot_Input;
+    GameObject createdmap;
+
     private void Awake()
     {
         this.GetComponent<Button>().onClick.AddListener(MapGenerateClicked);
@@ -16,16 +19,22 @@ public class CreateSlotMap : MonoBehaviour
 
     private void MapGenerateClicked()
     {
+        if (createdmap != null)
+        {
+            Destroy(createdmap);
+        }
         int xcount = Convert.ToInt32(X_Slot_Input.GetComponent<TMP_InputField>().text);
         int ycount = Convert.ToInt32(Y_Slot_Input.GetComponent<TMP_InputField>().text);
         GameMap gamemap = new(xcount, ycount);
-        GameObject emptyslotgo = Resources.Load("Prefabs/Slots/EmptySlot") as GameObject;
+        GameObject emptyslotgo =
+            Resources.Load(ResourcePrefabs.Resources[Prefab.Slot]) as GameObject;
         GameObject slotmap = new("SlotMap");
         slotmap.AddComponent<MapControl>();
-        CreateSlots(emptyslotgo,gamemap,ref slotmap);
+        createdmap = slotmap;
+        CreateSlots(emptyslotgo, gamemap, ref slotmap);
     }
 
-    private void CreateSlots(GameObject slotgo,GameMap gamemap,ref GameObject slotmap)
+    private void CreateSlots(GameObject slotgo, GameMap gamemap, ref GameObject slotmap)
     {
         Vector3Int spawnplace = Vector3Int.zero;
         int gamemapsizex = gamemap.Size.x;

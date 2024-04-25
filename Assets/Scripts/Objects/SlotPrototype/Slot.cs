@@ -17,7 +17,7 @@ public class Slot
         this.Chess = null;
     }
 
-    public void InitializeLandscape(LandscapeType landscape)
+    /*public void InitializeLandscape(LandscapeType landscape)
     {
         switch (landscape)
         {
@@ -37,7 +37,7 @@ public class Slot
                 this.Landscape = new River();
                 break;
         }
-    }
+    }*/
 
     public void ChessEnterSlot(ref Chess passchess)
     {

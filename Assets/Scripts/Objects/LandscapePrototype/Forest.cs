@@ -4,7 +4,7 @@ public class Forest : Landscape
     public Forest()
     {
         this.LandscapeName = "Forest";
-        this.LandscapeType = LandscapeType.Forest;
+//        this.LandscapeType = LandscapeType.Forest;
     }
 
     public override void EffectChess(ref Chess stepchess)

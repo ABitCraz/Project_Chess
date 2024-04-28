@@ -1,4 +1,5 @@
-public class Construction
+public abstract class Construction
 {
-    
+    public string ConstructionName;
+    public ConstructionType ConstructionType;
 }

@@ -7,9 +7,12 @@ public class ShootTheMouseRay : MonoBehaviour
     Ray MouseRay;
     GameObject hitobject;
     public GameObject slotdropdown;
-    public delegate void EndClickActions();
-    public static EndClickActions endClickActions;
+    public GameObject statusshow;
+    public delegate void EndActions();
+    public static event EndActions endClickActions;
+    public static event EndActions endHoverActions;
     GameObject previousgameobject;
+    GameObject[] paramlist;
 
     private void Update()
     {
@@ -17,7 +20,11 @@ public class ShootTheMouseRay : MonoBehaviour
         bool hitted = GetMouseRayCastHit(ref MouseRay);
         if (Input.GetMouseButtonDown(1) && !hitted)
         {
-            EndTheActions();
+            EndTheClickActions();
+        }
+        if (!hitted)
+        {
+            EndTheHoverActions();
         }
     }
 
@@ -28,21 +35,31 @@ public class ShootTheMouseRay : MonoBehaviour
             hitobject = hit.collider.gameObject;
             if (previousgameobject != null && previousgameobject != hitobject)
             {
-                EndTheActions();
+                EndTheClickActions();
             }
-            GameObject[] paramlist = new GameObject[] { hitobject, slotdropdown };
+            if (Input.GetMouseButtonDown(0))
+            {
+                paramlist = new GameObject[] { hitobject, slotdropdown };
+            }
+            else
+            {
+                paramlist = new GameObject[] { hitobject, statusshow };
+            }
             RaycastUIs.UIHit(ref paramlist);
             return true;
         }
         return false;
     }
 
-    private void EndTheActions()
+    private void EndTheClickActions()
     {
-        if (endClickActions != null)
-        {
-            endClickActions();
-        }
+        endClickActions?.Invoke();
         endClickActions = null;
+    }
+
+    private void EndTheHoverActions()
+    {
+        endHoverActions?.Invoke();
+        endHoverActions = null;
     }
 }

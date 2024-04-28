@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SlotComponent : MonoBehaviour
 {
-    public Slot thisSlot = new();
+    public Slot thisSlot = new(LandscapeType.Wildlessness,ChessType.AA_Infantry);
     
     public GameObject SlotContainer;
 }

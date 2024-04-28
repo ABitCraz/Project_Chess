@@ -1,7 +1,7 @@
 [System.Serializable]
-public class Highland : Landscape
+public class Highground : Landscape
 {
-    public Highland()
+    public Highground()
     {
         this.LandscapeName = "高地";
         this.LandscapeType = LandscapeType.Highground;

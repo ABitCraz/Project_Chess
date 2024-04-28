@@ -7,7 +7,6 @@ using static TMPro.TMP_Dropdown;
 
 public class GenerateTheSlotDropdown : MonoBehaviour
 {
-
     private void Awake()
     {
         ReconstructDropDown();
@@ -15,12 +14,14 @@ public class GenerateTheSlotDropdown : MonoBehaviour
 
     private void ReconstructDropDown()
     {
-        TMP_Dropdown landscapedropdown = this.transform
-            .GetChild(0)
-            .GetComponent<TMP_Dropdown>();
+        TMP_Dropdown landscapedropdown = this.transform.GetChild(0).GetComponent<TMP_Dropdown>();
+        List<OptionData> landscapes = new()
+        {
+            new OptionData("空")
+        };
         for (int i = 0; i < Enum.GetNames(typeof(LandscapeType)).Length; i++)
         {
-            landscapedropdown.options.Add(
+            landscapes.Add(
                 new OptionData(
                     i switch
                     {
@@ -35,12 +36,16 @@ public class GenerateTheSlotDropdown : MonoBehaviour
                 )
             );
         }
-        TMP_Dropdown constructiondropdown = this.transform
-            .GetChild(1)
-            .GetComponent<TMP_Dropdown>();
+        landscapedropdown.AddOptions(landscapes);
+
+        TMP_Dropdown constructiondropdown = this.transform.GetChild(1).GetComponent<TMP_Dropdown>();
+        List<OptionData> constructions = new()
+        {
+            new OptionData("空")
+        };
         for (int i = 0; i < Enum.GetNames(typeof(ConstructionType)).Length; i++)
         {
-            landscapedropdown.options.Add(
+            constructions.Add(
                 new OptionData(
                     i switch
                     {
@@ -50,18 +55,22 @@ public class GenerateTheSlotDropdown : MonoBehaviour
                 )
             );
         }
-        TMP_Dropdown chessdropdown = this.transform
-            .GetChild(2)
-            .GetComponent<TMP_Dropdown>();
+        constructiondropdown.AddOptions(constructions);
+        
+        TMP_Dropdown chessdropdown = this.transform.GetChild(2).GetComponent<TMP_Dropdown>();
+        List<OptionData> chesses = new()
+        {
+            new OptionData("空")
+        };
         for (int i = 0; i < Enum.GetNames(typeof(ChessType)).Length; i++)
         {
-            landscapedropdown.options.Add(
+            chesses.Add(
                 new OptionData(
                     i switch
                     {
                         0 => "尖兵",
                         1 => "反装甲步兵",
-                        2 => "轻型战车",
+                        2 => "战车",
                         3 => "坦克",
                         4 => "迫击炮",
                         5 => "火炮",
@@ -71,5 +80,6 @@ public class GenerateTheSlotDropdown : MonoBehaviour
                 )
             );
         }
+        chessdropdown.AddOptions(chesses);
     }
 }

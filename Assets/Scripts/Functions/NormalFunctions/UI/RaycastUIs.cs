@@ -169,8 +169,23 @@ public class RaycastUIs
                 )
                 {
                     thisslot.InitializeOrSwapLandscape((LandscapeType)landscapeindex - 1);
+                    if (thisslot.Landscape == null)
+                    {
+                        GameObject CreatedObject = MonoBehaviour.Instantiate(
+                            EssenitalDatumLoader.GameObjectDictionary[Prefab.Landscape]
+                        );
+                        thisslot.Landscape.UnitGameObject = CreatedObject;
+                        Landscape targetlandscape = CreatedObject
+                            .GetComponent<LandscapeComponent>()
+                            .thislandscape;
+                        targetlandscape = thisslot.Landscape;
+                        targetlandscape.PutToSlotPosition(ref hitslot);
+                        CreatedObject.transform.SetParent(hitslot.transform);
+                        CreatedObject.transform.localPosition = new Vector3(0,0,0.2f);
+                    }
+                    thisslot.Landscape.LoadLandscapeSprite();
                 }
-                else
+                else if (landscapeindex == 0)
                 {
                     thisslot.Landscape = null;
                 }
@@ -191,6 +206,21 @@ public class RaycastUIs
                 )
                 {
                     thisslot.InitializeOrSwapConstruction((ConstructionType)constructionindex - 1);
+                    if (thisslot.Construction == null)
+                    {
+                        GameObject CreatedObject = MonoBehaviour.Instantiate(
+                            EssenitalDatumLoader.GameObjectDictionary[Prefab.Construction]
+                        );
+                        thisslot.Construction.UnitGameObject = CreatedObject;
+                        Construction targetconstruction = CreatedObject
+                            .GetComponent<ConstructionComponent>()
+                            .thisconstruction;
+                        targetconstruction = thisslot.Construction;
+                        targetconstruction.PutToSlotPosition(ref hitslot);
+                        CreatedObject.transform.SetParent(hitslot.transform);
+                        CreatedObject.transform.localPosition = new Vector3(0,0,0.4f);
+                    }
+                    thisslot.Construction.LoadConstructionSprite();
                 }
                 else
                 {
@@ -210,6 +240,19 @@ public class RaycastUIs
                 if (chessindex != 0 && chessindex <= Enum.GetValues(typeof(ChessType)).Length)
                 {
                     thisslot.InitializeOrSwapChess((ChessType)chessindex - 1);
+                    if (thisslot.Chess == null)
+                    {
+                        GameObject CreatedObject = MonoBehaviour.Instantiate(
+                            EssenitalDatumLoader.GameObjectDictionary[Prefab.Chess]
+                        );
+                        thisslot.Chess.UnitGameObject = CreatedObject;
+                        Chess targetchess = CreatedObject.GetComponent<ChessComponent>().thischess;
+                        targetchess = thisslot.Chess;
+                        targetchess.PutToSlotPosition(ref hitslot);
+                        CreatedObject.transform.SetParent(hitslot.transform);
+                        CreatedObject.transform.localPosition = new Vector3(0,0,0.6f);
+                    }
+                    thisslot.Chess.LoadChessSprite();
                 }
                 else
                 {

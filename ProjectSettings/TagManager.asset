@@ -45,3 +45,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Slot
+    uniqueID: 2493328753
+    locked: 0
+  - name: Basics
+    uniqueID: 3458598109
+    locked: 0

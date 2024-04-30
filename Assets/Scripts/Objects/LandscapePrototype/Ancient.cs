@@ -1,3 +1,6 @@
+using System;
+
+[Serializable]
 public class Ancient : Landscape
 {
     public Ancient()
@@ -6,5 +9,23 @@ public class Ancient : Landscape
         this.LandscapeType = LandscapeType.Ancient;
     }
 
-    public override void EffectChess(ref Chess stepchess) { }
+    public override void ChessStepOff(ref Chess stepchess)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void ChessStepOn(ref Chess stepchess)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void ConstructionDestoryed(ref Construction plantconstruction)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void ConstructionPlantOn(ref Construction plantconstruction)
+    {
+        throw new System.NotImplementedException();
+    }
 }

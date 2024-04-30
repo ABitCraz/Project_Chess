@@ -1,4 +1,7 @@
 public enum Prefab
 {
-    Slot
+    Slot,
+    Landscape,
+    Construction,
+    Chess
 }

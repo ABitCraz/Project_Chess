@@ -1,19 +1,19 @@
+using System;
 using UnityEngine;
 
-[System.Serializable]
-public abstract class Landscape : ILandscape
+[Serializable]
+public abstract class Landscape : BasicUnit, ILandscape
 {
     public string LandscapeName;
     public LandscapeType LandscapeType;
-    public GameObject LandscapeObject;
 
-    public Landscape InitializeLandscapeGameObject(GameObject landscapeobject)
+    public void LoadLandscapeSprite()
     {
-        this.LandscapeObject = landscapeobject;
-        return this;
+        SwapSprite(EssenitalDatumLoader.SpriteDictionary[LandscapeType]);
     }
 
-    public abstract void EffectChess(ref Chess stepchess);
-
-    public virtual void EffectConstruction(ref Construction plantconstruction) { }
+    public abstract void ChessStepOff(ref Chess stepchess);
+    public abstract void ChessStepOn(ref Chess stepchess);
+    public abstract void ConstructionDestoryed(ref Construction plantconstruction);
+    public abstract void ConstructionPlantOn(ref Construction plantconstruction);
 }

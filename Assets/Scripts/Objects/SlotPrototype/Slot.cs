@@ -1,7 +1,7 @@
-using Palmmedia.ReportGenerator.Core.Reporting.Builders;
+using System;
 using UnityEngine;
 
-[System.Serializable]
+[Serializable]
 public class Slot
 {
     public const string SlotTagName = "Slot";
@@ -10,13 +10,13 @@ public class Slot
     public Landscape Landscape;
     public Chess Chess;
     public Construction Construction;
-
-    [HideInInspector]
     public Vector2 Position;
+    public Vector3 FactPosition;
 
     public Slot()
     {
         this.Landscape = null;
+        this.Construction = null;
         this.Chess = null;
     }
 
@@ -36,7 +36,7 @@ public class Slot
         InitializeOrSwapLandscape(newlandscape);
         InitializeOrSwapChess(newchess);
     }
-    
+
     public Slot(LandscapeType newlandscape, ConstructionType newconstruction, ChessType newchess)
     {
         InitializeOrSwapLandscape(newlandscape);
@@ -46,6 +46,11 @@ public class Slot
 
     public void InitializeOrSwapLandscape(LandscapeType landscape)
     {
+        GameObject LastGameObject = null;
+        if (this.Landscape != null)
+        {
+            LastGameObject = this.Landscape.UnitGameObject;
+        }
         switch (landscape)
         {
             case LandscapeType.Wildlessness:
@@ -67,20 +72,32 @@ public class Slot
                 this.Landscape = new Canyon();
                 break;
         }
+        this.Landscape.UnitGameObject = LastGameObject;
     }
 
     public void InitializeOrSwapConstruction(ConstructionType construction)
     {
+        GameObject LastGameObject = null;
+        if(this.Construction != null)
+        {
+            LastGameObject = this.Construction.UnitGameObject;
+        }
         switch (construction)
         {
             case ConstructionType.City:
                 this.Construction = new City();
                 break;
         }
+        this.Construction.UnitGameObject = LastGameObject;
     }
 
     public void InitializeOrSwapChess(ChessType chess)
     {
+        GameObject LastGameObject =null;
+        if(this.Chess != null)
+        {
+            LastGameObject = this.Chess.UnitGameObject;
+        }
         switch (chess)
         {
             case ChessType.Infantry:
@@ -105,19 +122,16 @@ public class Slot
                 this.Chess = new Commander();
                 break;
         }
+        this.Chess.UnitGameObject = LastGameObject;
     }
 
     public void ChessEnterSlot(ref Chess passchess)
     {
         this.Chess = passchess;
-        passchess.StepLandscape = this.Landscape;
-        passchess.StepSlot = this;
     }
 
     public void ChessQuitSlot()
     {
-        this.Chess.StepLandscape = null;
-        this.Chess.StepSlot = null;
         this.Chess = null;
     }
 }

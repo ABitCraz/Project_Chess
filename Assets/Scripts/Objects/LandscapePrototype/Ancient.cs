@@ -1,6 +1,3 @@
-using System;
-
-[Serializable]
 public class Ancient : Landscape
 {
     public Ancient()

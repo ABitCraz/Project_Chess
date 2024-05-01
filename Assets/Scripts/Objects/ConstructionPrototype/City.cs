@@ -1,7 +1,3 @@
-
-using System;
-
-[Serializable]
 public class City : Construction 
 { 
     public City()

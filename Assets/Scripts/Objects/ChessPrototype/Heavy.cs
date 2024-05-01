@@ -1,6 +1,3 @@
-using System;
-
-[Serializable]
 public class Heavy : Chess
 {
     public Heavy()
@@ -9,7 +6,7 @@ public class Heavy : Chess
         this.ChessType = ChessType.Heavy;
 
         this.Movement = 3;
-        this.AttackRange = 2;
+        this.AttackRange = new int[]{1,2};
         this.Vision = 2;
         this.Price = 10;
     }

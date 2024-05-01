@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class SavingDatum : MonoBehaviour
+public class SavingDatum
 {
-    
+    public List<SerializableSlot> saveslots = new();
 }

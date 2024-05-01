@@ -1,10 +1,7 @@
-using System;
-using UnityEngine;
-
-[Serializable]
-public abstract class Landscape : BasicUnit, ILandscape
+public class Landscape : BasicUnit, ILandscape
 {
     public string LandscapeName;
+    public int EffectRange;
     public LandscapeType LandscapeType;
 
     public void LoadLandscapeSprite()
@@ -12,8 +9,8 @@ public abstract class Landscape : BasicUnit, ILandscape
         SwapSprite(EssenitalDatumLoader.SpriteDictionary[LandscapeType]);
     }
 
-    public abstract void ChessStepOff(ref Chess stepchess);
-    public abstract void ChessStepOn(ref Chess stepchess);
-    public abstract void ConstructionDestoryed(ref Construction plantconstruction);
-    public abstract void ConstructionPlantOn(ref Construction plantconstruction);
+    public virtual void ChessStepOff(ref Chess stepchess){}
+    public virtual void ChessStepOn(ref Chess stepchess){}
+    public virtual void ConstructionDestoryed(ref Construction plantconstruction){}
+    public virtual void ConstructionPlantOn(ref Construction plantconstruction){}
 }

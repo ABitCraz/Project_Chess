@@ -1,4 +1,3 @@
-[System.Serializable]
 public class Artillery : Chess
 {
     public Artillery()
@@ -7,7 +6,7 @@ public class Artillery : Chess
         this.ChessType = ChessType.Artillery;
 
         this.Movement = 2;
-        this.AttackRange = 2;
+        this.AttackRange = new int[] { 3, 4 };
         this.Vision = 3;
         this.Price = 11;
     }

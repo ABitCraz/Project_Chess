@@ -71,14 +71,24 @@ public class Slot
             case LandscapeType.Canyon:
                 this.Landscape = new Canyon();
                 break;
+            default:
+                if ((this.Landscape != null) && (this.Landscape.UnitGameObject != null))
+                {
+                    MonoBehaviour.Destroy(this.Landscape.UnitGameObject);
+                }
+                this.Landscape = null;
+                break;
         }
-        this.Landscape.UnitGameObject = LastGameObject;
+        if (this.Landscape != null)
+        {
+            this.Landscape.UnitGameObject = LastGameObject;
+        }
     }
 
     public void InitializeOrSwapConstruction(ConstructionType construction)
     {
         GameObject LastGameObject = null;
-        if(this.Construction != null)
+        if (this.Construction != null)
         {
             LastGameObject = this.Construction.UnitGameObject;
         }
@@ -87,14 +97,24 @@ public class Slot
             case ConstructionType.City:
                 this.Construction = new City();
                 break;
+            default:
+                if ((this.Construction != null) && (this.Construction.UnitGameObject != null))
+                {
+                    MonoBehaviour.Destroy(this.Construction.UnitGameObject);
+                }
+                this.Construction = null;
+                break;
         }
-        this.Construction.UnitGameObject = LastGameObject;
+        if (this.Construction != null)
+        {
+            this.Construction.UnitGameObject = LastGameObject;
+        }
     }
 
     public void InitializeOrSwapChess(ChessType chess)
     {
-        GameObject LastGameObject =null;
-        if(this.Chess != null)
+        GameObject LastGameObject = null;
+        if (this.Chess != null)
         {
             LastGameObject = this.Chess.UnitGameObject;
         }
@@ -121,8 +141,23 @@ public class Slot
             case ChessType.Commander:
                 this.Chess = new Commander();
                 break;
+            default:
+                if ((this.Chess != null) && (this.Chess.UnitGameObject != null))
+                {
+                    MonoBehaviour.Destroy(this.Chess.UnitGameObject);
+                }
+                this.Chess = null;
+                break;
         }
-        this.Chess.UnitGameObject = LastGameObject;
+        if (this.Chess != null)
+        {
+            this.Chess.UnitGameObject = LastGameObject;
+        }
+    }
+
+    public SerializableSlot SwapToSerializableSlot()
+    {
+        return new SerializableSlot(this);
     }
 
     public void ChessEnterSlot(ref Chess passchess)

@@ -27,21 +27,21 @@ public class EssenitalDatumLoader : MonoBehaviour
 
     private void LoadWholeSpriteDictionary()
     {
-        for (int i = 0; i < Enum.GetNames(typeof(LandscapeType)).Length; i++)
+        for (int i = 1; i < Enum.GetNames(typeof(LandscapeType)).Length; i++)
         {
             SpriteDictionary.Add(
                 (LandscapeType)i,
                 Resources.Load<Sprite>(ResourcePaths.TargetSprites[(LandscapeType)i])
             );
         }
-        for (int i = 0; i < Enum.GetNames(typeof(ConstructionType)).Length; i++)
+        for (int i = 1; i < Enum.GetNames(typeof(ConstructionType)).Length; i++)
         {
             SpriteDictionary.Add(
                 (ConstructionType)i,
                 Resources.Load<Sprite>(ResourcePaths.TargetSprites[(ConstructionType)i])
             );
         }
-        for (int i = 0; i < Enum.GetNames(typeof(ChessType)).Length; i++)
+        for (int i = 1; i < Enum.GetNames(typeof(ChessType)).Length; i++)
         {
             SpriteDictionary.Add(
                 (ChessType)i,

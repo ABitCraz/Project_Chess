@@ -1,7 +1,4 @@
-using System;
-
-[Serializable]
-public abstract class Chess : BasicUnit, IChess
+public class Chess : BasicUnit, IChess
 {
     public string ChessName;
     public ChessType ChessType;
@@ -9,7 +6,7 @@ public abstract class Chess : BasicUnit, IChess
     public int AttackPoint = 10;
     public int DefensePoint = 10;
     public int Movement;
-    public int AttackRange;
+    public int[] AttackRange;
     public int Vision;
     public int TakeDamagePercent = 100;
     public int Price;

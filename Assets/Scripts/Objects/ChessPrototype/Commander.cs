@@ -1,6 +1,3 @@
-using System;
-
-[Serializable]
 public class Commander : Chess
 {
     public Commander()
@@ -9,9 +6,7 @@ public class Commander : Chess
         this.ChessType = ChessType.Commander;
 
         this.Movement = 2;
-        this.AttackRange = 1;
+        this.AttackRange = new int[] { 0, 1 };
         this.Vision = 3;
-
-        SwapSprite(EssenitalDatumLoader.SpriteDictionary[this.ChessType]);
     }
 }

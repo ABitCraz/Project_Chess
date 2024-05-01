@@ -1,7 +1,4 @@
-using System;
-
-[Serializable]
-public abstract class Construction : BasicUnit, IConstruction
+public class Construction : BasicUnit, IConstruction
 {
     public string ConstructionName;
     public ConstructionType ConstructionType;
@@ -11,8 +8,8 @@ public abstract class Construction : BasicUnit, IConstruction
         SwapSprite(EssenitalDatumLoader.SpriteDictionary[ConstructionType]);
     }
 
-    public abstract void ChessStepOff(ref Chess stepchess);
-    public abstract void ChessStepOn(ref Chess stepchess);
-    public abstract void LandscapeDestoryedOn(ref Landscape plantlandscape);
-    public abstract void LandscapePlantOn(ref Landscape plantlandscape);
+    public virtual void ChessStepOff(ref Chess stepchess){}
+    public virtual void ChessStepOn(ref Chess stepchess){}
+    public virtual void LandscapeDestoryedOn(ref Landscape plantlandscape){}
+    public virtual void LandscapePlantOn(ref Landscape plantlandscape){}
 }

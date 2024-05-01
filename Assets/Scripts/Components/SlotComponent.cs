@@ -6,6 +6,6 @@ using UnityEngine;
 [Serializable]
 public class SlotComponent : MonoBehaviour
 {
-    public Slot thisSlot = new(LandscapeType.Wildlessness,ConstructionType.City,ChessType.Heavy);
+    public Slot thisSlot;
     public GameObject SlotContainer;
 }

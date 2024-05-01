@@ -120,6 +120,7 @@ public class RaycastUIs
         {
             slotdropdown.SetActive(false);
             IsDropDownOff = true;
+            MapFileControls.SaveSlots();
         };
     }
 
@@ -168,8 +169,8 @@ public class RaycastUIs
                     && landscapeindex <= Enum.GetValues(typeof(LandscapeType)).Length
                 )
                 {
-                    thisslot.InitializeOrSwapLandscape((LandscapeType)landscapeindex - 1);
-                    if (thisslot.Landscape == null)
+                    thisslot.InitializeOrSwapLandscape((LandscapeType)landscapeindex);
+                    if ((thisslot.Landscape == null) || (thisslot.Landscape.UnitGameObject == null))
                     {
                         GameObject CreatedObject = MonoBehaviour.Instantiate(
                             EssenitalDatumLoader.GameObjectDictionary[Prefab.Landscape]
@@ -181,7 +182,7 @@ public class RaycastUIs
                         targetlandscape = thisslot.Landscape;
                         targetlandscape.PutToSlotPosition(ref hitslot);
                         CreatedObject.transform.SetParent(hitslot.transform);
-                        CreatedObject.transform.localPosition = new Vector3(0,0,0.2f);
+                        CreatedObject.transform.localPosition = new Vector3(0, 0, 0.2f);
                     }
                     thisslot.Landscape.LoadLandscapeSprite();
                 }
@@ -205,8 +206,11 @@ public class RaycastUIs
                     && constructionindex <= Enum.GetValues(typeof(ConstructionType)).Length
                 )
                 {
-                    thisslot.InitializeOrSwapConstruction((ConstructionType)constructionindex - 1);
-                    if (thisslot.Construction == null)
+                    thisslot.InitializeOrSwapConstruction((ConstructionType)constructionindex);
+                    if (
+                        (thisslot.Construction == null)
+                        || (thisslot.Construction.UnitGameObject == null)
+                    )
                     {
                         GameObject CreatedObject = MonoBehaviour.Instantiate(
                             EssenitalDatumLoader.GameObjectDictionary[Prefab.Construction]
@@ -218,7 +222,8 @@ public class RaycastUIs
                         targetconstruction = thisslot.Construction;
                         targetconstruction.PutToSlotPosition(ref hitslot);
                         CreatedObject.transform.SetParent(hitslot.transform);
-                        CreatedObject.transform.localPosition = new Vector3(0,0,0.4f);
+                        CreatedObject.transform.localScale *= 0.85f;
+                        CreatedObject.transform.localPosition = new Vector3(0, 0, 0.4f);
                     }
                     thisslot.Construction.LoadConstructionSprite();
                 }
@@ -239,8 +244,8 @@ public class RaycastUIs
                 int chessindex = chessdropdown.value;
                 if (chessindex != 0 && chessindex <= Enum.GetValues(typeof(ChessType)).Length)
                 {
-                    thisslot.InitializeOrSwapChess((ChessType)chessindex - 1);
-                    if (thisslot.Chess == null)
+                    thisslot.InitializeOrSwapChess((ChessType)chessindex);
+                    if ((thisslot.Chess == null) || (thisslot.Chess.UnitGameObject == null))
                     {
                         GameObject CreatedObject = MonoBehaviour.Instantiate(
                             EssenitalDatumLoader.GameObjectDictionary[Prefab.Chess]
@@ -250,7 +255,8 @@ public class RaycastUIs
                         targetchess = thisslot.Chess;
                         targetchess.PutToSlotPosition(ref hitslot);
                         CreatedObject.transform.SetParent(hitslot.transform);
-                        CreatedObject.transform.localPosition = new Vector3(0,0,0.6f);
+                        CreatedObject.transform.localScale *= 0.7f;
+                        CreatedObject.transform.localPosition = new Vector3(0, 0, 0.6f);
                     }
                     thisslot.Chess.LoadChessSprite();
                 }

@@ -2,6 +2,7 @@ public class Construction : BasicUnit, IConstruction
 {
     public string ConstructionName;
     public ConstructionType ConstructionType;
+    public int ConstructionHealth;
 
     public void LoadConstructionSprite()
     {

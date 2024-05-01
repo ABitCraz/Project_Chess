@@ -1,25 +1,17 @@
 
 public class Wildlessness : Landscape
 {
+    public bool IsSandstorming = false;
     public Wildlessness()
     {
         this.LandscapeName = "荒地";
         this.LandscapeType = LandscapeType.Wildlessness;
+
+        this.MovementPrice = 1;
     }
 
-    public override void ChessStepOff(ref Chess stepchess)
+    public void GetAttacked()
     {
-    }
-
-    public override void ChessStepOn(ref Chess stepchess)
-    {
-    }
-
-    public override void ConstructionDestoryed(ref Construction plantconstruction)
-    {
-    }
-
-    public override void ConstructionPlantOn(ref Construction plantconstruction)
-    {
+        this.IsSandstorming = true;
     }
 }

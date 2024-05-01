@@ -1,24 +1,13 @@
 public class Desert : Landscape
 {
+    public bool IsQuicksand = false;
     public Desert()
     {
         this.LandscapeName = "沙漠";
         this.LandscapeType = LandscapeType.Desert;
-    }
 
-    public override void ChessStepOff(ref Chess stepchess)
-    {
-    }
-
-    public override void ChessStepOn(ref Chess stepchess)
-    {
-    }
-
-    public override void ConstructionDestoryed(ref Construction plantconstruction)
-    {
-    }
-
-    public override void ConstructionPlantOn(ref Construction plantconstruction)
-    {
+        this.MovementPrice = 2;
+        this.DefenceEffectPercent = 0.5f;
+        this.IsTroopersOnly = true;
     }
 }

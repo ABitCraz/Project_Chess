@@ -4,22 +4,15 @@ public class Ruin : Landscape
     {
         this.LandscapeName = "废墟";
         this.LandscapeType = LandscapeType.Ruin;
-        
+
+        this.MovementPrice = 2;
+        this.DefenceEffectPercent = 1.5f;
+        this.EffectVision = -1;
+        this.IsTroopersOnly = true;
     }
 
-    public override void ChessStepOff(ref Chess stepchess)
+    public void GetAttacked(ref Slot attackslot)
     {
-    }
-
-    public override void ChessStepOn(ref Chess stepchess)
-    {
-    }
-
-    public override void ConstructionDestoryed(ref Construction plantconstruction)
-    {
-    }
-
-    public override void ConstructionPlantOn(ref Construction plantconstruction)
-    {
+        attackslot.InitializeOrSwapLandscape(LandscapeType.Wildlessness);
     }
 }

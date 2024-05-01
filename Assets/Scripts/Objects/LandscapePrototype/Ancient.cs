@@ -4,25 +4,15 @@ public class Ancient : Landscape
     {
         this.LandscapeName = "遗迹";
         this.LandscapeType = LandscapeType.Ancient;
+
+        this.MovementPrice = 2;
+        this.DefenceEffectPercent = 1.5f;
+        this.EffectVision = -1;
+        this.IsTroopersOnly = true;
     }
 
-    public override void ChessStepOff(ref Chess stepchess)
+    public void GetAttacked(ref Slot attackslot)
     {
-        throw new System.NotImplementedException();
-    }
-
-    public override void ChessStepOn(ref Chess stepchess)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public override void ConstructionDestoryed(ref Construction plantconstruction)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public override void ConstructionPlantOn(ref Construction plantconstruction)
-    {
-        throw new System.NotImplementedException();
+        attackslot.InitializeOrSwapLandscape(LandscapeType.Wildlessness);
     }
 }

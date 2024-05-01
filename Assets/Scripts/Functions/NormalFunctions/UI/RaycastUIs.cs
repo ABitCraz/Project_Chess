@@ -188,6 +188,10 @@ public class RaycastUIs
                 }
                 else if (landscapeindex == 0)
                 {
+                    if(thisslot.Landscape.UnitGameObject!=null)
+                    {
+                        MonoBehaviour.Destroy(thisslot.Landscape.UnitGameObject);
+                    }
                     thisslot.Landscape = null;
                 }
                 landscapedropdown.onValueChanged.RemoveAllListeners();
@@ -229,6 +233,10 @@ public class RaycastUIs
                 }
                 else
                 {
+                    if(thisslot.Construction.UnitGameObject!=null)
+                    {
+                        MonoBehaviour.Destroy(thisslot.Construction.UnitGameObject);
+                    }
                     thisslot.Construction = null;
                 }
                 constructiondropdown.onValueChanged.RemoveAllListeners();
@@ -262,6 +270,10 @@ public class RaycastUIs
                 }
                 else
                 {
+                    if(thisslot.Chess.UnitGameObject!=null)
+                    {
+                        MonoBehaviour.Destroy(thisslot.Chess.UnitGameObject);
+                    }
                     thisslot.Chess = null;
                 }
                 chessdropdown.onValueChanged.RemoveAllListeners();

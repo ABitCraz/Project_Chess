@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class Construction : BasicUnit, IConstruction
 {
     public string ConstructionName;
@@ -7,6 +9,8 @@ public class Construction : BasicUnit, IConstruction
     public void LoadConstructionSprite()
     {
         SwapSprite(EssenitalDatumLoader.SpriteDictionary[ConstructionType]);
+        this.UnitGameObject.GetComponent<Animator>().runtimeAnimatorController =
+            Resources.Load(ResourcePaths.TargetAnimators[ConstructionType]) as RuntimeAnimatorController;
     }
 
     public virtual void ChessStepOff(ref Chess stepchess){}

@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class Chess : BasicUnit, IChess
 {
     public string ChessName;
@@ -12,9 +14,18 @@ public class Chess : BasicUnit, IChess
     public int Price;
     public bool OnAlert = false;
     public int AlertCounterBackTime = 2;
+    public Slot TheSlotStepOn;
+
     public void LoadChessSprite()
     {
         SwapSprite(EssenitalDatumLoader.SpriteDictionary[ChessType]);
+        this.UnitGameObject.GetComponent<Animator>().runtimeAnimatorController =
+            Resources.Load(ResourcePaths.TargetAnimators[ChessType]) as RuntimeAnimatorController;
     }
 
+    public void MoveToAnotherSlot(ref Slot targetSlot)
+    {
+        TheSlotStepOn.Chess = null;
+        TheSlotStepOn = targetSlot;
+    }
 }

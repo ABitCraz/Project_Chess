@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: -1061065468591990682}
   - component: {fileID: 6592672646215099705}
   - component: {fileID: 492368672388684702}
+  - component: {fileID: -6508648526288352060}
   m_Layer: 0
   m_Name: Landscape
   m_TagString: Untagged
@@ -119,3 +120,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c58588aef97c575438ddaa4d6b0779b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &-6508648526288352060
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8762014730611447441}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

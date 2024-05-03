@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class Landscape : BasicUnit, ILandscape
 {
     public string LandscapeName;
@@ -12,6 +14,8 @@ public class Landscape : BasicUnit, ILandscape
     public void LoadLandscapeSprite()
     {
         SwapSprite(EssenitalDatumLoader.SpriteDictionary[LandscapeType]);
+        this.UnitGameObject.GetComponent<Animator>().runtimeAnimatorController =
+            Resources.Load(ResourcePaths.TargetAnimators[LandscapeType]) as RuntimeAnimatorController;
     }
 
     public virtual void ChessStepOff(ref Chess stepchess){}

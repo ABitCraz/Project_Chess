@@ -11,7 +11,6 @@ public class CreateSlotMap : MonoBehaviour
     public GameObject GenerateMapButton;
     public GameObject X_Slot_Input;
     public GameObject Y_Slot_Input;
-    public GameObject CreatedMap;
 
     private void Awake()
     {
@@ -20,25 +19,29 @@ public class CreateSlotMap : MonoBehaviour
 
     private void MapGenerateClicked()
     {
-        if (CreatedMap != null)
+        if (this.GetComponent<MapFileControls>().save.SlotMap.SlotMapGameObject != null)
         {
-            Destroy(CreatedMap);
+            Destroy(this.GetComponent<MapFileControls>().save.SlotMap.SlotMapGameObject);
+            this.GetComponent<MapFileControls>().save.SlotMap = new();
         }
         int xcount = Convert.ToInt32(X_Slot_Input.GetComponent<TMP_InputField>().text);
         int ycount = Convert.ToInt32(Y_Slot_Input.GetComponent<TMP_InputField>().text);
-        GameMap gamemap = new(xcount, ycount);
+        SlotMap slotmap = new() { MapSize = new[] { xcount, ycount } };
         GameObject emptyslotgo = Resources.Load(ResourcePaths.Resources[Prefab.Slot]) as GameObject;
-        GameObject slotmap = new("SlotMap");
-        slotmap.AddComponent<MapControl>();
-        CreatedMap = slotmap;
-        CreateSlots(emptyslotgo, gamemap, ref slotmap);
+        GameObject slotmapgo = new("SlotMap");
+        slotmapgo.AddComponent<MapControl>();
+        slotmap.SlotMapGameObject = slotmapgo;
+        slotmapgo.AddComponent<SlotMapComponent>().thisSlotMap = slotmap;
+        this.GetComponent<MapFileControls>().save.SlotMap = slotmap;
+        CreateSlots(emptyslotgo, ref slotmap);
     }
 
-    private void CreateSlots(GameObject slotgo, GameMap gamemap, ref GameObject slotmap)
+    private void CreateSlots(GameObject slotgo, ref SlotMap slotmap)
     {
         Vector3Int spawnplace = Vector3Int.zero;
-        int gamemapsizex = gamemap.Size.x;
-        int gamemapsizey = gamemap.Size.y;
+        int gamemapsizex = slotmap.MapSize[0];
+        int gamemapsizey = slotmap.MapSize[1];
+        List<Slot> wholeslot = new();
         for (int i = 0; i < gamemapsizex; i++)
         {
             spawnplace.x = i;
@@ -47,13 +50,15 @@ public class CreateSlotMap : MonoBehaviour
                 spawnplace.y = j;
                 GameObject spawnedslot = Instantiate(slotgo);
                 spawnedslot.transform.position = spawnplace;
-                spawnedslot.transform.parent = slotmap.transform;
-                Slot thisslot = spawnedslot.GetComponent<SlotComponent>().thisSlot = new(LandscapeType.Wildlessness);
-                thisslot.Position = new Vector2(i, j);
+                spawnedslot.transform.parent = slotmap.SlotMapGameObject.transform;
+                Slot thisslot = spawnedslot.GetComponent<SlotComponent>().thisSlot;
+                thisslot.Position = new int[] { i, j };
                 thisslot.FactPosition = spawnplace;
                 SlotLoader.LoadGameObjectFromType(ref spawnedslot);
-                MapFileControls.SaveSlots();
+                slotmap.FullSlotDictionary.Add(new int[] { i, j }, thisslot);
+                wholeslot.Add(thisslot);
             }
         }
+        slotmap.FullSlotMap = wholeslot.ToArray();
     }
 }

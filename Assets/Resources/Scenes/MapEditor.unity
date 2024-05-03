@@ -5317,6 +5317,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotdropdown: {fileID: 4853549419120329810}
   statusshow: {fileID: 1191638064}
+  Isdropdownoff: 1
 --- !u!114 &1243434676
 MonoBehaviour:
   m_ObjectHideFlags: 0

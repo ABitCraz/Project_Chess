@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 
-[Serializable]
 public class Slot
 {
     public const string SlotTagName = "Slot";
@@ -10,7 +9,7 @@ public class Slot
     public Landscape Landscape;
     public Chess Chess;
     public Construction Construction;
-    public Vector2 Position;
+    public int[] Position;
     public Vector3 FactPosition;
 
     public Slot()
@@ -42,6 +41,11 @@ public class Slot
         InitializeOrSwapLandscape(newlandscape);
         InitializeOrSwapConstruction(newconstruction);
         InitializeOrSwapChess(newchess);
+    }
+
+    public void SwitchSlotVectorToIntArray(Vector2 origin)
+    {
+        Position = new int[] { (int)origin.x, (int)origin.y };
     }
 
     public void InitializeOrSwapLandscape(LandscapeType landscape)

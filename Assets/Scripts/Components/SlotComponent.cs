@@ -6,6 +6,6 @@ using UnityEngine;
 [Serializable]
 public class SlotComponent : MonoBehaviour
 {
-    public Slot thisSlot;
+    public Slot thisSlot = new();
     public GameObject SlotContainer;
 }

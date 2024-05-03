@@ -13,5 +13,12 @@ public class Wildlessness : Landscape
     public void GetAttacked()
     {
         this.IsSandstorming = true;
+        this.DefenceEffectPercent = 150;
+    }
+
+    public void SandstormOut()
+    {
+        this.IsSandstorming = false;
+        this.DefenceEffectPercent = 100;
     }
 }

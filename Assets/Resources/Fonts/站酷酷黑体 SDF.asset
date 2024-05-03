@@ -134,8 +134,8 @@ Material:
     - _StencilOp: 0
     - _StencilReadMask: 255
     - _StencilWriteMask: 255
-    - _TextureHeight: 1024
-    - _TextureWidth: 1024
+    - _TextureHeight: 4096
+    - _TextureWidth: 4096
     - _UnderlayDilate: 0
     - _UnderlayOffsetX: 0
     - _UnderlayOffsetY: 0
@@ -168,9 +168,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
   m_Name: "\u7AD9\u9177\u9177\u9ED1\u4F53 SDF"
   m_EditorClassIdentifier: 
-  hashCode: 0
+  hashCode: 16097194
   material: {fileID: -991881687979657298}
-  materialHashCode: 0
+  materialHashCode: 734235466
   m_Version: 1.1.0
   m_SourceFontFileGUID: 82d134084e55e13479d896fdbe28f2f4
   m_SourceFontFile_EditorRef: {fileID: 12800000, guid: 82d134084e55e13479d896fdbe28f2f4, type: 3}
@@ -209,8 +209,8 @@ MonoBehaviour:
   m_FreeGlyphRects:
   - m_X: 0
     m_Y: 0
-    m_Width: 1023
-    m_Height: 1023
+    m_Width: 4095
+    m_Height: 4095
   m_fontInfo:
     Name: 
     PointSize: 0
@@ -234,8 +234,8 @@ MonoBehaviour:
     AtlasWidth: 0
     AtlasHeight: 0
   atlas: {fileID: 0}
-  m_AtlasWidth: 1024
-  m_AtlasHeight: 1024
+  m_AtlasWidth: 4096
+  m_AtlasHeight: 4096
   m_AtlasPadding: 9
   m_AtlasRenderMode: 4165
   m_glyphInfoList: []
@@ -252,8 +252,8 @@ MonoBehaviour:
     pointSize: 90
     padding: 9
     packingMode: 0
-    atlasWidth: 1024
-    atlasHeight: 1024
+    atlasWidth: 4096
+    atlasHeight: 4096
     characterSetSelectionMode: 7
     characterSequence: 
     referencedFontAssetGUID: 

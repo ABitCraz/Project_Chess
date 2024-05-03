@@ -66,6 +66,7 @@ public class SaveAndLoad
             return;
         }
 
+        mapobject.MapToSerializeSlot();
         if (coverit)
         {
             savedone.GetComponent<TMP_Text>().text = "覆盖中";
@@ -79,11 +80,11 @@ public class SaveAndLoad
             await File.WriteAllTextAsync(fullpath, JsonUtility.ToJson(mapobject));
             if (coverit)
             {
-                savedone.GetComponent<TMP_Text>().text = "保存成功了";
+                savedone.GetComponent<TMP_Text>().text = "覆盖成功了";
             }
             else
             {
-                savedone.GetComponent<TMP_Text>().text = "覆盖成功了";
+                savedone.GetComponent<TMP_Text>().text = "保存成功了";
             }
         }
         catch (Exception except)
@@ -141,6 +142,7 @@ public class SaveAndLoad
         try
         {
             string jsonstr = File.ReadAllText(fullpath);
+            readdone.GetComponent<TMP_Text>().text = "读取成功了";
             return JsonUtility.FromJson<SavingDatum>(jsonstr);
         }
         catch (Exception except)
@@ -150,6 +152,32 @@ public class SaveAndLoad
         }
         return null;
     }
+
+    public SavingDatum LoadMapJSONFile(string loadfilename)
+    {
+        if (!Directory.Exists(SaveMapFilePath))
+        {
+            Directory.CreateDirectory(SaveMapFilePath);
+            return null;
+        }
+        string fullpath = SaveMapFilePath + "/" + loadfilename + ".json";
+        if (!File.Exists(fullpath))
+        {
+            return null;
+        }
+
+        try
+        {
+            string jsonstr = File.ReadAllText(fullpath);
+            return JsonUtility.FromJson<SavingDatum>(jsonstr);
+        }
+        catch (Exception except)
+        {
+            MonoBehaviour.print(except);
+        }
+        return null;
+    }
+
 
     public SavingDatum LoadMapSerializedFile(ref GameObject readdirectory, ref GameObject readdone)
     {

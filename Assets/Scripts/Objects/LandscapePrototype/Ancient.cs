@@ -6,7 +6,7 @@ public class Ancient : Landscape
         this.LandscapeType = LandscapeType.Ancient;
 
         this.MovementPrice = 2;
-        this.DefenceEffectPercent = 1.5f;
+        this.DefenceEffectPercent = 150;
         this.EffectVision = -1;
         this.IsTroopersOnly = true;
     }

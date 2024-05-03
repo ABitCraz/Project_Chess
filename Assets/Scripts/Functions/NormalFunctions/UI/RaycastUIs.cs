@@ -7,59 +7,40 @@ using System.Text;
 
 public class RaycastUIs
 {
-    static GameObject previousclickslot;
-    static GameObject previoushoverslot;
-    static StringBuilder status = new();
-    static bool IsDropDownOff = true;
+    StringBuilder status = new();
 
-    public static void UIHit(ref GameObject[] hitobject)
+    public void SlotOnHover(GameObject hitslot, GameObject statusshow)
     {
-        if (IsDropDownOff)
-        {
-            switch (hitobject[0].tag)
-            {
-                case "Slot":
-                    SlotOnHover(hitobject[0], hitobject[1]);
-                    SlotOnClick(hitobject[0], hitobject[1]);
-                    break;
-            }
-        }
-    }
-
-    private static void SlotOnHover(GameObject hitslot, GameObject statusshow)
-    {
-        if ((hitslot != previoushoverslot) && (previoushoverslot != null))
-        {
-            previoushoverslot.transform.GetChild(0).gameObject.SetActive(false);
-        }
-        previoushoverslot = hitslot;
         hitslot.transform.GetChild(0).gameObject.SetActive(true);
+        ShootTheMouseRay.endHoverActions += () =>
+        {
+            hitslot.transform.GetChild(0).gameObject.SetActive(false);
+        };
         if (statusshow.TryGetComponent<TMP_Text>(out _))
         {
             ShowSlotStats(hitslot, statusshow);
         }
     }
 
-    private static void SlotOnClick(GameObject hitslot, GameObject slotdropdown)
+    public void SlotOnClick(GameObject hitslot, GameObject slotdropdown)
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if ((hitslot != previousclickslot) && (previousclickslot != null))
-            {
-                previousclickslot.transform.GetChild(1).gameObject.SetActive(false);
-            }
-            previousclickslot = hitslot;
             hitslot.transform.GetChild(1).gameObject.SetActive(true);
+            ShootTheMouseRay.endHoverActions += () =>
+            {
+                hitslot.transform.GetChild(1).gameObject.SetActive(false);
+            };
             if (slotdropdown.CompareTag("DropDown"))
             {
-                LoadSlotToDropdown(previousclickslot, slotdropdown);
-                RefillDropdownEvents(previousclickslot, slotdropdown);
+                LoadSlotToDropdown(hitslot, slotdropdown);
+                RefillDropdownEvents(hitslot, slotdropdown);
                 ShowSlotDropdown(slotdropdown);
             }
         }
     }
 
-    private static void LoadSlotToDropdown(GameObject hitslot, GameObject slotdropdown)
+    public void LoadSlotToDropdown(GameObject hitslot, GameObject slotdropdown)
     {
         Slot thisslot = hitslot.GetComponent<SlotComponent>().thisSlot;
 
@@ -68,7 +49,7 @@ public class RaycastUIs
             .GetComponent<TMP_Dropdown>();
         if (thisslot.Landscape != null)
         {
-            landscapedropdown.value = (int)thisslot.Landscape.LandscapeType + 1;
+            landscapedropdown.value = (int)thisslot.Landscape.LandscapeType;
         }
         else
         {
@@ -80,7 +61,7 @@ public class RaycastUIs
             .GetComponent<TMP_Dropdown>();
         if (thisslot.Construction != null)
         {
-            constructiondropdown.value = (int)thisslot.Construction.ConstructionType + 1;
+            constructiondropdown.value = (int)thisslot.Construction.ConstructionType;
         }
         else
         {
@@ -92,7 +73,7 @@ public class RaycastUIs
             .GetComponent<TMP_Dropdown>();
         if (thisslot.Chess != null)
         {
-            chessdropdown.value = (int)thisslot.Chess.ChessType + 1;
+            chessdropdown.value = (int)thisslot.Chess.ChessType;
         }
         else
         {
@@ -100,9 +81,8 @@ public class RaycastUIs
         }
     }
 
-    private static void ShowSlotDropdown(GameObject slotdropdown)
+    public void ShowSlotDropdown(GameObject slotdropdown)
     {
-        IsDropDownOff = false;
         if (!slotdropdown.activeSelf)
         {
             slotdropdown.SetActive(true);
@@ -119,12 +99,10 @@ public class RaycastUIs
         ShootTheMouseRay.endClickActions += () =>
         {
             slotdropdown.SetActive(false);
-            IsDropDownOff = true;
-            MapFileControls.SaveSlots();
         };
     }
 
-    private static void ShowSlotStats(GameObject hitslot, GameObject statusshow)
+    public void ShowSlotStats(GameObject hitslot, GameObject statusshow)
     {
         TMP_Text showtext = statusshow.GetComponent<TMP_Text>();
         if (!statusshow.activeSelf)
@@ -153,7 +131,7 @@ public class RaycastUIs
         };
     }
 
-    private static void RefillDropdownEvents(GameObject hitslot, GameObject slotdropdown)
+    public void RefillDropdownEvents(GameObject hitslot, GameObject slotdropdown)
     {
         Slot thisslot = hitslot.GetComponent<SlotComponent>().thisSlot;
 
@@ -163,14 +141,14 @@ public class RaycastUIs
         landscapedropdown.onValueChanged.AddListener(
             (int index) =>
             {
-                int landscapeindex = landscapedropdown.value;
-                if (
-                    landscapeindex != 0
-                    && landscapeindex <= Enum.GetValues(typeof(LandscapeType)).Length
-                )
+                landscapedropdown.onValueChanged.RemoveAllListeners();
+                if (index <= Enum.GetValues(typeof(LandscapeType)).Length)
                 {
-                    thisslot.InitializeOrSwapLandscape((LandscapeType)landscapeindex);
-                    if ((thisslot.Landscape == null) || (thisslot.Landscape.UnitGameObject == null))
+                    thisslot.InitializeOrSwapLandscape((LandscapeType)index);
+                    if (
+                        (thisslot.Landscape == null || thisslot.Landscape.UnitGameObject == null)
+                        && index != 0
+                    )
                     {
                         GameObject CreatedObject = MonoBehaviour.Instantiate(
                             EssenitalDatumLoader.GameObjectDictionary[Prefab.Landscape]
@@ -178,23 +156,14 @@ public class RaycastUIs
                         thisslot.Landscape.UnitGameObject = CreatedObject;
                         Landscape targetlandscape = CreatedObject
                             .GetComponent<LandscapeComponent>()
-                            .thislandscape;
+                            .thisLandscape;
                         targetlandscape = thisslot.Landscape;
                         targetlandscape.PutToSlotPosition(ref hitslot);
                         CreatedObject.transform.SetParent(hitslot.transform);
                         CreatedObject.transform.localPosition = new Vector3(0, 0, 0.2f);
+                        thisslot.Landscape.LoadLandscapeSprite();
                     }
-                    thisslot.Landscape.LoadLandscapeSprite();
                 }
-                else if (landscapeindex == 0)
-                {
-                    if(thisslot.Landscape.UnitGameObject!=null)
-                    {
-                        MonoBehaviour.Destroy(thisslot.Landscape.UnitGameObject);
-                    }
-                    thisslot.Landscape = null;
-                }
-                landscapedropdown.onValueChanged.RemoveAllListeners();
             }
         );
 
@@ -204,16 +173,16 @@ public class RaycastUIs
         constructiondropdown.onValueChanged.AddListener(
             (int index) =>
             {
-                int constructionindex = constructiondropdown.value;
-                if (
-                    constructionindex != 0
-                    && constructionindex <= Enum.GetValues(typeof(ConstructionType)).Length
-                )
+                constructiondropdown.onValueChanged.RemoveAllListeners();
+                if (index <= Enum.GetValues(typeof(ConstructionType)).Length)
                 {
-                    thisslot.InitializeOrSwapConstruction((ConstructionType)constructionindex);
+                    thisslot.InitializeOrSwapConstruction((ConstructionType)index);
                     if (
-                        (thisslot.Construction == null)
-                        || (thisslot.Construction.UnitGameObject == null)
+                        (
+                            thisslot.Construction == null
+                            || thisslot.Construction.UnitGameObject == null
+                        )
+                        && index != 0
                     )
                     {
                         GameObject CreatedObject = MonoBehaviour.Instantiate(
@@ -222,24 +191,15 @@ public class RaycastUIs
                         thisslot.Construction.UnitGameObject = CreatedObject;
                         Construction targetconstruction = CreatedObject
                             .GetComponent<ConstructionComponent>()
-                            .thisconstruction;
+                            .thisConstruction;
                         targetconstruction = thisslot.Construction;
                         targetconstruction.PutToSlotPosition(ref hitslot);
                         CreatedObject.transform.SetParent(hitslot.transform);
                         CreatedObject.transform.localScale *= 0.85f;
                         CreatedObject.transform.localPosition = new Vector3(0, 0, 0.4f);
+                        thisslot.Construction.LoadConstructionSprite();
                     }
-                    thisslot.Construction.LoadConstructionSprite();
                 }
-                else
-                {
-                    if(thisslot.Construction.UnitGameObject!=null)
-                    {
-                        MonoBehaviour.Destroy(thisslot.Construction.UnitGameObject);
-                    }
-                    thisslot.Construction = null;
-                }
-                constructiondropdown.onValueChanged.RemoveAllListeners();
             }
         );
 
@@ -249,34 +209,28 @@ public class RaycastUIs
         chessdropdown.onValueChanged.AddListener(
             (int index) =>
             {
-                int chessindex = chessdropdown.value;
-                if (chessindex != 0 && chessindex <= Enum.GetValues(typeof(ChessType)).Length)
+                chessdropdown.onValueChanged.RemoveAllListeners();
+                if (index <= Enum.GetValues(typeof(ChessType)).Length)
                 {
-                    thisslot.InitializeOrSwapChess((ChessType)chessindex);
-                    if ((thisslot.Chess == null) || (thisslot.Chess.UnitGameObject == null))
+                    thisslot.InitializeOrSwapChess((ChessType)index);
+                    if (
+                        (thisslot.Chess == null || thisslot.Chess.UnitGameObject == null)
+                        && index != 0
+                    )
                     {
                         GameObject CreatedObject = MonoBehaviour.Instantiate(
                             EssenitalDatumLoader.GameObjectDictionary[Prefab.Chess]
                         );
                         thisslot.Chess.UnitGameObject = CreatedObject;
-                        Chess targetchess = CreatedObject.GetComponent<ChessComponent>().thischess;
+                        Chess targetchess = CreatedObject.GetComponent<ChessComponent>().thisChess;
                         targetchess = thisslot.Chess;
                         targetchess.PutToSlotPosition(ref hitslot);
                         CreatedObject.transform.SetParent(hitslot.transform);
                         CreatedObject.transform.localScale *= 0.7f;
                         CreatedObject.transform.localPosition = new Vector3(0, 0, 0.6f);
+                        thisslot.Chess.LoadChessSprite();
                     }
-                    thisslot.Chess.LoadChessSprite();
                 }
-                else
-                {
-                    if(thisslot.Chess.UnitGameObject!=null)
-                    {
-                        MonoBehaviour.Destroy(thisslot.Chess.UnitGameObject);
-                    }
-                    thisslot.Chess = null;
-                }
-                chessdropdown.onValueChanged.RemoveAllListeners();
             }
         );
     }

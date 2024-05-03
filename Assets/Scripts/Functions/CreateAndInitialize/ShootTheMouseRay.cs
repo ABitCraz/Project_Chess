@@ -13,18 +13,20 @@ public class ShootTheMouseRay : MonoBehaviour
     public static event EndActions endHoverActions;
     GameObject previousgameobject;
     GameObject[] paramlist;
+    public bool Isdropdownoff = true;
+    bool israyshootnothing = true;
 
     private void Update()
     {
         MouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        bool hitted = GetMouseRayCastHit(ref MouseRay);
-        if (Input.GetMouseButtonDown(1) && !hitted)
-        {
-            EndTheClickActions();
-        }
-        if (!hitted)
+        israyshootnothing = GetMouseRayCastHit(ref MouseRay);
+        if (israyshootnothing)
         {
             EndTheHoverActions();
+        }
+        if (Input.GetMouseButtonDown(1) && israyshootnothing)
+        {
+            EndTheClickActions();
         }
     }
 
@@ -45,10 +47,22 @@ public class ShootTheMouseRay : MonoBehaviour
             {
                 paramlist = new GameObject[] { hitobject, statusshow };
             }
-            RaycastUIs.UIHit(ref paramlist);
-            return true;
+            UIHit(ref paramlist);
+            return false;
         }
-        return false;
+        return true;
+    }
+
+    public void UIHit(ref GameObject[] hitobject)
+    {
+        RaycastUIs rui = new();
+        switch (hitobject[0].tag)
+        {
+            case "Slot":
+                rui.SlotOnHover(hitobject[0], hitobject[1]);
+                rui.SlotOnClick(hitobject[0], hitobject[1]);
+                break;
+        }
     }
 
     private void EndTheClickActions()

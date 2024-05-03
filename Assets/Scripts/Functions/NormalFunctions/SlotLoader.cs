@@ -19,7 +19,7 @@ public class SlotLoader
             slot.Landscape.UnitGameObject = CreatedObject;
             Landscape targetlandscape = CreatedObject
                 .GetComponent<LandscapeComponent>()
-                .thislandscape;
+                .thisLandscape;
             targetlandscape = slot.Landscape;
             targetlandscape.PutToSlotPosition(ref slotobject);
             targetlandscape.LoadLandscapeSprite();
@@ -38,7 +38,7 @@ public class SlotLoader
             slot.Construction.UnitGameObject = CreatedObject;
             Construction targetconstruction = CreatedObject
                 .GetComponent<ConstructionComponent>()
-                .thisconstruction;
+                .thisConstruction;
             targetconstruction = slot.Construction;
             targetconstruction.PutToSlotPosition(ref slotobject);
             targetconstruction.LoadConstructionSprite();
@@ -53,7 +53,7 @@ public class SlotLoader
             );
             slot.Chess.UnitSprite = CreatedObject.GetComponent<SpriteRenderer>().sprite;
             slot.Chess.UnitGameObject = CreatedObject;
-            Chess targetchess = CreatedObject.GetComponent<ChessComponent>().thischess;
+            Chess targetchess = CreatedObject.GetComponent<ChessComponent>().thisChess;
             targetchess = slot.Chess;
             targetchess.PutToSlotPosition(ref slotobject);
             targetchess.LoadChessSprite();

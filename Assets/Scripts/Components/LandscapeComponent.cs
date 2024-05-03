@@ -3,8 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
 public class LandscapeComponent : MonoBehaviour
 {
-    public Landscape thislandscape;
+    public Landscape thisLandscape;
 }

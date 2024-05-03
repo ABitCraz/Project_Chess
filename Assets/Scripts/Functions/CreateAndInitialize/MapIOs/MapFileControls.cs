@@ -10,10 +10,8 @@ public class MapFileControls : MonoBehaviour
     SaveAndLoad snl = new();
     public GameObject FileDirectoryObject;
     public GameObject ActionDoneObject;
-    public static DataManeuvers.SaveSlotDatum SaveSlots;
     bool isempty = true;
     public SavingDatum save = new();
-    public bool iscover;
     public GameObject SaveButton;
     public GameObject CoverButton;
     public GameObject LoadButton;
@@ -21,7 +19,6 @@ public class MapFileControls : MonoBehaviour
 
     private void Awake()
     {
-        SaveSlots += FillTheSaveSlots;
         SaveButton
             .GetComponent<Button>()
             .onClick.AddListener(() =>
@@ -47,7 +44,7 @@ public class MapFileControls : MonoBehaviour
             .GetComponent<Button>()
             .onClick.AddListener(() =>
             {
-                GameObject createdmap = this.GetComponent<CreateSlotMap>().CreatedMap;
+                GameObject createdmap = save.SlotMap.SlotMapGameObject;
                 Destroy(createdmap);
                 createdmap = null;
                 isempty = true;
@@ -58,12 +55,16 @@ public class MapFileControls : MonoBehaviour
     {
         if (isempty)
         {
-            if (save.saveslots.Count <= 0)
+            if (save.SlotMap.FullSlotMap == null)
+            {
+                return;
+            }
+            if (save.SlotMap.FullSlotMap.Length <= 0)
             {
                 SaveButton.GetComponent<Button>().interactable = false;
                 ActionDoneObject.GetComponent<TMP_Text>().text = "地图空的，把作者存进去?";
             }
-            else if (save.saveslots.Count > 0)
+            else if (save.SlotMap.FullSlotMap.Length > 0)
             {
                 SaveButton.GetComponent<Button>().interactable = true;
                 ActionDoneObject.GetComponent<TMP_Text>().text = "地图可以保存了";
@@ -76,52 +77,36 @@ public class MapFileControls : MonoBehaviour
     {
         try
         {
-            SavingDatum saved = snl.LoadMapJSONFile(ref FileDirectoryObject, ref ActionDoneObject);
-            List<SerializableSlot> s_slots = saved.saveslots;
+            save = snl.LoadMapJSONFile(ref FileDirectoryObject, ref ActionDoneObject);
+            List<SerializableSlot> s_slots = save.SaveSlots;
             if ((s_slots.Count > 0) && (s_slots != null))
             {
-                if (this.GetComponent<CreateSlotMap>().CreatedMap != null)
+                if (save.SlotMap.FullSlotMap != null)
                 {
                     ActionDoneObject.GetComponent<TMP_Text>().text = "地图并不是空的，请先清理地图";
                     return;
                 }
                 GameObject createdmap = new("SlotMap");
+                createdmap.AddComponent<SlotMapComponent>().thisSlotMap = save.SlotMap;
+                save.SlotMap.SlotMapGameObject = createdmap;
                 for (int i = 0; i < s_slots.Count; i++)
                 {
-                    GameObject loadslot = Instantiate(
+                    Slot loadedslot = s_slots[i].SwitchToNormalSlot();
+                    GameObject loadedslotgameobject = Instantiate(
                         Resources.Load(ResourcePaths.Resources[Prefab.Slot]) as GameObject
                     );
-                    loadslot.GetComponent<SlotComponent>().thisSlot = s_slots[
-                        i
-                    ].SwitchToNormalSlot();
-                    loadslot.transform.position = loadslot
-                        .GetComponent<SlotComponent>()
-                        .thisSlot.FactPosition;
-                    loadslot.transform.SetParent(createdmap.transform);
-                    SlotLoader.LoadGameObjectFromType(ref loadslot);
+                    loadedslotgameobject.GetComponent<SlotComponent>().thisSlot = loadedslot;
+                    loadedslotgameobject.transform.position = loadedslot.FactPosition;
+                    loadedslotgameobject.transform.SetParent(createdmap.transform);
+                    SlotLoader.LoadGameObjectFromType(ref loadedslotgameobject);
+                    save.SlotMap.FullSlotDictionary.Add(s_slots[i].MapPosition, loadedslot);
                 }
-                this.GetComponent<CreateSlotMap>().CreatedMap = createdmap;
+                save.SlotMap.SlotMapGameObject = createdmap;
             }
         }
         catch (Exception except)
         {
             print("文件不可读:\n" + except);
-        }
-    }
-
-    private void FillTheSaveSlots()
-    {
-        save.saveslots = new();
-        GameObject slotmap = this.GetComponent<CreateSlotMap>().CreatedMap;
-        int slotcount = slotmap.transform.childCount;
-        for (int i = 0; i < slotcount; i++)
-        {
-            save.saveslots.Add(
-                slotmap.transform
-                    .GetChild(i)
-                    .GetComponent<SlotComponent>()
-                    .thisSlot.SwapToSerializableSlot()
-            );
         }
     }
 }

@@ -892,7 +892,7 @@ GameObject:
   - component: {fileID: 649705401}
   - component: {fileID: 649705400}
   m_Layer: 5
-  m_Name: Text (TMP) (1)
+  m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1351,7 +1351,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 100, y: 0}
+  m_AnchoredPosition: {x: -90, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &766701993
@@ -1819,12 +1819,12 @@ GameObject:
   - component: {fileID: 912768902}
   - component: {fileID: 912768901}
   m_Layer: 5
-  m_Name: LandscapeStatus
+  m_Name: ConstructionStatus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &912768900
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2143,7 +2143,7 @@ GameObject:
   - component: {fileID: 990290645}
   - component: {fileID: 990290644}
   m_Layer: 5
-  m_Name: LandscapeStatus (1)
+  m_Name: LandscapeStatus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2354,7 +2354,7 @@ GameObject:
   - component: {fileID: 1234515096}
   - component: {fileID: 1234515095}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3448,7 +3448,7 @@ GameObject:
   - component: {fileID: 1566987427}
   - component: {fileID: 1566987426}
   m_Layer: 5
-  m_Name: Text (TMP) (1)
+  m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3972,7 +3972,7 @@ GameObject:
   - component: {fileID: 2041632686}
   - component: {fileID: 2041632685}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

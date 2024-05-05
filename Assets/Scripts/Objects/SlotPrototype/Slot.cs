@@ -11,6 +11,7 @@ public class Slot
     public Construction Construction;
     public int[] Position;
     public Vector3 FactPosition;
+    public GameObject SlotGameObject;
 
     public Slot()
     {

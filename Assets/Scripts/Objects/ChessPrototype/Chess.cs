@@ -15,6 +15,7 @@ public class Chess : BasicUnit, IChess
     public bool OnAlert = false;
     public int AlertCounterBackTime = 2;
     public Slot TheSlotStepOn;
+    public Player Owner;
 
     public void LoadChessSprite()
     {

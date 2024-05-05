@@ -7,11 +7,6 @@ public class PlaningStage : MonoBehaviour
 {
     SlotCalculator slotcalc = new();
     Chess planchess;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()

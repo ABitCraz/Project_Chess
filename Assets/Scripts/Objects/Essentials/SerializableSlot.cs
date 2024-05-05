@@ -10,6 +10,7 @@ public class SerializableSlot
     public float Chess_HealthPoint;
     public int[] MapPosition;
     public Vector3 FactPosition;
+    public Player Chess_Owner;
 
     public SerializableSlot(Slot swapslot)
     {
@@ -25,6 +26,7 @@ public class SerializableSlot
         {
             this.S_ChessType = swapslot.Chess.ChessType;
             this.Chess_HealthPoint = swapslot.Chess.HealthPoint;
+            this.Chess_Owner = swapslot.Chess.Owner;
         }
         this.MapPosition = swapslot.Position;
         this.FactPosition = swapslot.FactPosition;
@@ -40,6 +42,7 @@ public class SerializableSlot
         if (swapslot.Chess != null)
         {
             swapslot.Chess.HealthPoint = Chess_HealthPoint;
+            swapslot.Chess.Owner = Chess_Owner;
         }
         return swapslot;
     }

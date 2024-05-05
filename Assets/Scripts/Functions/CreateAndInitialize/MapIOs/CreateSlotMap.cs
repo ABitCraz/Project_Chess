@@ -28,6 +28,7 @@ public class CreateSlotMap : MonoBehaviour
         int ycount = Convert.ToInt32(Y_Slot_Input.GetComponent<TMP_InputField>().text);
         SlotMap slotmap = new() { MapSize = new[] { xcount, ycount } };
         GameObject emptyslotgo = Resources.Load(ResourcePaths.Resources[Prefab.Slot]) as GameObject;
+        emptyslotgo.GetComponent<SlotComponent>().thisSlot.SlotGameObject = emptyslotgo;
         GameObject slotmapgo = new("SlotMap");
         slotmapgo.AddComponent<MapControl>();
         slotmap.SlotMapGameObject = slotmapgo;

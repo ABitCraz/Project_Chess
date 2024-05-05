@@ -193,7 +193,7 @@ public class SlotCalculator
         int[][] inrangepos = CalculateEveryPositionInDistance(
             originslot.Position,
             0,
-            visionrange,
+            1,
             mapsize[0],
             mapsize[1]
         );

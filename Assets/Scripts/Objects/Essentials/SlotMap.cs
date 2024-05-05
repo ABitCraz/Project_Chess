@@ -9,4 +9,5 @@ public class SlotMap
     public Slot[] FullSlotMap;
     public int[] MapSize;
     public GameObject SlotMapGameObject;
+    public Player[] WholePlayers;
 }

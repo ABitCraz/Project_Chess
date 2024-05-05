@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SlotRangeShow : MonoBehaviour
+public class GameController : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public SlotMap slotmap;
     void Start()
     {
         

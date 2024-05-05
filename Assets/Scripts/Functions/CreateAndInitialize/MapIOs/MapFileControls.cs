@@ -96,6 +96,7 @@ public class MapFileControls : MonoBehaviour
                         Resources.Load(ResourcePaths.Resources[Prefab.Slot]) as GameObject
                     );
                     loadedslotgameobject.GetComponent<SlotComponent>().thisSlot = loadedslot;
+                    loadedslotgameobject.GetComponent<SlotComponent>().thisSlot.SlotGameObject = loadedslotgameobject;
                     loadedslotgameobject.transform.position = loadedslot.FactPosition;
                     loadedslotgameobject.transform.SetParent(createdmap.transform);
                     SlotLoader.LoadGameObjectFromType(ref loadedslotgameobject);

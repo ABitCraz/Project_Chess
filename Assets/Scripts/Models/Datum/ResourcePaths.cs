@@ -30,7 +30,7 @@ public class ResourcePaths
             { ChessType.AA_Infantry, "Images/Sprites/Chess/AntiArmorSoldier/S_AntiArmorSoldier" },
             { ChessType.Light, "Images/Sprites/Chess/LightTank/S_LightTank" },
             { ChessType.Heavy, "Images/Sprites/Chess/HeavyTank/S_HeavyTank" },
-            { ChessType.Artillery, "Images/Sprites/Chess/Artillery/Artillery" },
+            { ChessType.Artillery, "Images/Sprites/Chess/Artillery/S_Artillery" },
             { ChessType.Mortar, "Images/Sprites/Chess/Mortar/S_Mortar" },
             { ChessType.Commander, "Images/Sprites/Chess/General/S_General" },
         };

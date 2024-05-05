@@ -5349,6 +5349,7 @@ MonoBehaviour:
     SlotMap:
       MapSize: 
       SlotMapGameObject: {fileID: 0}
+      WholePlayers: []
   SaveButton: {fileID: 1243007926}
   CoverButton: {fileID: 1963286375}
   LoadButton: {fileID: 53517879}

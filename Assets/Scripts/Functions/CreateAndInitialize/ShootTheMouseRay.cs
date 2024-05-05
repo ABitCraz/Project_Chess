@@ -12,7 +12,6 @@ public class ShootTheMouseRay : MonoBehaviour
     public static event EndActions endClickActions;
     public static event EndActions endHoverActions;
     GameObject previoushover;
-    GameObject previousclicked;
     GameObject[] paramlist;
     public bool Isdropdownoff;
     bool israyshootnothing = true;
@@ -25,7 +24,7 @@ public class ShootTheMouseRay : MonoBehaviour
         {
             EndTheHoverActions();
         }
-        if (Input.GetMouseButtonDown(1) && israyshootnothing && Isdropdownoff)
+        if (Input.GetMouseButtonDown(1))
         {
             EndTheClickActions();
         }
@@ -43,11 +42,6 @@ public class ShootTheMouseRay : MonoBehaviour
             previoushover = hitobject;
             if (Input.GetMouseButtonDown(0))
             {
-                if (previousclicked != null && hitobject != previousclicked)
-                {
-                    EndTheClickActions();
-                }
-                previousclicked = hitobject;
                 if (!Isdropdownoff)
                 {
                     paramlist = new GameObject[] { hitobject, slotdropdown };

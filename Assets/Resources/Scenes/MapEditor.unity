@@ -5317,7 +5317,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotdropdown: {fileID: 4853549419120329810}
   statusshow: {fileID: 1191638064}
-  Isdropdownoff: 1
+  Isdropdownoff: 0
 --- !u!114 &1243434676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5349,6 +5349,7 @@ MonoBehaviour:
     SlotMap:
       MapSize: 
       SlotMapGameObject: {fileID: 0}
+      WholePlayers: []
   SaveButton: {fileID: 1243007926}
   CoverButton: {fileID: 1963286375}
   LoadButton: {fileID: 53517879}

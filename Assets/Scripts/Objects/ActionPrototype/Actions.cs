@@ -47,6 +47,7 @@ public class Actions
                 CurrentChess.AttackPoint
                     * CurrentChess.TheSlotStepOn.Landscape.AttackEffectPercent
                     * TypeAttackPercent()
+                    / 100
                 - TargetChess.DefensePoint
                     * TargetChess.TheSlotStepOn.Landscape.DefenceEffectPercent
             )

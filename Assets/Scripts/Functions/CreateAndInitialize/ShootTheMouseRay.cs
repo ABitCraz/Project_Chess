@@ -11,9 +11,10 @@ public class ShootTheMouseRay : MonoBehaviour
     public delegate void EndActions();
     public static event EndActions endClickActions;
     public static event EndActions endHoverActions;
-    GameObject previousgameobject;
+    GameObject previoushover;
+    GameObject previousclicked;
     GameObject[] paramlist;
-    public bool Isdropdownoff = true;
+    public bool Isdropdownoff;
     bool israyshootnothing = true;
 
     private void Update()
@@ -24,7 +25,7 @@ public class ShootTheMouseRay : MonoBehaviour
         {
             EndTheHoverActions();
         }
-        if (Input.GetMouseButtonDown(1) && israyshootnothing)
+        if (Input.GetMouseButtonDown(1) && israyshootnothing && Isdropdownoff)
         {
             EndTheClickActions();
         }
@@ -34,14 +35,28 @@ public class ShootTheMouseRay : MonoBehaviour
     {
         if (Physics.Raycast(mouseray, out RaycastHit hit) && (hit.collider.gameObject != null))
         {
-            hitobject = hit.collider.gameObject;
-            if (previousgameobject != null && previousgameobject != hitobject)
+            GameObject hitobject = hit.collider.gameObject;
+            if (previoushover != null && hitobject != previoushover)
             {
-                EndTheClickActions();
+                EndTheHoverActions();
             }
+            previoushover = hitobject;
             if (Input.GetMouseButtonDown(0))
             {
-                paramlist = new GameObject[] { hitobject, slotdropdown };
+                if (previousclicked != null && hitobject != previousclicked)
+                {
+                    EndTheClickActions();
+                }
+                previousclicked = hitobject;
+                if (!Isdropdownoff)
+                {
+                    paramlist = new GameObject[] { hitobject, slotdropdown };
+                    Isdropdownoff = true;
+                    endClickActions += () =>
+                    {
+                        Isdropdownoff = false;
+                    };
+                }
             }
             else
             {

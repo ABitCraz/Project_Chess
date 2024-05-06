@@ -2105,7 +2105,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: -90, y: 0}
+  m_AnchoredPosition: {x: -89.99994, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &766701993
@@ -5275,7 +5275,7 @@ MonoBehaviour:
     MapSize: {x: 0, y: 0}
     SlotMapGameObject: {fileID: 0}
     WholePlayers: []
-  MapFileName: Test
+  MapFileName: test
   save:
     SaveSlots: []
     SlotMap:
@@ -5319,7 +5319,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af4ca2a5982baee459428458bdead9a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StatusSet: {fileID: 1342428330}
+  StatusSet: {fileID: 945226294}
 --- !u!1 &1673076057
 GameObject:
   m_ObjectHideFlags: 0

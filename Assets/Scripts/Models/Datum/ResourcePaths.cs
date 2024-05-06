@@ -22,7 +22,7 @@ public class ResourcePaths
             { LandscapeType.Desert, "Images/Sprites/Landscape/L_Desert" },
             { LandscapeType.Highground, "Images/Sprites/Landscape/L_Highground" },
             { LandscapeType.Ruin, "Images/Sprites/Landscape/L_Ruin" },
-            { LandscapeType.Wildlessness, "Images/Sprites/Landscape/L_Wildlessness" },
+            { LandscapeType.Wildlessness, "Images/Sprites/Landscape/L_Wildlessness_V2" },
             //ConstructionTypes
             { ConstructionType.City, "Images/Sprites/Construction/L_City" },
             //ChessTypes
@@ -43,7 +43,7 @@ public class ResourcePaths
             { LandscapeType.Desert, "Images/Sprites/Landscape/L_Desert" },
             { LandscapeType.Highground, "Images/Sprites/Landscape/L_Highground" },
             { LandscapeType.Ruin, "Images/Sprites/Landscape/L_Ruin" },
-            { LandscapeType.Wildlessness, "Images/Sprites/Landscape/L_Wildlessness" },
+            { LandscapeType.Wildlessness, "Images/Sprites/Landscape/L_Wildlessness_V2" },
             //ConstructionTypes
             { ConstructionType.City, "Images/Sprites/Construction/L_City" },
             //ChessTypes

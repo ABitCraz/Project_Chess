@@ -147,7 +147,7 @@ public class RaycastUIs
                     thisslot.InitializeOrSwapLandscape((LandscapeType)index);
                     if (
                         (thisslot.Landscape == null || thisslot.Landscape.UnitGameObject == null)
-                        && index != 0
+                        && index > 0
                     )
                     {
                         GameObject CreatedObject = MonoBehaviour.Instantiate(
@@ -182,7 +182,7 @@ public class RaycastUIs
                             thisslot.Construction == null
                             || thisslot.Construction.UnitGameObject == null
                         )
-                        && index != 0
+                        && index > 0
                     )
                     {
                         GameObject CreatedObject = MonoBehaviour.Instantiate(
@@ -215,7 +215,7 @@ public class RaycastUIs
                     thisslot.InitializeOrSwapChess((ChessType)index);
                     if (
                         (thisslot.Chess == null || thisslot.Chess.UnitGameObject == null)
-                        && index != 0
+                        && index > 0
                     )
                     {
                         GameObject CreatedObject = MonoBehaviour.Instantiate(

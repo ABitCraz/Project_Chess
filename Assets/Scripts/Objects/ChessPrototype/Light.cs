@@ -8,6 +8,5 @@ public class Light : Chess
         this.Movement = 4;
         this.AttackRange = new int[]{0,1};
         this.Vision = 2;
-        this.Price = 6;
     }
 }

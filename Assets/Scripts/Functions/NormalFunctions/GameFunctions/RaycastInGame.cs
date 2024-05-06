@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class RaycastInGame : MonoBehaviour
 {
+    public GameObject StatusSet;
     Ray mouseray;
+    SlotStatusShow sss = new();
 
     private void Awake()
     {
@@ -21,7 +23,7 @@ public class RaycastInGame : MonoBehaviour
         if (Physics.Raycast(mouseray, out RaycastHit hit) && hit.collider.gameObject)
         {
             GameObject hitobject = hit.collider.gameObject;
-            if(hitobject.CompareTag("Slot"))
+            if (hitobject.CompareTag("Slot"))
             {
                 Slot currentslot = hitobject.GetComponent<SlotComponent>().thisSlot;
                 ControlCurrentSlot(ref currentslot);
@@ -31,6 +33,6 @@ public class RaycastInGame : MonoBehaviour
 
     private void ControlCurrentSlot(ref Slot slot)
     {
-        
+        sss.ShowStatus(slot, StatusSet);
     }
 }

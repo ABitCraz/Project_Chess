@@ -164,14 +164,4 @@ public class Slot
     {
         return new SerializableSlot(this);
     }
-
-    public void ChessEnterSlot(ref Chess passchess)
-    {
-        this.Chess = passchess;
-    }
-
-    public void ChessQuitSlot()
-    {
-        this.Chess = null;
-    }
 }

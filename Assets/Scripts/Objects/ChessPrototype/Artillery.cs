@@ -8,6 +8,5 @@ public class Artillery : Chess
         this.Movement = 2;
         this.AttackRange = new int[] { 3, 4 };
         this.Vision = 3;
-        this.Price = 11;
     }
 }

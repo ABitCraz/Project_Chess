@@ -9,8 +9,6 @@ using System;
 public class CameraControl : MonoBehaviour
 {
     Camera maincamera;
-    public GameObject cameraspeed;
-    public GameObject speeddashboard;
     float speed = 1.0f;
 
     private void Awake()
@@ -34,40 +32,38 @@ public class CameraControl : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
         {
-            maincamera.transform.Translate(speed * Time.deltaTime * Vector2.left);
+            maincamera.transform.Translate(speed * Time.deltaTime * Vector2.left, Space.Self);
         }
         if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
         {
-            maincamera.transform.Translate(speed * Time.deltaTime * Vector2.right);
+            maincamera.transform.Translate(speed * Time.deltaTime * Vector2.right, Space.Self);
         }
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
         {
-            maincamera.transform.Translate(speed * Time.deltaTime * Vector2.up);
+            maincamera.transform.Translate(speed * Time.deltaTime * Vector2.up, Space.Self);
         }
         if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
         {
-            maincamera.transform.Translate(speed * Time.deltaTime * Vector2.down);
+            maincamera.transform.Translate(speed * Time.deltaTime * Vector2.down, Space.Self);
+        }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            maincamera.transform.position = new Vector3(0, 0, -10);
+            speed = 1.0f;
         }
     }
 
     private void ShiftControl()
     {
-        if ((Input.GetKeyDown(KeyCode.Q) || Input.GetAxis("Mouse ScrollWheel") < 0) && speed > 0.25f)
+        if (
+            (Input.GetKeyDown(KeyCode.Q) || Input.GetAxis("Mouse ScrollWheel") < 0) && speed > 0.25f
+        )
         {
             speed /= 1.5f;
-            CalibrateSpeedToggle(speed);
         }
         if ((Input.GetKeyDown(KeyCode.E) || Input.GetAxis("Mouse ScrollWheel") > 0) && speed < 10f)
         {
             speed *= 1.5f;
-            CalibrateSpeedToggle(speed);
         }
-    }
-
-    private void CalibrateSpeedToggle(float speed)
-    {
-        int speedlog = (int)Mathf.Log(speed, 1.5f);
-        speeddashboard.GetComponent<TMP_Text>().text = string.Format("x1.5(^{0})", speedlog);
-        cameraspeed.GetComponent<Slider>().value = (speedlog + 5f) / 10f;
     }
 }

@@ -9,8 +9,31 @@ public class LoadTargetMap : MonoBehaviour
     public SlotMap LoadedMap;
     public string MapFileName;
     public SavingDatum save;
+    KeepSpriteErect kse = new();
 
-    public void Awake()
+    public void Start()
+    {
+        LoadMap();
+        ChangeCamera();
+    }
+
+    public void Update()
+    {
+        if (save.SlotMap != null)
+        {
+            kse.KeepErect(ref save.SlotMap, Camera.main.gameObject);
+        }
+    }
+
+    private void ChangeCamera()
+    {
+        GameObject c = Camera.main.gameObject;
+        c.transform.Rotate(Vector3.left, 45f, Space.World);
+        c.transform.Rotate(Vector3.forward, 45f, Space.World);
+        c.transform.position = new Vector3(8, -8f, c.transform.position.z);
+    }
+
+    private void LoadMap()
     {
         try
         {
@@ -19,8 +42,10 @@ public class LoadTargetMap : MonoBehaviour
             if ((s_slots.Count > 0) && (s_slots != null))
             {
                 GameObject createdmap = new("SlotMap");
+                createdmap.AddComponent<MapControl>();
                 createdmap.AddComponent<SlotMapComponent>().thisSlotMap = save.SlotMap;
                 save.SlotMap.SlotMapGameObject = createdmap;
+                List<Slot> wholeslot = new();
                 for (int i = 0; i < s_slots.Count; i++)
                 {
                     Slot loadedslot = s_slots[i].SwitchToNormalSlot();
@@ -32,7 +57,9 @@ public class LoadTargetMap : MonoBehaviour
                     loadedslotgameobject.transform.SetParent(createdmap.transform);
                     SlotLoader.LoadGameObjectFromType(ref loadedslotgameobject);
                     save.SlotMap.FullSlotDictionary.Add(s_slots[i].MapPosition, loadedslot);
+                    wholeslot.Add(loadedslot);
                 }
+                save.SlotMap.FullSlotMap = wholeslot.ToArray();
                 save.SlotMap.SlotMapGameObject = createdmap;
             }
         }

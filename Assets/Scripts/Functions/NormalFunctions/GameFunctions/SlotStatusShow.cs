@@ -16,6 +16,7 @@ public class SlotStatusShow
         }
         else
         {
+            showset.transform.GetChild(0).gameObject.SetActive(true);
             showset.transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = currentslot
                 .Landscape
                 .LandscapeName;
@@ -30,6 +31,7 @@ public class SlotStatusShow
         }
         else
         {
+            showset.transform.GetChild(1).gameObject.SetActive(true);
             showset.transform.GetChild(1).GetChild(0).GetComponent<TMP_Text>().text = currentslot
                 .Construction
                 .ConstructionName;
@@ -44,6 +46,7 @@ public class SlotStatusShow
         }
         else
         {
+            showset.transform.GetChild(2).gameObject.SetActive(true);
             showset.transform.GetChild(2).GetChild(0).GetComponent<TMP_Text>().text = currentslot
                 .Chess
                 .ChessName;

@@ -86,7 +86,9 @@ public class MapFileControls : MonoBehaviour
                     ActionDoneObject.GetComponent<TMP_Text>().text = "地图并不是空的，请先清理地图";
                     return;
                 }
+                List<Slot> slots = new();
                 GameObject createdmap = new("SlotMap");
+                createdmap.AddComponent<MapControl>();
                 createdmap.AddComponent<SlotMapComponent>().thisSlotMap = save.SlotMap;
                 save.SlotMap.SlotMapGameObject = createdmap;
                 for (int i = 0; i < s_slots.Count; i++)
@@ -96,12 +98,15 @@ public class MapFileControls : MonoBehaviour
                         Resources.Load(ResourcePaths.Resources[Prefab.Slot]) as GameObject
                     );
                     loadedslotgameobject.GetComponent<SlotComponent>().thisSlot = loadedslot;
-                    loadedslotgameobject.GetComponent<SlotComponent>().thisSlot.SlotGameObject = loadedslotgameobject;
+                    loadedslotgameobject.GetComponent<SlotComponent>().thisSlot.SlotGameObject =
+                        loadedslotgameobject;
                     loadedslotgameobject.transform.position = loadedslot.FactPosition;
                     loadedslotgameobject.transform.SetParent(createdmap.transform);
                     SlotLoader.LoadGameObjectFromType(ref loadedslotgameobject);
                     save.SlotMap.FullSlotDictionary.Add(s_slots[i].MapPosition, loadedslot);
+                    slots.Add(loadedslot);
                 }
+                save.SlotMap.FullSlotMap = slots.ToArray();
                 save.SlotMap.SlotMapGameObject = createdmap;
             }
         }

@@ -227,6 +227,10 @@ public class SlotCalculator
             {
                 continue;
             }
+            if (targetslot.Chess != null)
+            {
+                continue;
+            }
             getslots.Add(targetslot);
         }
         return getslots.ToArray();

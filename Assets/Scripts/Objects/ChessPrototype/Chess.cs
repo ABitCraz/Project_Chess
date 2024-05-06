@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Chess : BasicUnit, IChess
@@ -11,11 +13,14 @@ public class Chess : BasicUnit, IChess
     public int[] AttackRange;
     public int Vision;
     public int TakeDamagePercent = 100;
-    public int Price;
+    public ActionType CurrentAction = ActionType.Hold;
+    public List<Chess> AttackedChessOnAlert = new();
     public bool OnAlert = false;
     public int AlertCounterBackTime = 2;
     public Slot TheSlotStepOn;
     public Player Owner;
+    public bool IsStanding = true;
+    public bool IsMoving = true;
 
     public void LoadChessSprite()
     {
@@ -28,5 +33,7 @@ public class Chess : BasicUnit, IChess
     {
         TheSlotStepOn.Chess = null;
         TheSlotStepOn = targetSlot;
+        targetSlot.Chess = this;
     }
+
 }

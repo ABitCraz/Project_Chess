@@ -8,6 +8,5 @@ public class Infantry : Chess
         this.Movement = 4;
         this.AttackRange = new int[] {0,1};
         this.Vision = 3;
-        this.Price = 3;
     }
 }

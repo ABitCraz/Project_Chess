@@ -7,10 +7,14 @@ public class SlotComponent : MonoBehaviour
     public GameObject SlotContainer;
     public bool IsAttackFocusing = false;
     public bool IsVisionFocusing = false;
+    public bool IsMovingFocusing = false;
+    public bool IsRouteFocusing = false;
     public bool IsUnfocusing = true;
-    SpriteColorFunctions scf = new();
+    readonly SpriteColorFunctions scf = new();
     SlotUpdateBehaviour.SlotUpdateActions AttackFocusingActions;
     SlotUpdateBehaviour.SlotUpdateActions VisionFocusingActions;
+    SlotUpdateBehaviour.SlotUpdateActions MoveFocusingActions;
+    SlotUpdateBehaviour.SlotUpdateActions RouteFocusingActions;
     public SlotUpdateBehaviour.SlotUpdateActions UnfocusingActions;
 
     private void Awake()
@@ -20,7 +24,23 @@ public class SlotComponent : MonoBehaviour
             int speed = 5;
             for (int i = 0; i < speed; i++)
             {
-                bool isdone = scf.ColorFadingInTargetColor(this.gameObject, 128, 0);
+                bool isdone = scf.ColorFadingInTargetColor(this.gameObject, 32, 0);
+                if (isdone)
+                {
+                    break;
+                }
+            }
+        };
+
+        RouteFocusingActions += () =>
+        {
+            int speed = 5;
+            for (int i = 0; i < speed; i++)
+            {
+                bool isdone = scf.ColorFadingInTargetColor(
+                    this.gameObject,
+                    new Color32(128, 128, 255, 255)
+                );
                 if (isdone)
                 {
                     break;
@@ -33,7 +53,20 @@ public class SlotComponent : MonoBehaviour
             int speed = 5;
             for (int i = 0; i < speed; i++)
             {
-                bool isdone = scf.ColorFadingInTargetColor(this.gameObject, 128, 2);
+                bool isdone = scf.ColorFadingInTargetColor(this.gameObject, 32, 2);
+                if (isdone)
+                {
+                    break;
+                }
+            }
+        };
+
+        MoveFocusingActions += () =>
+        {
+            int speed = 5;
+            for (int i = 0; i < speed; i++)
+            {
+                bool isdone = scf.ColorFadingInTargetColor(this.gameObject, 0, 1);
                 if (isdone)
                 {
                     break;
@@ -46,6 +79,8 @@ public class SlotComponent : MonoBehaviour
             IsUnfocusing = true;
             IsAttackFocusing = false;
             IsVisionFocusing = false;
+            IsMovingFocusing = false;
+            IsRouteFocusing = false;
             bool isdone = scf.ColorFadingToNormal(this.gameObject, 4);
         };
     }
@@ -66,6 +101,8 @@ public class SlotComponent : MonoBehaviour
             IsUnfocusing = true;
             IsAttackFocusing = false;
             IsVisionFocusing = false;
+            IsMovingFocusing = false;
+            IsRouteFocusing = false;
             UnfocusingActions();
         }
         else
@@ -77,6 +114,14 @@ public class SlotComponent : MonoBehaviour
             if (IsVisionFocusing)
             {
                 VisionFocusingActions();
+            }
+            if (IsMovingFocusing)
+            {
+                MoveFocusingActions();
+            }
+            if (IsRouteFocusing)
+            {
+                RouteFocusingActions();
             }
         }
     }

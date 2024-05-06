@@ -191,10 +191,6 @@ public class SlotCalculator
         ref Vector2Int mapsize
     )
     {
-        Chess attackchess = originslot.Chess;
-        Landscape steplandscape = originslot.Landscape;
-        int visionrange = attackchess.Vision + steplandscape.EffectVision;
-        visionrange = visionrange < 0 ? 0 : visionrange;
         Vector2Int[] inrangepos = CalculateEveryPositionInDistance(
             originslot.Position,
             0,

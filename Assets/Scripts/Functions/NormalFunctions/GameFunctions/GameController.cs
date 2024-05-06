@@ -4,5 +4,10 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    
+    List<Actions> actionlist = new();
+
+    public void OnAttack()
+    {
+
+    }
 }

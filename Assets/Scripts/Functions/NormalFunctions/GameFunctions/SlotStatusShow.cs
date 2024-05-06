@@ -58,7 +58,7 @@ public class SlotStatusShow
         }
     }
 
-    public Slot[] ShowAttackRange(ref Slot currentslot, ref SlotMap slotmap)
+    public Slot[] ShowAttackRange(Slot currentslot, SlotMap slotmap)
     {
         if (previousattackslot != null && previousattackslot != currentslot)
         {
@@ -83,7 +83,7 @@ public class SlotStatusShow
         return slotsinattackrange;
     }
 
-    public Slot[] ShowVisionRange(ref Slot currentslot, ref SlotMap slotmap)
+    public Slot[] ShowVisionRange(Slot currentslot, SlotMap slotmap)
     {
         if (previousvisionslot != null && previousvisionslot != currentslot)
         {
@@ -96,6 +96,21 @@ public class SlotStatusShow
         }
         previousvisionslot = currentslot;
         Slot[] slotsinattackrange = slotcalc.CalculateSlotInVisionRange(
+            ref currentslot,
+            ref slotmap.FullSlotDictionary,
+            ref slotmap.MapSize
+        );
+        for (int i = 0; i < slotsinattackrange.Length; i++)
+        {
+            slotsinattackrange[i].SlotGameObject.GetComponent<SlotComponent>().IsVisionFocusing =
+                true;
+        }
+        return slotsinattackrange;
+    }
+
+    public Slot[] ShowMovementRange(Slot currentslot, SlotMap slotmap)
+    {
+        Slot[] slotsinattackrange = slotcalc.CalculateSlotInMovementRange(
             ref currentslot,
             ref slotmap.FullSlotDictionary,
             ref slotmap.MapSize

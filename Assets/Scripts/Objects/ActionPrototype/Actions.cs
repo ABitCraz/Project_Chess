@@ -5,35 +5,12 @@ using UnityEngine;
 
 public class Actions
 {
-    public int[] TargetPosition;
+    public Vector2Int TargetPosition;
     public Chess CurrentChess;
     public Chess TargetChess;
     public Player CurrentPlayer;
     public SlotMap CurrentSlotMap;
     SlotCalculator slotcalculator;
-
-    public Actions(int[] position, ActionType targetaction, Chess originchess, Player currentplayer)
-    {
-        this.CurrentPlayer = currentplayer;
-        this.TargetPosition = position;
-        this.CurrentChess = originchess;
-        CurrentChess.CurrentAction = targetaction;
-    }
-
-    public Actions(
-        int[] position,
-        ActionType targetaction,
-        Chess originchess,
-        Chess targetchess,
-        Player currentplayer
-    )
-    {
-        this.CurrentPlayer = currentplayer;
-        this.TargetPosition = position;
-        this.CurrentChess = originchess;
-        this.TargetChess = targetchess;
-        CurrentChess.CurrentAction = targetaction;
-    }
 
     public void Attack()
     {
@@ -180,16 +157,6 @@ public class Actions
         }
     }
 
-    public void Hold()
-    {
-        if (CurrentChess == null)
-        {
-            return;
-        }
-        CurrentChess.CurrentAction = ActionType.Hold;
-        CurrentChess.IsStanding = true;
-    }
-
     public IEnumerator<bool> Push(Slot[] route)
     {
         CurrentChess.CurrentAction = ActionType.Push;
@@ -243,7 +210,6 @@ public class Actions
         }
         return true;
     }
-
     public bool Reinforce(ref Slot reinforceslot, ChessType reinforcechesstype)
     {
         CurrentChess.CurrentAction = ActionType.Reinforce;

@@ -11,6 +11,7 @@ public class RaycastInGame : MonoBehaviour
     SlotCalculator sc = new();
     SavingDatum save;
     Coroutine loadedsave = null;
+    GameObject previousslot;
 
     private void Awake()
     {
@@ -20,10 +21,10 @@ public class RaycastInGame : MonoBehaviour
     private void Update()
     {
         mouseray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        ShootingRaycast(ref mouseray);
+        bool shotsth = ShootingRaycast(ref mouseray);
     }
 
-    private void ShootingRaycast(ref Ray mouseray)
+    private bool ShootingRaycast(ref Ray mouseray)
     {
         RaycastHit[] hits = Physics.RaycastAll(mouseray);
         for (int i = 0; i < hits.Length; i++)
@@ -31,11 +32,13 @@ public class RaycastInGame : MonoBehaviour
             GameObject hitobject = hits[i].collider.gameObject;
             if (hitobject.CompareTag("Slot"))
             {
+                previousslot = hitobject;
                 Slot currentslot = hitobject.GetComponent<SlotComponent>().thisSlot;
                 ControlCurrentSlot(ref currentslot);
-                break;
+                return true;
             }
         }
+        return false;
     }
 
     private void ControlCurrentSlot(ref Slot slot)

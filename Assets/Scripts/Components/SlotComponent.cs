@@ -20,7 +20,7 @@ public class SlotComponent : MonoBehaviour
             int speed = 5;
             for (int i = 0; i < speed; i++)
             {
-                bool isdone = scf.ColorFadingInTargetColor(this.gameObject, 64, 0);
+                bool isdone = scf.ColorFadingInTargetColor(this.gameObject, 128, 0);
                 if (isdone)
                 {
                     break;
@@ -33,7 +33,7 @@ public class SlotComponent : MonoBehaviour
             int speed = 5;
             for (int i = 0; i < speed; i++)
             {
-                bool isdone = scf.ColorFadingInTargetColor(this.gameObject, 64, 2);
+                bool isdone = scf.ColorFadingInTargetColor(this.gameObject, 128, 2);
                 if (isdone)
                 {
                     break;
@@ -43,6 +43,7 @@ public class SlotComponent : MonoBehaviour
 
         UnfocusingActions += () =>
         {
+            IsUnfocusing = true;
             IsAttackFocusing = false;
             IsVisionFocusing = false;
             bool isdone = scf.ColorFadingToNormal(this.gameObject, 4);
@@ -51,13 +52,32 @@ public class SlotComponent : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (IsAttackFocusing)
+        if (IsAttackFocusing || IsVisionFocusing)
         {
-            AttackFocusingActions();
+            IsUnfocusing = false;
         }
-        if (IsVisionFocusing)
+        else if (!IsAttackFocusing && !IsVisionFocusing)
         {
-            VisionFocusingActions();
+            IsUnfocusing = true;
+        }
+
+        if (IsUnfocusing)
+        {
+            IsUnfocusing = true;
+            IsAttackFocusing = false;
+            IsVisionFocusing = false;
+            UnfocusingActions();
+        }
+        else
+        {
+            if (IsAttackFocusing)
+            {
+                AttackFocusingActions();
+            }
+            if (IsVisionFocusing)
+            {
+                VisionFocusingActions();
+            }
         }
     }
 }

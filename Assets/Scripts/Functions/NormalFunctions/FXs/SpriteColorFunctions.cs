@@ -129,24 +129,7 @@ public class SpriteColorFunctions
         {
             return true;
         }
-
-        if (spritecolor.r < 255)
-        {
-            spritecolor.r += speed;
-        }
-        if (spritecolor.g < 255)
-        {
-            spritecolor.g += speed;
-        }
-        if (spritecolor.b < 255)
-        {
-            spritecolor.b += speed;
-        }
-        if (spritecolor.a < 255)
-        {
-            spritecolor.a += speed;
-        }
-        spritegameobject.GetComponent<SpriteRenderer>().color = spritecolor;
+        spritegameobject.GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 255);
         return false;
     }
 

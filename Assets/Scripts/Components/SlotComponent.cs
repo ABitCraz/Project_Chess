@@ -3,15 +3,15 @@ using UnityEngine;
 
 public class SlotComponent : MonoBehaviour
 {
-    public Slot thisSlot = new();
+    public Slot thisSlot = new(LandscapeType.Wildlessness);
     public GameObject SlotContainer;
     public bool IsAttackFocusing = false;
     public bool IsVisionFocusing = false;
-    public bool IsUnfocusing = false;
+    public bool IsUnfocusing = true;
     SpriteColorFunctions scf = new();
     SlotUpdateBehaviour.SlotUpdateActions AttackFocusingActions;
     SlotUpdateBehaviour.SlotUpdateActions VisionFocusingActions;
-    SlotUpdateBehaviour.SlotUpdateActions UnfocusingActions;
+    public SlotUpdateBehaviour.SlotUpdateActions UnfocusingActions;
 
     private void Awake()
     {
@@ -46,10 +46,6 @@ public class SlotComponent : MonoBehaviour
             IsAttackFocusing = false;
             IsVisionFocusing = false;
             bool isdone = scf.ColorFadingToNormal(this.gameObject, 4);
-            if (isdone)
-            {
-                IsUnfocusing = false;
-            }
         };
     }
 
@@ -62,10 +58,6 @@ public class SlotComponent : MonoBehaviour
         if (IsVisionFocusing)
         {
             VisionFocusingActions();
-        }
-        if (IsUnfocusing)
-        {
-            UnfocusingActions();
         }
     }
 }

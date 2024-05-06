@@ -26,7 +26,7 @@ public class CreateSlotMap : MonoBehaviour
         }
         int xcount = Convert.ToInt32(X_Slot_Input.GetComponent<TMP_InputField>().text);
         int ycount = Convert.ToInt32(Y_Slot_Input.GetComponent<TMP_InputField>().text);
-        SlotMap slotmap = new() { MapSize = new[] { xcount, ycount } };
+        SlotMap slotmap = new() { MapSize = new(xcount, ycount) };
         GameObject emptyslotgo = Resources.Load(ResourcePaths.Resources[Prefab.Slot]) as GameObject;
         emptyslotgo.GetComponent<SlotComponent>().thisSlot.SlotGameObject = emptyslotgo;
         GameObject slotmapgo = new("SlotMap");
@@ -53,10 +53,10 @@ public class CreateSlotMap : MonoBehaviour
                 spawnedslot.transform.position = spawnplace;
                 spawnedslot.transform.parent = slotmap.SlotMapGameObject.transform;
                 Slot thisslot = spawnedslot.GetComponent<SlotComponent>().thisSlot;
-                thisslot.Position = new int[] { i, j };
+                thisslot.Position = new Vector2Int(i, j);
                 thisslot.FactPosition = spawnplace;
                 SlotLoader.LoadGameObjectFromType(ref spawnedslot);
-                slotmap.FullSlotDictionary.Add(new int[] { i, j }, thisslot);
+                slotmap.FullSlotDictionary.Add(new Vector2Int(i, j), thisslot);
                 wholeslot.Add(thisslot);
             }
         }

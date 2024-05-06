@@ -8,7 +8,7 @@ public class SerializableSlot
     public ConstructionType S_ConstructionType;
     public ChessType S_ChessType;
     public float Chess_HealthPoint;
-    public int[] MapPosition;
+    public Vector2Int MapPosition;
     public Vector3 FactPosition;
     public Player Chess_Owner;
 

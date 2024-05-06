@@ -10,6 +10,7 @@ public class LoadTargetMap : MonoBehaviour
     public string MapFileName;
     public SavingDatum save;
     KeepSpriteErect kse = new();
+    public bool IsLoadDone = false;
 
     public void Start()
     {
@@ -53,6 +54,7 @@ public class LoadTargetMap : MonoBehaviour
                         Resources.Load(ResourcePaths.Resources[Prefab.Slot]) as GameObject
                     );
                     loadedslotgameobject.GetComponent<SlotComponent>().thisSlot = loadedslot;
+                    loadedslotgameobject.GetComponent<SlotComponent>().thisSlot.SlotGameObject = loadedslotgameobject;
                     loadedslotgameobject.transform.position = loadedslot.FactPosition;
                     loadedslotgameobject.transform.SetParent(createdmap.transform);
                     SlotLoader.LoadGameObjectFromType(ref loadedslotgameobject);
@@ -67,5 +69,6 @@ public class LoadTargetMap : MonoBehaviour
         {
             print("文件不可读:\n" + except);
         }
+        IsLoadDone = true;
     }
 }

@@ -46,7 +46,7 @@ public class ShowLeftBar : MonoBehaviour
         }
         else
         {
-            if (lbr.anchoredPosition.x > -150f)
+            if (lbr.anchoredPosition.x > -90f)
             {
                 lbr.anchoredPosition = new Vector2(lbr.anchoredPosition.x - 1, 0);
             }

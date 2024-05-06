@@ -5224,6 +5224,7 @@ GameObject:
   - component: {fileID: 1602449971}
   - component: {fileID: 1602449972}
   - component: {fileID: 1602449973}
+  - component: {fileID: 1602449974}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -5271,16 +5272,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LoadedMap:
-    MapSize: 
+    MapSize: {x: 0, y: 0}
     SlotMapGameObject: {fileID: 0}
     WholePlayers: []
-  MapFileName: Classic
+  MapFileName: Test
   save:
     SaveSlots: []
     SlotMap:
-      MapSize: 
+      MapSize: {x: 0, y: 0}
       SlotMapGameObject: {fileID: 0}
       WholePlayers: []
+  IsLoadDone: 0
 --- !u!114 &1602449972
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5305,6 +5307,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 402da9b8de6cfbf40924d20b989498d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1602449974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1602449968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af4ca2a5982baee459428458bdead9a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  StatusSet: {fileID: 1342428330}
 --- !u!1 &1673076057
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,8 +7,9 @@ using TMPro;
 public class SlotStatusShow
 {
     SlotCalculator slotcalc = new();
+    Slot lastslot;
 
-    public void ShowStatus(Slot currentslot, GameObject showset)
+    public void ShowStatus(ref Slot currentslot, ref GameObject showset)
     {
         if (currentslot.Landscape == null)
         {
@@ -56,8 +57,24 @@ public class SlotStatusShow
         }
     }
 
-    public Slot[] ShowAttackRange(Slot currentslot, SlotMap slotmap)
+    public Slot[] ShowAttackRange(ref Slot currentslot, ref SlotMap slotmap)
     {
+        if (lastslot != null && lastslot != currentslot)
+        {
+            Slot[] lastslotsinattackrange = slotcalc.CalculateSlotInAttackRange(
+                ref lastslot,
+                ref slotmap.FullSlotDictionary,
+                ref slotmap.MapSize
+            );
+            for (int i = 0; i < lastslotsinattackrange.Length; i++)
+            {
+                lastslotsinattackrange[i].SlotGameObject
+                    .GetComponent<SlotComponent>()
+                    .UnfocusingActions();
+            }
+        }
+        lastslot = currentslot;
+
         Slot[] slotsinattackrange = slotcalc.CalculateSlotInAttackRange(
             ref currentslot,
             ref slotmap.FullSlotDictionary,
@@ -71,8 +88,24 @@ public class SlotStatusShow
         return slotsinattackrange;
     }
 
-    public Slot[] ShowVisionRange(Slot currentslot, SlotMap slotmap)
+    public Slot[] ShowVisionRange(ref Slot currentslot, ref SlotMap slotmap)
     {
+        if ((lastslot != null) && (lastslot != currentslot))
+        {
+            Slot[] lastslotsinattackrange = slotcalc.CalculateSlotInAttackRange(
+                ref lastslot,
+                ref slotmap.FullSlotDictionary,
+                ref slotmap.MapSize
+            );
+            for (int i = 0; i < lastslotsinattackrange.Length; i++)
+            {
+                lastslotsinattackrange[i].SlotGameObject
+                    .GetComponent<SlotComponent>()
+                    .UnfocusingActions();
+            }
+        }
+        lastslot = currentslot;
+
         Slot[] slotsinattackrange = slotcalc.CalculateSlotInVisionRange(
             ref currentslot,
             ref slotmap.FullSlotDictionary,

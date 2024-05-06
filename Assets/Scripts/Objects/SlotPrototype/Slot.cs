@@ -9,7 +9,7 @@ public class Slot
     public Landscape Landscape;
     public Chess Chess;
     public Construction Construction;
-    public int[] Position;
+    public Vector2Int Position;
     public Vector3 FactPosition;
     public GameObject SlotGameObject;
 

@@ -11,6 +11,7 @@ public class SavingDatum
 
     public List<SerializableSlot> MapToSerializeSlot()
     {
+        SaveSlots = new();
         for (int i = 0; i < SlotMap.FullSlotMap.Length; i++)
         {
             SaveSlots.Add(SlotMap.FullSlotMap[i].SwapToSerializableSlot());

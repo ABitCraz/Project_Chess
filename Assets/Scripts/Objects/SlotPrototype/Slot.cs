@@ -44,11 +44,6 @@ public class Slot
         InitializeOrSwapChess(newchess);
     }
 
-    public void SwitchSlotVectorToIntArray(Vector2 origin)
-    {
-        Position = new int[] { (int)origin.x, (int)origin.y };
-    }
-
     public void InitializeOrSwapLandscape(LandscapeType landscape)
     {
         GameObject LastGameObject = null;

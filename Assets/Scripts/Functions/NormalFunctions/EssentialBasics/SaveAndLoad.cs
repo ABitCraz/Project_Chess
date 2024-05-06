@@ -28,7 +28,7 @@ public class SaveAndLoad
             return;
         }
 
-        FileStream fs = new(fullpath, FileMode.Create);
+        FileStream fs = new(fullpath,FileMode.Create);
         BinaryFormatter bf = new();
         savedone.GetComponent<TMP_Text>().text = "保存中";
         try

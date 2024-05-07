@@ -7,6 +7,8 @@ using UnityEngine;
 
 public class SlotCalculator
 {
+    Chess MovingChess = new();
+
     public int CalculateDistance(ref Slot originslot, ref Slot targetslot)
     {
         int distance =
@@ -199,6 +201,16 @@ public class SlotCalculator
             mapsize[1]
         );
         List<Slot> getslots = new();
+        Chess currentchess;
+        if (originslot.Chess != null)
+        {
+            currentchess = originslot.Chess;
+            MovingChess.Movement = currentchess.Movement;
+        }
+        else
+        {
+            currentchess = MovingChess;
+        }
         for (int i = 0; i < inrangepos.Length; i++)
         {
             Slot targetslot = slotdictionary[inrangepos[i]];
@@ -217,16 +229,20 @@ public class SlotCalculator
             if (
                 targetslot.Landscape.IsTroopersOnly == true
                 && (
-                    originslot.Chess.ChessType != ChessType.AA_Infantry
-                    || originslot.Chess.ChessType != ChessType.Infantry
+                    currentchess.ChessType != ChessType.AA_Infantry
+                    || currentchess.ChessType != ChessType.Infantry
                 )
             )
             {
                 continue;
             }
-            if (originslot.Chess.Movement - targetslot.Landscape.MovementPrice < 0)
+            if (MovingChess.Movement - targetslot.Landscape.MovementPrice < 0)
             {
                 continue;
+            }
+            else
+            {
+                MovingChess.Movement -= targetslot.Landscape.MovementPrice;
             }
             if (targetslot.Chess != null)
             {

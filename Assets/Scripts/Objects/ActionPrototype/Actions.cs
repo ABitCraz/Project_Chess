@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -11,6 +12,21 @@ public class Actions
     public Player CurrentPlayer;
     public SlotMap CurrentSlotMap;
     SlotCalculator slotcalculator;
+
+    public Actions(Chess originchess, Player currentplayer)
+    {
+        this.CurrentPlayer = currentplayer;
+        this.CurrentChess = originchess;
+    }
+
+    public void Hold()
+    {
+        if (CurrentChess == null)
+        {
+            return;
+        }
+        CurrentChess.IsStanding = true;
+    }
 
     public void Attack()
     {
@@ -75,28 +91,26 @@ public class Actions
         }
     }
 
-    public IEnumerator<bool> Move(Slot[] route)
+    public IEnumerable<bool> Move(Slot[] route)
     {
-        if (CurrentChess == null)
+        List<Slot> slotsonroute = route.ToList<Slot>();
+        while (slotsonroute.Count > 0)
         {
-            yield return true;
-        }
-        CurrentChess.CurrentAction = ActionType.Move;
-        CurrentChess.IsStanding = false;
-        CurrentChess.IsMoving = true;
-        for (int i = 0; i < route.Length; i++)
-        {
-            CurrentChess.MoveToAnotherSlot(ref route[i]);
             if (CurrentChess == null)
             {
-                yield return true;
+                break;
+            }
+            CurrentChess.CurrentAction = ActionType.Move;
+            CurrentChess.IsStanding = false;
+            CurrentChess.IsMoving = true;
+            CurrentChess.MoveToAnotherSlot(slotsonroute[0]);
+            slotsonroute.RemoveAt(0);
+            if (slotsonroute.Count <= 0)
+            {
+                CurrentChess.IsMoving = false;
                 break;
             }
             yield return false;
-        }
-        if (CurrentChess != null)
-        {
-            CurrentChess.IsMoving = false;
         }
         yield return true;
     }
@@ -108,11 +122,7 @@ public class Actions
             return;
         }
         CurrentChess.CurrentAction = ActionType.Alert;
-        if (route.Length > 0)
-        {
-            Move(route);
-        }
-        else
+        if (route.Length <= 0)
         {
             CurrentChess.IsStanding = true;
         }
@@ -132,6 +142,7 @@ public class Actions
             {
                 if (CurrentChess.AlertCounterBackTime <= 0)
                 {
+                    CurrentChess.AttackedChessOnAlert.Clear();
                     break;
                 }
                 if (
@@ -157,8 +168,9 @@ public class Actions
         }
     }
 
-    public IEnumerator<bool> Push(Slot[] route)
+    public IEnumerable<bool> Push(Slot[] route)
     {
+        List<Slot> slotsonroute = route.ToList<Slot>();
         CurrentChess.CurrentAction = ActionType.Push;
         int ActionPrice = 300;
         if (CurrentPlayer.Resource <= ActionPrice)
@@ -171,7 +183,7 @@ public class Actions
         }
         CurrentChess.IsStanding = false;
         CurrentChess.IsMoving = true;
-        for (int i = 0; i < route.Length; i++)
+        while (slotsonroute.Count > 0)
         {
             Slot[] slotinrange = slotcalculator.CalculateSlotInAttackRange(
                 ref CurrentChess.TheSlotStepOn,
@@ -185,7 +197,8 @@ public class Actions
                     Attack();
                 }
             }
-            CurrentChess.MoveToAnotherSlot(ref route[i]);
+            CurrentChess.MoveToAnotherSlot(route[0]);
+            slotsonroute.RemoveAt(0);
             yield return false;
         }
         yield return true;
@@ -210,6 +223,7 @@ public class Actions
         }
         return true;
     }
+
     public bool Reinforce(ref Slot reinforceslot, ChessType reinforcechesstype)
     {
         CurrentChess.CurrentAction = ActionType.Reinforce;

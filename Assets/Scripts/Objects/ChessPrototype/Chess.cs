@@ -29,7 +29,7 @@ public class Chess : BasicUnit, IChess
             Resources.Load(ResourcePaths.TargetAnimators[ChessType]) as RuntimeAnimatorController;
     }
 
-    public void MoveToAnotherSlot(ref Slot targetSlot)
+    public void MoveToAnotherSlot(Slot targetSlot)
     {
         TheSlotStepOn.Chess = null;
         TheSlotStepOn = targetSlot;

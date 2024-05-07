@@ -14,6 +14,12 @@ public class EssenitalDatumLoader : MonoBehaviour
         LoadWholeSpriteDictionary();
     }
 
+    public static void ReloadDictionary()
+    {
+        SpriteDictionary = new();
+        GameObjectDictionary = new();
+    }
+
     private void LoadWholeGameObjectDictionary()
     {
         for (int i = 1; i < Enum.GetNames(typeof(Prefab)).Length; i++)
@@ -46,6 +52,13 @@ public class EssenitalDatumLoader : MonoBehaviour
             SpriteDictionary.Add(
                 (ChessType)i,
                 Resources.Load<Sprite>(ResourcePaths.TargetSprites[(ChessType)i])
+            );
+        }
+        for (int i = 1; i < Enum.GetNames(typeof(ActionType)).Length; i++)
+        {
+            SpriteDictionary.Add(
+                (ActionType)i,
+                Resources.Load<Sprite>(ResourcePaths.TargetSprites[(ActionType)i])
             );
         }
     }

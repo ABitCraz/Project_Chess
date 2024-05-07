@@ -12,19 +12,18 @@ public class PlanActions
     public SlotMap CurrentSlotMap;
     public Slot[] RouteInPlan;
     public ChessType ReinforceChessType;
-    SlotCalculator slotcalculator;
 
     public PlanActions(
-        Vector2Int position,
-        ActionType targetaction,
+        Vector2Int targetposition,
+        ActionType actiontype,
         Chess originchess,
         Player currentplayer
     )
     {
+        this.TargetPosition = targetposition;
         this.CurrentPlayer = currentplayer;
-        this.TargetPosition = position;
         this.CurrentChess = originchess;
-        CurrentChess.CurrentAction = targetaction;
+        this.ThisActionType = actiontype;
     }
 
     public PlanActions Attack(Slot target)

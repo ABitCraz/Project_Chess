@@ -32,7 +32,14 @@ public class ResourcePaths
             { ChessType.Heavy, "Images/Sprites/Chess/HeavyTank/S_HeavyTank" },
             { ChessType.Artillery, "Images/Sprites/Chess/Artillery/S_Artillery" },
             { ChessType.Mortar, "Images/Sprites/Chess/Mortar/S_Mortar" },
-            { ChessType.Commander, "Images/Sprites/Chess/General/S_General" },
+            { ChessType.Commander, "Images/Sprites/Chess/Commander/S_General" },
+            { ActionType.Attack, "Images/UIs/ORDERattack" },
+            { ActionType.Move, "Images/UIs/ORDERmove" },
+            { ActionType.Alert, "Images/UIs/ORDERoverwatch" },
+            { ActionType.Push, "Images/UIs/ORDERpush" },
+            { ActionType.Repair, "Images/UIs/ORDERrepair" },
+            { ActionType.Hold, "Images/UIs/ORDERrepair" },
+            { ActionType.Reinforce, "Images/UIs/ORDERrepair" },
         };
     public static readonly Dictionary<Enum, string> TargetAnimators =
         new()

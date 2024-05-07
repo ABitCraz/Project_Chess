@@ -9,7 +9,7 @@ using System;
 public class CameraControl : MonoBehaviour
 {
     Camera maincamera;
-    float speed = 1.0f;
+    float speed = 2.5f;
 
     private void Awake()
     {
@@ -49,7 +49,7 @@ public class CameraControl : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
         {
             maincamera.transform.position = new Vector3(0, 0, -10);
-            speed = 1.0f;
+            speed = 2.5f;
         }
     }
 

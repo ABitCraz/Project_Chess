@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,23 +8,24 @@ using UnityEngine.UI;
 public class RaycastInGame : MonoBehaviour
 {
     public List<PlanActions> ActionList = new();
-    public List<Chess> PlannedChesses = new();
     public GameObject StatusSet;
     public GameObject ActionDropdown;
+    public GameObject PlanContainer;
     public Player CurrentPlayer;
+    public bool IsInControl = true;
     delegate void ActionController();
     ActionController EndPicking;
     ActionController EndDrawing;
     Ray mouseray;
     SlotStatusShow sss = new();
-    SlotCalculator sc = new();
     SavingDatum save;
     Coroutine loadedsave = null;
-    GameObject previousslot;
     bool isactiondropdown = false;
     List<Slot> moveroute = new();
     Coroutine drawroutecoroutine;
     Coroutine picktargetcoroutine;
+    List<GameObject> ActionUnits = new();
+    GameObject clear;
     Slot targetslot;
     bool ispickingtarget = false;
     bool isdrawingtarget = false;
@@ -31,6 +33,7 @@ public class RaycastInGame : MonoBehaviour
     private void Awake()
     {
         loadedsave ??= StartCoroutine(LoadSave());
+        InitializedButtons();
     }
 
     private void Update()
@@ -45,6 +48,80 @@ public class RaycastInGame : MonoBehaviour
             ActionDropdown.SetActive(false);
             isactiondropdown = false;
         }
+        OnShowThoseVisiable();
+    }
+
+    private void OnShowThoseVisiable()
+    {
+        int count = ActionList.Count;
+        Vector2 plancontainerrt = PlanContainer.GetComponent<RectTransform>().anchoredPosition;
+        switch (count)
+        {
+            case <= 0:
+                if (plancontainerrt.x < 230)
+                {
+                    PlanContainer.GetComponent<RectTransform>().anchoredPosition = new Vector2(
+                        plancontainerrt.x + 1,
+                        plancontainerrt.y
+                    );
+                }
+                else if (plancontainerrt.x > 230)
+                {
+                    PlanContainer.GetComponent<RectTransform>().anchoredPosition = new Vector2(
+                        plancontainerrt.x - 1,
+                        plancontainerrt.y
+                    );
+                }
+                break;
+            case 1:
+                if (plancontainerrt.x < 75)
+                {
+                    PlanContainer.GetComponent<RectTransform>().anchoredPosition = new Vector2(
+                        plancontainerrt.x + 1,
+                        plancontainerrt.y
+                    );
+                }
+                else if (plancontainerrt.x > 75)
+                {
+                    PlanContainer.GetComponent<RectTransform>().anchoredPosition = new Vector2(
+                        plancontainerrt.x - 1,
+                        plancontainerrt.y
+                    );
+                }
+                break;
+            case 2:
+                if (plancontainerrt.x < -75)
+                {
+                    PlanContainer.GetComponent<RectTransform>().anchoredPosition = new Vector2(
+                        plancontainerrt.x + 1,
+                        plancontainerrt.y
+                    );
+                }
+                else if (plancontainerrt.x > -75)
+                {
+                    PlanContainer.GetComponent<RectTransform>().anchoredPosition = new Vector2(
+                        plancontainerrt.x - 1,
+                        plancontainerrt.y
+                    );
+                }
+                break;
+            case >= 3:
+                if (plancontainerrt.x < -245)
+                {
+                    PlanContainer.GetComponent<RectTransform>().anchoredPosition = new Vector2(
+                        plancontainerrt.x + 1,
+                        plancontainerrt.y
+                    );
+                }
+                else if (plancontainerrt.x > -245)
+                {
+                    PlanContainer.GetComponent<RectTransform>().anchoredPosition = new Vector2(
+                        plancontainerrt.x - 1,
+                        plancontainerrt.y
+                    );
+                }
+                break;
+        }
     }
 
     private bool ShootingRaycast(ref Ray mouseray)
@@ -55,7 +132,6 @@ public class RaycastInGame : MonoBehaviour
             GameObject hitobject = hits[i].collider.gameObject;
             if (hitobject.CompareTag("Slot"))
             {
-                previousslot = hitobject;
                 Slot currentslot = hitobject.GetComponent<SlotComponent>().thisSlot;
                 ControlCurrentSlot(ref currentslot);
                 return true;
@@ -72,9 +148,20 @@ public class RaycastInGame : MonoBehaviour
             sss.ShowAttackRange(slot, save.SlotMap);
             sss.ShowVisionRange(slot, save.SlotMap);
         }
-        if (PlannedChesses.Contains(slot.Chess) || slot.Chess == null)
+        if (!IsInControl)
         {
             return;
+        }
+        if (slot.Chess == null || ActionList.Count > 3)
+        {
+            return;
+        }
+        for (int i = 0; i < ActionList.Count; i++)
+        {
+            if (ActionList[i].CurrentChess == slot.Chess)
+            {
+                return;
+            }
         }
         if (Input.GetMouseButtonDown(0))
         {
@@ -122,13 +209,15 @@ public class RaycastInGame : MonoBehaviour
                         hitslot.CompareTag("Slot")
                         && movableslots.Contains(hitslot.GetComponent<SlotComponent>().thisSlot)
                         && !moveroute.Contains(hitslot.GetComponent<SlotComponent>().thisSlot)
-                        && Input.GetMouseButton(0)
                     )
                     {
-                        print("Shoot ya.");
-                        moveroute.Add(hitslot.GetComponent<SlotComponent>().thisSlot);
-                        currentslot = hitslot.GetComponent<SlotComponent>().thisSlot;
-                        break;
+                        if (Input.GetMouseButton(0))
+                        {
+                            moveroute.Add(hitslot.GetComponent<SlotComponent>().thisSlot);
+                            currentslot = hitslot.GetComponent<SlotComponent>().thisSlot;
+                            gotpicked = true;
+                            break;
+                        }
                     }
                 }
                 if (gotpicked)
@@ -168,12 +257,14 @@ public class RaycastInGame : MonoBehaviour
                 if (
                     hitslot.CompareTag("Slot")
                     && attackableslots.Contains(hitslot.GetComponent<SlotComponent>().thisSlot)
-                    && Input.GetMouseButton(0)
                 )
                 {
-                    targetslot = hitslot.GetComponent<SlotComponent>().thisSlot;
-                    EndPicking();
-                    break;
+                    if (Input.GetMouseButton(0))
+                    {
+                        targetslot = hitslot.GetComponent<SlotComponent>().thisSlot;
+                        EndPicking();
+                        break;
+                    }
                 }
             }
             yield return new WaitForEndOfFrame();
@@ -203,7 +294,6 @@ public class RaycastInGame : MonoBehaviour
                 isactiondropdown = false;
                 EndPicking += () =>
                 {
-                    PlannedChesses.Add(slot.Chess);
                     if (picktargetcoroutine != null)
                     {
                         StopCoroutine(picktargetcoroutine);
@@ -212,10 +302,12 @@ public class RaycastInGame : MonoBehaviour
                     if (targetslot != null)
                     {
                         ActionList.Add(planaction.Attack(targetslot));
+                        PickAnEmptyActionUnitAndFillIt(slot.Chess.ChessType, ActionType.Attack);
                     }
                     ispickingtarget = false;
                     targetslot = null;
                     CleanUpMap();
+                    CleanUpButtonFunctions();
                 };
             });
         ActionDropdown.transform
@@ -228,7 +320,6 @@ public class RaycastInGame : MonoBehaviour
                 isactiondropdown = false;
                 EndDrawing += () =>
                 {
-                    PlannedChesses.Add(slot.Chess);
                     if (drawroutecoroutine != null)
                     {
                         StopCoroutine(drawroutecoroutine);
@@ -237,10 +328,12 @@ public class RaycastInGame : MonoBehaviour
                     if (moveroute.Count > 0)
                     {
                         ActionList.Add(planaction.Move(moveroute.ToArray()));
+                        PickAnEmptyActionUnitAndFillIt(slot.Chess.ChessType, ActionType.Move);
                     }
                     isdrawingtarget = false;
                     CleanUpMap();
                     moveroute = new();
+                    CleanUpButtonFunctions();
                 };
             });
         ActionDropdown.transform
@@ -253,7 +346,6 @@ public class RaycastInGame : MonoBehaviour
                 isactiondropdown = false;
                 EndDrawing += () =>
                 {
-                    PlannedChesses.Add(slot.Chess);
                     if (drawroutecoroutine != null)
                     {
                         StopCoroutine(drawroutecoroutine);
@@ -262,10 +354,12 @@ public class RaycastInGame : MonoBehaviour
                     if (moveroute.Count > 0)
                     {
                         ActionList.Add(planaction.Push(moveroute.ToArray()));
+                        PickAnEmptyActionUnitAndFillIt(slot.Chess.ChessType, ActionType.Push);
                     }
                     isdrawingtarget = false;
                     CleanUpMap();
                     moveroute = new();
+                    CleanUpButtonFunctions();
                 };
             });
         ActionDropdown.transform
@@ -278,16 +372,17 @@ public class RaycastInGame : MonoBehaviour
                 isactiondropdown = false;
                 EndDrawing += () =>
                 {
-                    PlannedChesses.Add(slot.Chess);
                     if (drawroutecoroutine != null)
                     {
                         StopCoroutine(drawroutecoroutine);
                     }
                     drawroutecoroutine = null;
                     ActionList.Add(planaction.Alert(moveroute.ToArray()));
+                    PickAnEmptyActionUnitAndFillIt(slot.Chess.ChessType, ActionType.Alert);
                     isdrawingtarget = false;
                     CleanUpMap();
                     moveroute = new();
+                    CleanUpButtonFunctions();
                 };
             });
         ActionDropdown.transform
@@ -296,9 +391,10 @@ public class RaycastInGame : MonoBehaviour
             .onClick.AddListener(() =>
             {
                 isactiondropdown = false;
-                PlannedChesses.Add(slot.Chess);
-                ActionDropdown.SetActive(false);
                 ActionList.Add(planaction.Repair());
+                PickAnEmptyActionUnitAndFillIt(slot.Chess.ChessType, ActionType.Repair);
+                ActionDropdown.SetActive(false);
+                CleanUpButtonFunctions();
             });
         ActionDropdown.transform
             .GetChild(6)
@@ -306,10 +402,59 @@ public class RaycastInGame : MonoBehaviour
             .onClick.AddListener(() =>
             {
                 isactiondropdown = false;
-                PlannedChesses.Add(slot.Chess);
-                ActionDropdown.SetActive(false);
                 ActionList.Add(planaction.Hold());
+                PickAnEmptyActionUnitAndFillIt(slot.Chess.ChessType, ActionType.Hold);
+                ActionDropdown.SetActive(false);
+                CleanUpButtonFunctions();
             });
+    }
+
+    private void CleanUpButtonFunctions()
+    {
+        ActionDropdown.transform.GetChild(1).GetComponent<Button>().onClick.RemoveAllListeners();
+        ActionDropdown.transform.GetChild(2).GetComponent<Button>().onClick.RemoveAllListeners();
+        ActionDropdown.transform.GetChild(3).GetComponent<Button>().onClick.RemoveAllListeners();
+        ActionDropdown.transform.GetChild(4).GetComponent<Button>().onClick.RemoveAllListeners();
+        ActionDropdown.transform.GetChild(5).GetComponent<Button>().onClick.RemoveAllListeners();
+        ActionDropdown.transform.GetChild(6).GetComponent<Button>().onClick.RemoveAllListeners();
+    }
+
+    private GameObject PickAnEmptyActionUnitAndFillIt(ChessType chesstype, ActionType actiontype)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            if (!ActionUnits[i].GetComponent<OrderShowing>().IsShowing)
+            {
+                ActionUnits[i].GetComponent<OrderShowing>().IsShowing = true;
+                ActionUnits[i].transform.GetChild(0).GetComponent<Image>().sprite =
+                    Resources.Load<Sprite>(ResourcePaths.TargetSprites[chesstype]);
+                ActionUnits[i].transform.GetChild(1).GetComponent<Image>().sprite =
+                    Resources.Load<Sprite>(ResourcePaths.TargetSprites[actiontype]);
+                return ActionUnits[i];
+            }
+        }
+        return null;
+    }
+
+    private void InitializedButtons()
+    {
+        ActionUnits.Add(PlanContainer.transform.GetChild(0).gameObject);
+        ActionUnits.Add(PlanContainer.transform.GetChild(1).gameObject);
+        ActionUnits.Add(PlanContainer.transform.GetChild(2).gameObject);
+        clear = PlanContainer.transform.GetChild(3).gameObject;
+        clear.GetComponent<Button>().onClick.AddListener(RestoreAll);
+    }
+
+    private void RestoreAll()
+    {
+        ActionList.Clear();
+        for (int i = 0; i < 3; i++)
+        {
+            ActionUnits[i].GetComponent<OrderShowing>().IsShowing = false;
+            ActionUnits[i].transform.GetChild(0).GetComponent<Image>().sprite = null;
+            ActionUnits[i].transform.GetChild(1).GetComponent<Image>().sprite = null;
+        }
+        GC.Collect();
     }
 
     IEnumerator LoadSave()

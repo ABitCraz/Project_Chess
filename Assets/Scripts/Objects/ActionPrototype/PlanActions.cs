@@ -27,6 +27,17 @@ public class PlanActions
         this.ThisActionType = actiontype;
     }
 
+    public PlanActions(
+        Vector2Int targetposition,
+        ActionType actiontype,
+        Player currentplayer
+    )
+    {
+        this.TargetPosition = targetposition;
+        this.CurrentPlayer = currentplayer;
+        this.ThisActionType = actiontype;
+    }
+
     public PlanActions Attack(Slot target)
     {
         ThisActionType = ActionType.Attack;
@@ -71,6 +82,13 @@ public class PlanActions
     {
         TargetPosition = reinforceslot;
         ReinforceChessType = reinforcechesstype;
+        return this;
+    }
+
+    public PlanActions DropUnit(ref Vector2Int dropunit,ChessType droptype)
+    {
+        TargetPosition = dropunit;
+        ReinforceChessType = droptype;
         return this;
     }
 }

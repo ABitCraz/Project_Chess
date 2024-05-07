@@ -40,6 +40,7 @@ public class ResourcePaths
             { ActionType.Repair, "Images/UIs/ORDERrepair" },
             { ActionType.Hold, "Images/UIs/ORDERrepair" },
             { ActionType.Reinforce, "Images/UIs/ORDERrepair" },
+            { ActionType.Drop, "Images/UIs/ORDERrepair" },
         };
     public static readonly Dictionary<Enum, string> TargetAnimators =
         new()

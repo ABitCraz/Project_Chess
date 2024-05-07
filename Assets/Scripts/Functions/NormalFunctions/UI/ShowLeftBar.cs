@@ -6,23 +6,23 @@ using UnityEngine.UI;
 
 public class ShowLeftBar : MonoBehaviour
 {
-    public GameObject LeftBar;
+    public GameObject ShowLeftBarButton;
     public GameObject PlayerStatus;
-    bool isleftopen = false;
+    public bool isleftopen = false;
 
     void Awake()
     {
-        this.GetComponent<Button>()
+        ShowLeftBarButton.GetComponent<Button>()
             .onClick.AddListener(() =>
             {
                 if (!isleftopen)
                 {
-                    this.transform.GetChild(0).GetComponent<TMP_Text>().text = "<";
+                    ShowLeftBarButton.transform.GetChild(0).GetComponent<TMP_Text>().text = "<";
                     isleftopen = true;
                 }
                 else
                 {
-                    this.transform.GetChild(0).GetComponent<TMP_Text>().text = ">";
+                    ShowLeftBarButton.transform.GetChild(0).GetComponent<TMP_Text>().text = ">";
                     isleftopen = false;
                 }
             });
@@ -30,7 +30,7 @@ public class ShowLeftBar : MonoBehaviour
 
     private void Update()
     {
-        RectTransform lbr = LeftBar.GetComponent<RectTransform>();
+        RectTransform lbr = this.GetComponent<RectTransform>();
         RectTransform psr = PlayerStatus.GetComponent<RectTransform>();
         if (isleftopen)
         {

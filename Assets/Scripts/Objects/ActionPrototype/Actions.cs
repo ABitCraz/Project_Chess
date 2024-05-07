@@ -261,6 +261,14 @@ public class Actions
         Debug.Log("Reinfore End");
     }
 
+    public void PlanActions(ref Slot reinforceslot,ChessType reinforcechesstype,ref Player currentplayer)
+    {
+        Debug.Log("Placing");
+        reinforceslot.InitializeOrSwapChess(reinforcechesstype);
+        reinforceslot.Chess.Owner = currentplayer;
+        Debug.Log("Placine End");
+    }
+
     public int TypeAttackPercent(Chess CurrentChess, Chess TargetChess)
     {
         ChessType currenttype = CurrentChess.ChessType;

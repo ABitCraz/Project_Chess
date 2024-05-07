@@ -970,8 +970,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e5d2f08de3ec5d45b8baf798f847d78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Target: MapEditor
-  LoadSceneButton: {fileID: 477217482}
+  Target: MenuAbout
+  LoadSceneButton: {fileID: 430413507}
 --- !u!1 &488191083
 GameObject:
   m_ObjectHideFlags: 0

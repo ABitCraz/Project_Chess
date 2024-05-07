@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Resources;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,12 +13,16 @@ public class RaycastInGame : Singleton<RaycastInGame>
     public GameObject StatusSet;
     public GameObject ActionDropdown;
     public GameObject PlanContainer;
+    public GameObject LeftBar;
     public Player CurrentPlayer;
     public bool IsInControl = true;
     public SavingDatum save;
-    delegate void ActionController();
+    public ChessType PutChessType;
+    public delegate void ActionController();
     ActionController EndPicking;
     ActionController EndDrawing;
+    public ActionController ReadyForDrop;
+    public ActionController EndDropping;
     Ray mouseray;
     SlotStatusShow sss = new();
     Coroutine loadedsave = null;
@@ -25,17 +30,42 @@ public class RaycastInGame : Singleton<RaycastInGame>
     List<Slot> moveroute = new();
     Coroutine drawroutecoroutine;
     Coroutine picktargetcoroutine;
+    Coroutine droptargetcoroutine;
     List<GameObject> ActionUnits = new();
     GameObject clear;
     Slot targetslot;
     bool ispickingtarget = false;
     bool isdrawingtarget = false;
+    bool isdroppingtarget = false;
 
     protected override void Awake()
     {
         base.Awake();
         loadedsave ??= StartCoroutine(LoadSave());
         InitializedButtons();
+        ReadyForDrop += () =>
+        {
+            for (int i = 0; i < save.SlotMap.FullSlotMap.Length; i++)
+            {
+                if (save.SlotMap.FullSlotMap[i].Position.x < 2)
+                {
+                    save.SlotMap.FullSlotMap[i].SlotGameObject
+                        .GetComponent<SlotComponent>()
+                        .IsDropFocusing = true;
+                }
+            }
+            isdroppingtarget = true;
+            LeftBar.GetComponent<ShowLeftBar>().isleftopen = true;
+            droptargetcoroutine ??= StartCoroutine(DroppingTargetSlot());
+        };
+
+        EndDropping += () =>
+        {
+            StopCoroutine(droptargetcoroutine);
+            droptargetcoroutine = null;
+            isdroppingtarget = false;
+            CleanUpMap();
+        };
     }
 
     private void Start()
@@ -45,7 +75,7 @@ public class RaycastInGame : Singleton<RaycastInGame>
 
     private void Update()
     {
-        if (!isactiondropdown && !ispickingtarget && !isdrawingtarget)
+        if (!isactiondropdown && !ispickingtarget && !isdrawingtarget && !isdroppingtarget)
         {
             mouseray = Camera.main.ScreenPointToRay(Input.mousePosition);
             bool hitsth = ShootingRaycast(ref mouseray);
@@ -236,7 +266,7 @@ public class RaycastInGame : Singleton<RaycastInGame>
                 }
                 if (Input.GetMouseButton(1))
                 {
-                    EndDrawing();
+                    EndDrawing?.Invoke();
                 }
                 yield return new WaitForEndOfFrame();
             }
@@ -272,7 +302,7 @@ public class RaycastInGame : Singleton<RaycastInGame>
                     if (Input.GetMouseButton(0))
                     {
                         targetslot = hitslot.GetComponent<SlotComponent>().thisSlot;
-                        EndPicking();
+                        EndPicking?.Invoke();
                         break;
                     }
                 }
@@ -281,7 +311,53 @@ public class RaycastInGame : Singleton<RaycastInGame>
         }
     }
 
-    private void CleanUpMap()
+    IEnumerator DroppingTargetSlot()
+    {
+        CleanUpMap();
+        isdroppingtarget = true;
+        while (true)
+        {
+            mouseray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit[] hits = Physics.RaycastAll(mouseray);
+            for (int i = 0; i < hits.Length; i++)
+            {
+                GameObject hitslot = hits[i].collider.gameObject;
+                if (
+                    hitslot.CompareTag("Slot")
+                    && hitslot.GetComponent<SlotComponent>().IsDropFocusing
+                )
+                {
+                    if (Input.GetMouseButton(0))
+                    {
+                        if (
+                            CurrentPlayer.Resource - CurrentPlayer.ChessCostDictionary[PutChessType]
+                            >= 0
+                        )
+                        {
+                            targetslot = hitslot.GetComponent<SlotComponent>().thisSlot;
+                            ActionList.Add(
+                                new PlanActions(
+                                    targetslot.Position,
+                                    ActionType.Drop,
+                                    CurrentPlayer
+                                ).DropUnit(ref targetslot.Position, PutChessType)
+                            );
+                            PickAnEmptyActionUnitAndFillIt(PutChessType, ActionType.Drop);
+                        }
+                        EndDropping?.Invoke();
+                        break;
+                    }
+                    if (Input.GetMouseButton(1))
+                    {
+                        EndDropping?.Invoke();
+                    }
+                }
+            }
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
+    public void CleanUpMap()
     {
         for (int i = 0; i < save.SlotMap.FullSlotMap.Length; i++)
         {

@@ -9,12 +9,14 @@ public class SlotComponent : MonoBehaviour
     public bool IsVisionFocusing = false;
     public bool IsMovingFocusing = false;
     public bool IsRouteFocusing = false;
+    public bool IsDropFocusing = false;
     public bool IsUnfocusing = true;
     readonly SpriteColorFunctions scf = new();
     SlotUpdateBehaviour.SlotUpdateActions AttackFocusingActions;
     SlotUpdateBehaviour.SlotUpdateActions VisionFocusingActions;
     SlotUpdateBehaviour.SlotUpdateActions MoveFocusingActions;
     SlotUpdateBehaviour.SlotUpdateActions RouteFocusingActions;
+    SlotUpdateBehaviour.SlotUpdateActions DropFocusingActions;
     public SlotUpdateBehaviour.SlotUpdateActions UnfocusingActions;
 
     private void Awake()
@@ -74,6 +76,22 @@ public class SlotComponent : MonoBehaviour
             }
         };
 
+        DropFocusingActions += () =>
+        {
+            int speed = 5;
+            for (int i = 0; i < speed; i++)
+            {
+                bool isdone = scf.ColorFadingInTargetColor(
+                    this.gameObject,
+                    new Color(32, 32, 255, 255)
+                );
+                if (isdone)
+                {
+                    break;
+                }
+            }
+        };
+
         UnfocusingActions += () =>
         {
             IsUnfocusing = true;
@@ -81,6 +99,7 @@ public class SlotComponent : MonoBehaviour
             IsVisionFocusing = false;
             IsMovingFocusing = false;
             IsRouteFocusing = false;
+            IsDropFocusing = false;
             bool isdone = scf.ColorFadingToNormal(this.gameObject, 4);
         };
     }
@@ -103,6 +122,7 @@ public class SlotComponent : MonoBehaviour
             IsVisionFocusing = false;
             IsMovingFocusing = false;
             IsRouteFocusing = false;
+            IsDropFocusing = false;
             UnfocusingActions();
         }
         else
@@ -122,6 +142,10 @@ public class SlotComponent : MonoBehaviour
             if (IsRouteFocusing)
             {
                 RouteFocusingActions();
+            }
+            if(IsDropFocusing)
+            {
+                DropFocusingActions();
             }
         }
     }

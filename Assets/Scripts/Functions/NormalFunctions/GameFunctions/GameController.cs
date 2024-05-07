@@ -73,8 +73,8 @@ public class GameController : Singleton<GameController>
         Debug.Log(CustomerActionList.Count);
         for (int i = 0; i < 3; i++)
         {
-            PlanActions mp = i > MasterActionList.Count ? null : MasterActionList[i];
-            PlanActions ca = i > CustomerActionList.Count ? null : CustomerActionList[i];
+            PlanActions mp = i >= MasterActionList.Count ? null : MasterActionList[i];
+            PlanActions ca = i >= CustomerActionList.Count ? null : CustomerActionList[i];
             while (statement < 5)
             {
                 switch (statement)

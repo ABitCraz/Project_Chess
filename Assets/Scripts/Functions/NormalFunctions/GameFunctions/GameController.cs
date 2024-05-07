@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameController : MonoBehaviour
+public class GameController : Singleton<GameController>
 {
     public List<PlanActions> MasterActionList;
     public List<PlanActions> CustomerActionList;
@@ -12,6 +14,12 @@ public class GameController : MonoBehaviour
     public bool IntoTheBreach;
     public int statement = 0;
 
+    public bool isRoundBegin = false;
+    public bool masterActionReady = false;
+    public bool customerActionReady = false;
+    public bool customerRoundBeginReady = false;
+    
+    
     private void Awake()
     {
         ConfirmButton.GetComponent<Button>().onClick.AddListener(LetUsBegin);
@@ -21,7 +29,26 @@ public class GameController : MonoBehaviour
 
     private void LetUsBegin()
     {
+        if (isRoundBegin) { return; }
+        
         this.GetComponent<RaycastInGame>().IsInControl = false;
+        isRoundBegin = true;
+        NetworkEventManager.GetInstance().SendPlayerActionEvent(RaycastInGame.GetInstance().ActionList);
+        StartCoroutine(WaitToStart());
+    }
+
+    private IEnumerator WaitToStart()
+    {
+        yield return new WaitUntil(() => masterActionReady && customerActionReady);
+        if (PhotonNetwork.LocalPlayer.IsMasterClient)
+        {
+            yield return new WaitUntil(() => customerRoundBeginReady);
+            NetworkEventManager.GetInstance().SendRoundState(2);
+        }
+        else
+        {
+            NetworkEventManager.GetInstance().SendRoundState(1);
+        }
     }
 
     public IEnumerable<int> RoundBegin()
@@ -53,8 +80,18 @@ public class GameController : MonoBehaviour
             }
             yield return i;
         }
+        RoundEnd();
     }
 
+    private void RoundEnd()
+    {
+        isRoundBegin = false;
+        RaycastInGame.GetInstance().IsInControl = true;
+        masterActionReady = false;
+        customerActionReady = false;
+        customerRoundBeginReady = false;
+    }
+    
     private void CheckHold(ref PlanActions planaction)
     {
         if (planaction.ThisActionType == ActionType.Hold)

@@ -46,8 +46,10 @@ public class NetworkEventManager : SingletonPunCallbacks<NetworkEventManager>,IO
 
     private void ReceivePlayerAction(EventData eventData)
     {
+
         Dictionary<byte, object> tmp_actionData = (Dictionary<byte, object>)eventData.CustomData;
         Photon.Realtime.Player sender = (Photon.Realtime.Player)tmp_actionData[0];
+        Debug.Log("收到action消息 from" + sender.ActorNumber);
         List<PlanActions> tmp_actionsList = new (); 
         for (int i = 1; i < tmp_actionData.Count; i++)
         {
@@ -69,16 +71,21 @@ public class NetworkEventManager : SingletonPunCallbacks<NetworkEventManager>,IO
     private void ReceiveRoundState(EventData eventData)
     {
         Dictionary<byte, object> tmp_roundStateData = (Dictionary<byte, object>)eventData.CustomData;
+        Debug.Log("收到round消息:" + tmp_roundStateData[0]);
         switch ((int) tmp_roundStateData[0])
         {
             case 1:
                 if (PhotonNetwork.LocalPlayer.IsMasterClient)
                 {
-                    GameController.GetInstance().customerActionReady = true;
+                    GameController.GetInstance().customerRoundBeginReady = true;
                 }
                 break;
             case 2:
+                foreach (var a in GameController.GetInstance(). RoundBegin())
+                {
                     GameController.GetInstance().RoundBegin();
+                }
+                Debug.Log("开始回合动");
                 break;
             default:
                 break;

@@ -68,6 +68,11 @@ public class GameController : Singleton<GameController>
         }
     }
 
+    public void EndGame(Photon.Realtime.Player winner)
+    {
+        EndingUI.GetInstance().ShowEndingUI(winner.Equals(PhotonNetwork.LocalPlayer));
+    }
+
     public IEnumerable<int> RoundBegin()
     {
         Debug.Log(MasterActionList.Count);

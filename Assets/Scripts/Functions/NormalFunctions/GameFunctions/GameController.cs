@@ -185,8 +185,9 @@ public class GameController : Singleton<GameController>
     {
         if (planaction.ThisActionType == ActionType.Attack)
         {
+            Slot cachedslot = save.SlotMap.FullSlotDictionary[planaction.TargetPosition];
             new Actions(planaction.CurrentChess, planaction.CurrentPlayer).Attack(
-                save.SlotMap.FullSlotDictionary[planaction.TargetPosition]
+                ref cachedslot
             );
         }
     }

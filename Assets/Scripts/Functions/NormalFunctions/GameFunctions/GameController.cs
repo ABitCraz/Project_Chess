@@ -10,7 +10,7 @@ public class GameController : Singleton<GameController>
 {
     public List<PlanActions> MasterActionList;
     public List<PlanActions> CustomerActionList;
-    public List<Chess> ChessesOnAlert;
+    public List<Chess> ChessesOnAlert = new();
     public GameObject ConfirmButton;
     public bool IntoTheBreach;
     public int statement = 0;

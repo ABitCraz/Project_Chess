@@ -9,10 +9,13 @@ using EventCode = Tools.EventCode;
 using Tools;
 using UnityTemplateProjects.Tools;
 
-public class NetworkEventManager : SingletonPunCallbacks<NetworkEventManager>, IOnEventCallback
+public class NetworkEventManager : SingletonPunCallbacks<NetworkEventManager>,IOnEventCallback
 {
-    
-    
+    protected override void Awake()
+    {
+        base.Awake();
+    }
+
     private void OnEnable()
     {
         PhotonNetwork.AddCallbackTarget(this);

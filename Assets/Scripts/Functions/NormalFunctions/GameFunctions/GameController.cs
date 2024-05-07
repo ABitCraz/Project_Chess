@@ -22,6 +22,7 @@ public class GameController : Singleton<GameController>
     
     private void Awake()
     {
+        base.Awake();
         ConfirmButton.GetComponent<Button>().onClick.AddListener(LetUsBegin);
     }
 
@@ -33,6 +34,7 @@ public class GameController : Singleton<GameController>
         
         this.GetComponent<RaycastInGame>().IsInControl = false;
         isRoundBegin = true;
+        Debug.Log(NetworkEventManager.IsInitialized);
         NetworkEventManager.GetInstance().SendPlayerActionEvent(RaycastInGame.GetInstance().ActionList);
         StartCoroutine(WaitToStart());
     }

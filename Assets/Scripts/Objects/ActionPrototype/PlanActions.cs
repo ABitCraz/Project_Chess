@@ -9,10 +9,9 @@ public class PlanActions
     public ActionType ThisActionType;
     public Vector2Int TargetPosition;
     public Chess CurrentChess;
-    public Slot TargetSlot;
     public Player CurrentPlayer;
     public SlotMap CurrentSlotMap;
-    public Slot[] RouteInPlan;
+    public Vector2Int[] PositionToRouteInPlan;
     public ChessType ReinforceChessType;
 
     public PlanActions(
@@ -31,21 +30,21 @@ public class PlanActions
     public PlanActions Attack(Slot target)
     {
         ThisActionType = ActionType.Attack;
-        TargetSlot = target;
+        TargetPosition = target.Position;
         return this;
     }
 
-    public PlanActions Move(Slot[] route)
+    public PlanActions Move(Vector2Int[] route)
     {
         ThisActionType = ActionType.Move;
-        RouteInPlan = route;
+        PositionToRouteInPlan = route;
         return this;
     }
 
-    public PlanActions Alert(Slot[] route)
+    public PlanActions Alert(Vector2Int[] route)
     {
         ThisActionType = ActionType.Alert;
-        RouteInPlan = route;
+        PositionToRouteInPlan = route;
         return this;
     }
 
@@ -55,10 +54,10 @@ public class PlanActions
         return this;
     }
 
-    public PlanActions Push(Slot[] route)
+    public PlanActions Push(Vector2Int[] route)
     {
         ThisActionType = ActionType.Push;
-        RouteInPlan = route;
+        PositionToRouteInPlan = route;
         return this;
     }
 
@@ -68,9 +67,9 @@ public class PlanActions
         return this;
     }
 
-    public PlanActions Reinforce(ref Slot reinforceslot, ChessType reinforcechesstype)
+    public PlanActions Reinforce(ref Vector2Int reinforceslot, ChessType reinforcechesstype)
     {
-        TargetSlot = reinforceslot;
+        TargetPosition = reinforceslot;
         ReinforceChessType = reinforcechesstype;
         return this;
     }

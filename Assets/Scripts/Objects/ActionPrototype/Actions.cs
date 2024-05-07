@@ -30,7 +30,7 @@ public class Actions
         Debug.Log("Hold End");
     }
 
-    public void Attack(Slot targetslot)
+    public void Attack(ref Slot targetslot)
     {
         Debug.Log("Attacking");
         if (targetslot.Chess != null)
@@ -136,11 +136,10 @@ public class Actions
         }
     }
 
-    public IEnumerable<bool> Move(Slot[] route)
+    public IEnumerable<bool> Move(List<Slot> route)
     {
         Debug.Log("Moving");
-        List<Slot> slotsonroute = route.ToList<Slot>();
-        while (slotsonroute.Count > 0)
+        while (route.Count > 0)
         {
             if (CurrentChess == null)
             {
@@ -149,9 +148,9 @@ public class Actions
             CurrentChess.CurrentAction = ActionType.Move;
             CurrentChess.IsStanding = false;
             CurrentChess.IsMoving = true;
-            CurrentChess.MoveToAnotherSlot(slotsonroute[0]);
-            slotsonroute.RemoveAt(0);
-            if (slotsonroute.Count <= 0)
+            CurrentChess.MoveToAnotherSlot(route[0]);
+            route.RemoveAt(0);
+            if (route.Count <= 0)
             {
                 CurrentChess.IsMoving = false;
                 break;
@@ -162,14 +161,14 @@ public class Actions
         Debug.Log("Move End");
     }
 
-    public void Alert(Slot[] route)
+    public void Alert(List<Slot> route)
     {
         Debug.Log("Alerting");
         if (CurrentChess == null)
         {
             return;
         }
-        if (route.Length <= 0)
+        if (route.Count <= 0)
         {
             CurrentChess.IsStanding = true;
         }
@@ -202,7 +201,7 @@ public class Actions
                 TargetChess = slotinrange[i].Chess;
                 if (!CurrentChess.AttackedChessOnAlert.Contains(TargetChess))
                 {
-                    Attack(slotinrange[i]);
+                    Attack(ref slotinrange[i]);
                     CurrentChess.AttackedChessOnAlert.Add(TargetChess);
                 }
                 if (CurrentChess == null)
@@ -215,13 +214,12 @@ public class Actions
         Debug.Log("Alarm End");
     }
 
-    public IEnumerable<bool> Push(Slot[] route)
+    public IEnumerable<bool> Push(List<Slot> route)
     {
         Debug.Log("Pushing");
-        List<Slot> slotsonroute = route.ToList<Slot>();
         CurrentChess.IsStanding = false;
         CurrentChess.IsMoving = true;
-        while (slotsonroute.Count > 0)
+        while (route.Count > 0)
         {
             Slot[] slotinrange = slotcalculator.CalculateSlotInAttackRange(
                 ref CurrentChess.TheSlotStepOn,
@@ -232,11 +230,11 @@ public class Actions
             {
                 if (slotinrange[j].Chess != null && slotinrange[j].Chess.Owner != CurrentPlayer)
                 {
-                    Attack(slotinrange[j]);
+                    Attack(ref slotinrange[j]);
                 }
             }
             CurrentChess.MoveToAnotherSlot(route[0]);
-            slotsonroute.RemoveAt(0);
+            route.RemoveAt(0);
             yield return false;
         }
         yield return true;

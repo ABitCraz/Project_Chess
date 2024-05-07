@@ -103,9 +103,9 @@ public class NetworkEventManager : SingletonPunCallbacks<NetworkEventManager>, I
         Dictionary<byte, object> tmp_actionData = new Dictionary<byte, object>();
 
         tmp_actionData.Add(0, PhotonNetwork.LocalPlayer);
-        for (int i = 1; i < actionsList.Count; i++)
+        for (int i = 0; i < actionsList.Count; i++)
         {
-            tmp_actionData.Add(Convert.ToByte(i), JsonUtility.ToJson(actionsList[i]));
+            tmp_actionData.Add(Convert.ToByte(i + 1), JsonUtility.ToJson(actionsList[i]));
         }
 
         RaiseEventOptions tmp_RaiseEventOptions = new RaiseEventOptions()

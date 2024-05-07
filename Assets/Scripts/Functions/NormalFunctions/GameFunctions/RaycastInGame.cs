@@ -14,12 +14,12 @@ public class RaycastInGame : Singleton<RaycastInGame>
     public GameObject PlanContainer;
     public Player CurrentPlayer;
     public bool IsInControl = true;
+    public SavingDatum save;
     delegate void ActionController();
     ActionController EndPicking;
     ActionController EndDrawing;
     Ray mouseray;
     SlotStatusShow sss = new();
-    SavingDatum save;
     Coroutine loadedsave = null;
     bool isactiondropdown = false;
     List<Slot> moveroute = new();
@@ -335,7 +335,12 @@ public class RaycastInGame : Singleton<RaycastInGame>
                     drawroutecoroutine = null;
                     if (moveroute.Count > 0)
                     {
-                        ActionList.Add(planaction.Move(moveroute.ToArray()));
+                        List<Vector2Int> paths = new();
+                        for (int i = 0; i < moveroute.Count; i++)
+                        {
+                            paths.Add(moveroute[i].Position);
+                        }
+                        ActionList.Add(planaction.Move(paths.ToArray()));
                         PickAnEmptyActionUnitAndFillIt(slot.Chess.ChessType, ActionType.Move);
                     }
                     Debug.Log(ActionList.Count);
@@ -362,7 +367,12 @@ public class RaycastInGame : Singleton<RaycastInGame>
                     drawroutecoroutine = null;
                     if (moveroute.Count > 0)
                     {
-                        ActionList.Add(planaction.Push(moveroute.ToArray()));
+                        List<Vector2Int> paths = new();
+                        for (int i = 0; i < moveroute.Count; i++)
+                        {
+                            paths.Add(moveroute[i].Position);
+                        }
+                        ActionList.Add(planaction.Push(paths.ToArray()));
                         PickAnEmptyActionUnitAndFillIt(slot.Chess.ChessType, ActionType.Push);
                     }
                     isdrawingtarget = false;
@@ -386,7 +396,12 @@ public class RaycastInGame : Singleton<RaycastInGame>
                         StopCoroutine(drawroutecoroutine);
                     }
                     drawroutecoroutine = null;
-                    ActionList.Add(planaction.Alert(moveroute.ToArray()));
+                    List<Vector2Int> paths = new();
+                    for (int i = 0; i < moveroute.Count; i++)
+                    {
+                        paths.Add(moveroute[i].Position);
+                    }
+                    ActionList.Add(planaction.Alert(paths.ToArray()));
                     PickAnEmptyActionUnitAndFillIt(slot.Chess.ChessType, ActionType.Alert);
                     isdrawingtarget = false;
                     CleanUpMap();
@@ -420,12 +435,30 @@ public class RaycastInGame : Singleton<RaycastInGame>
 
     private void CleanUpButtonFunctions()
     {
-        ActionDropdown.transform.GetChild(1).gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
-        ActionDropdown.transform.GetChild(2).gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
-        ActionDropdown.transform.GetChild(3).gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
-        ActionDropdown.transform.GetChild(4).gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
-        ActionDropdown.transform.GetChild(5).gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
-        ActionDropdown.transform.GetChild(6).gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
+        ActionDropdown.transform
+            .GetChild(1)
+            .gameObject.GetComponent<Button>()
+            .onClick.RemoveAllListeners();
+        ActionDropdown.transform
+            .GetChild(2)
+            .gameObject.GetComponent<Button>()
+            .onClick.RemoveAllListeners();
+        ActionDropdown.transform
+            .GetChild(3)
+            .gameObject.GetComponent<Button>()
+            .onClick.RemoveAllListeners();
+        ActionDropdown.transform
+            .GetChild(4)
+            .gameObject.GetComponent<Button>()
+            .onClick.RemoveAllListeners();
+        ActionDropdown.transform
+            .GetChild(5)
+            .gameObject.GetComponent<Button>()
+            .onClick.RemoveAllListeners();
+        ActionDropdown.transform
+            .GetChild(6)
+            .gameObject.GetComponent<Button>()
+            .onClick.RemoveAllListeners();
         EndDrawing = null;
         EndPicking = null;
     }
@@ -478,5 +511,6 @@ public class RaycastInGame : Singleton<RaycastInGame>
         StopCoroutine(loadedsave);
         loadedsave = null;
         print("Load is Done");
+        GameController.GetInstance().save = save;
     }
 }

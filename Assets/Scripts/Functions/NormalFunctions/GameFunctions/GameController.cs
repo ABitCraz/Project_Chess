@@ -14,7 +14,7 @@ public class GameController : Singleton<GameController>
     public GameObject ConfirmButton;
     public bool IntoTheBreach;
     public int statement = 0;
-
+    public SavingDatum save;
     public bool isRoundBegin = false;
     public bool masterActionReady = false;
     public bool customerActionReady = false;
@@ -73,47 +73,85 @@ public class GameController : Singleton<GameController>
         Debug.Log(CustomerActionList.Count);
         for (int i = 0; i < 3; i++)
         {
-            PlanActions mp = MasterActionList[i];
-            PlanActions ca = CustomerActionList[i];
-            switch (statement)
+            PlanActions mp = i > MasterActionList.Count ? null : MasterActionList[i];
+            PlanActions ca = i > CustomerActionList.Count ? null : CustomerActionList[i];
+            while (statement < 5)
             {
-                case 0:
-                    CheckHold(ref mp);
-                    CheckHold(ref ca);
-                    statement += 1;
-                    break;
-                case 1:
-                    CheckAlert(ref mp);
-                    CheckAlert(ref ca);
-                    statement += 1;
-                    break;
-                case 2:
-                    CheckAttack(ref mp);
-                    CheckAttack(ref ca);
-                    statement += 1;
-                    break;
-                case 3:
-                    CheckRepair(ref mp);
-                    CheckRepair(ref ca);
-                    statement += 1;
-                    break;
-                case 4:
-                    CheckAlertMovePush(ref mp);
-                    CheckAlertMovePush(ref ca);
-                    break;
+                switch (statement)
+                {
+                    case 0:
+                        if (mp != null)
+                        {
+                            CheckHold(ref mp);
+                        }
+                        if (ca != null)
+                        {
+                            CheckHold(ref ca);
+                        }
+                        statement += 1;
+                        break;
+                    case 1:
+                        if (mp != null)
+                        {
+                            CheckAlert(ref mp);
+                        }
+                        if (ca != null)
+                        {
+                            CheckAlert(ref ca);
+                        }
+                        statement += 1;
+                        break;
+                    case 2:
+                        if (mp != null)
+                        {
+                            CheckAttack(ref mp);
+                        }
+                        if (ca != null)
+                        {
+                            CheckAttack(ref ca);
+                        }
+                        statement += 1;
+                        break;
+                    case 3:
+                        if (mp != null)
+                        {
+                            CheckRepair(ref mp);
+                        }
+                        if (ca != null)
+                        {
+                            CheckRepair(ref ca);
+                        }
+                        statement += 1;
+                        break;
+                    case 4:
+                        if (mp != null)
+                        {
+                            CheckAlertMovePush(ref mp);
+                        }
+                        if (ca != null)
+                        {
+                            CheckAlertMovePush(ref ca);
+                        }
+                        statement += 1;
+                        break;
+                }
+                yield return i;
             }
-            yield return i;
         }
         RoundEnd();
     }
 
     private void RoundEnd()
     {
+        Debug.Log("RoundOver");
         isRoundBegin = false;
         RaycastInGame.GetInstance().IsInControl = true;
         masterActionReady = false;
         customerActionReady = false;
         customerRoundBeginReady = false;
+        RaycastInGame.GetInstance().ActionList.Clear();
+        GC.Collect();
+        RaycastInGame.GetInstance().IsInControl = true;
     }
 
     private void CheckHold(ref PlanActions planaction)
@@ -126,11 +164,19 @@ public class GameController : Singleton<GameController>
 
     private void CheckAlert(ref PlanActions planaction)
     {
-        if ((planaction.ThisActionType == ActionType.Alert) && (planaction.RouteInPlan.Length <= 0))
+        if (
+            (planaction.ThisActionType == ActionType.Alert)
+            && (planaction.PositionToRouteInPlan.Length <= 0)
+        )
         {
-            new Actions(planaction.CurrentChess, planaction.CurrentPlayer).Alert(
-                planaction.RouteInPlan
-            );
+            List<Slot> cachedslot = new();
+            for (int i = 0; i < planaction.PositionToRouteInPlan.Length; i++)
+            {
+                cachedslot.Add(
+                    save.SlotMap.FullSlotDictionary[planaction.PositionToRouteInPlan[i]]
+                );
+            }
+            new Actions(planaction.CurrentChess, planaction.CurrentPlayer).Alert(cachedslot);
             ChessesOnAlert.Add(planaction.CurrentChess);
         }
     }
@@ -140,7 +186,7 @@ public class GameController : Singleton<GameController>
         if (planaction.ThisActionType == ActionType.Attack)
         {
             new Actions(planaction.CurrentChess, planaction.CurrentPlayer).Attack(
-                planaction.TargetSlot
+                save.SlotMap.FullSlotDictionary[planaction.TargetPosition]
             );
         }
     }
@@ -156,13 +202,23 @@ public class GameController : Singleton<GameController>
     private void CheckAlertMovePush(ref PlanActions planaction)
     {
         if (
-            (planaction.ThisActionType == ActionType.Alert && planaction.RouteInPlan.Length >= 0)
+            (
+                planaction.ThisActionType == ActionType.Alert
+                && planaction.PositionToRouteInPlan.Length >= 0
+            )
             || planaction.ThisActionType == ActionType.Move
         )
         {
+            List<Slot> cachedslot = new();
+            for (int i = 0; i < planaction.PositionToRouteInPlan.Length; i++)
+            {
+                cachedslot.Add(
+                    save.SlotMap.FullSlotDictionary[planaction.PositionToRouteInPlan[i]]
+                );
+            }
             foreach (
                 bool result in new Actions(planaction.CurrentChess, planaction.CurrentPlayer).Move(
-                    planaction.RouteInPlan
+                    cachedslot
                 )
             )
             {
@@ -170,17 +226,22 @@ public class GameController : Singleton<GameController>
             }
             if (planaction.ThisActionType == ActionType.Alert)
             {
-                new Actions(planaction.CurrentChess, planaction.CurrentPlayer).Alert(
-                    planaction.RouteInPlan
-                );
+                new Actions(planaction.CurrentChess, planaction.CurrentPlayer).Alert(cachedslot);
                 ChessesOnAlert.Add(planaction.CurrentChess);
             }
         }
         else if (planaction.ThisActionType == ActionType.Push)
         {
+            List<Slot> cachedslot = new();
+            for (int i = 0; i < planaction.PositionToRouteInPlan.Length; i++)
+            {
+                cachedslot.Add(
+                    save.SlotMap.FullSlotDictionary[planaction.PositionToRouteInPlan[i]]
+                );
+            }
             foreach (
-                bool result in new Actions(planaction.CurrentChess, planaction.CurrentPlayer).Push(
-                    planaction.RouteInPlan
+                bool result in new Actions(planaction.CurrentChess, planaction.CurrentPlayer).Move(
+                    cachedslot
                 )
             )
             {

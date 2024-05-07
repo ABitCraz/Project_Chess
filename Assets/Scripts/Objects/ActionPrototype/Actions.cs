@@ -24,10 +24,6 @@ public class Actions
         Debug.Log("Attacking");
         Chess TargetChess = targetslot.Chess ?? null;
         Chess CurrentChess = currentslot.Chess ?? null;
-        if (targetslot.Chess != null)
-        {
-            TargetChess = targetslot.Chess;
-        }
         if (CurrentChess == null)
         {
             return;
@@ -36,33 +32,35 @@ public class Actions
         {
             return;
         }
-        int damage = (int)(
-            CurrentChess.HealthPoint
-            / 10
-            * (
-                CurrentChess.AttackPoint
-                    * CurrentChess.TheSlotStepOn.Landscape.AttackEffectPercent
-                    * TypeAttackPercent(CurrentChess, TargetChess)
-                    / 100
-                - TargetChess.DefensePoint
-                    * TargetChess.TheSlotStepOn.Landscape.DefenceEffectPercent
-            )
-            / 100
-        );
-        if (!CurrentChess.IsStanding)
+        if (CurrentChess != null && TargetChess != null)
         {
-            damage /= 2;
+            int damage = (int)(
+                CurrentChess.HealthPoint
+                / 10
+                * (
+                    CurrentChess.AttackPoint
+                        * CurrentChess.TheSlotStepOn.Landscape.AttackEffectPercent
+                        * TypeAttackPercent(CurrentChess, TargetChess)
+                        / 100
+                    - TargetChess.DefensePoint
+                        * TargetChess.TheSlotStepOn.Landscape.DefenceEffectPercent
+                )
+                / 100
+            );
+            if (!CurrentChess.IsStanding)
+            {
+                damage /= 2;
+            }
+            TargetChess.HealthPoint -= damage;
         }
 
         AttackChangedLandscape(ref targetslot);
 
         if (TargetChess != null)
         {
-            TargetChess.HealthPoint -= damage;
             if (TargetChess.HealthPoint <= 0)
             {
                 TargetChess.UnitGameObject.SetActive(false);
-                TargetChess = null;
                 return;
             }
 
@@ -86,10 +84,6 @@ public class Actions
 
             AttackChangedLandscape(ref targetslot);
             CurrentChess.HealthPoint -= counterback;
-            if (CurrentChess.HealthPoint <= 0)
-            {
-                CurrentChess = null;
-            }
         }
         Debug.Log("Attack End");
     }

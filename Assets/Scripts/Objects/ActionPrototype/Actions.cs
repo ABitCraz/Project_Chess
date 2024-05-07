@@ -189,6 +189,7 @@ public class Actions
             if (CurrentChess.AlertCounterBackTime <= 0)
             {
                 CurrentChess.AttackedChessOnAlert.Clear();
+                GameController.GetInstance().ChessesOnAlert.Remove(CurrentChess);
                 break;
             }
             if (

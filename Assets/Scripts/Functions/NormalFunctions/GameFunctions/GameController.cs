@@ -1,9 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameController : MonoBehaviour
+public class GameController : Singleton<GameController>
 {
     public List<PlanActions> MasterActionList;
     public List<PlanActions> CustomerActionList;
@@ -12,8 +15,14 @@ public class GameController : MonoBehaviour
     public bool IntoTheBreach;
     public int statement = 0;
 
-    private void Awake()
+    public bool isRoundBegin = false;
+    public bool masterActionReady = false;
+    public bool customerActionReady = false;
+    public bool customerRoundBeginReady = false;
+
+    protected override void Awake()
     {
+        base.Awake();
         ConfirmButton.GetComponent<Button>().onClick.AddListener(LetUsBegin);
     }
 
@@ -21,38 +30,125 @@ public class GameController : MonoBehaviour
 
     private void LetUsBegin()
     {
+        if (isRoundBegin)
+        {
+            return;
+        }
+
         this.GetComponent<RaycastInGame>().IsInControl = false;
+        isRoundBegin = true;
+        Debug.Log(NetworkEventManager.IsInitialized);
+        NetworkEventManager
+            .GetInstance()
+            .SendPlayerActionEvent(RaycastInGame.GetInstance().ActionList);
+        StartCoroutine(WaitToStart());
+    }
+
+    private IEnumerator WaitToStart()
+    {
+        yield return new WaitUntil(() => masterActionReady && customerActionReady);
+        if (PhotonNetwork.LocalPlayer.IsMasterClient)
+        {
+            yield return new WaitUntil(() => customerRoundBeginReady);
+            NetworkEventManager.GetInstance().SendRoundState(2);
+        }
+        else
+        {
+            NetworkEventManager.GetInstance().SendRoundState(1);
+        }
     }
 
     public IEnumerable<int> RoundBegin()
     {
         for (int i = 0; i < 3; i++)
         {
-            PlanActions mp = MasterActionList[i];
-            PlanActions ca = CustomerActionList[i];
+            PlanActions mp;
+            try
+            {
+                mp = MasterActionList[i];
+            }
+            catch (Exception)
+            {
+                mp = null;
+            }
+            PlanActions ca;
+            try
+            {
+                ca = CustomerActionList[i];
+            }
+            catch (Exception)
+            {
+                ca = null;
+            }
             switch (statement)
             {
                 case 0:
-                    CheckHold(ref mp);
-                    CheckHold(ref ca);
+                    if (mp != null)
+                    {
+                        CheckHold(ref mp);
+                    }
+                    if (ca != null)
+                    {
+                        CheckHold(ref ca);
+                    }
                     statement += 1;
                     break;
                 case 1:
-                    CheckAlert(ref mp);
-                    CheckAlert(ref ca);
+                    if (mp != null)
+                    {
+                        CheckAlert(ref mp);
+                    }
+                    if (ca != null)
+                    {
+                        CheckAlert(ref ca);
+                    }
                     statement += 1;
                     break;
                 case 2:
-                    CheckRepair(ref mp);
-                    CheckRepair(ref ca);
+                    if (mp != null)
+                    {
+                        CheckAttack(ref mp);
+                    }
+                    if (ca != null)
+                    {
+                        CheckAttack(ref ca);
+                    }
+                    statement += 1;
                     break;
                 case 3:
-                    CheckAlertMovePush(ref mp);
-                    CheckAlertMovePush(ref ca);
+                    if (mp != null)
+                    {
+                        CheckRepair(ref mp);
+                    }
+                    if (ca != null)
+                    {
+                        CheckRepair(ref ca);
+                    }
+                    statement += 1;
+                    break;
+                case 4:
+                    if (mp != null)
+                    {
+                        CheckAlertMovePush(ref mp);
+                    }
+                    if (ca != null)
+                    {
+                        CheckAlertMovePush(ref ca);
+                    }
                     break;
             }
             yield return i;
         }
+        RoundEnd();
+    }
+
+    private void RoundEnd()
+    {
+        isRoundBegin = false;
+        RaycastInGame.GetInstance().IsInControl = true;
+        masterActionReady = false;
+        customerActionReady = false;
+        customerRoundBeginReady = false;
     }
 
     private void CheckHold(ref PlanActions planaction)
@@ -71,6 +167,14 @@ public class GameController : MonoBehaviour
                 planaction.RouteInPlan
             );
             ChessesOnAlert.Add(planaction.CurrentChess);
+        }
+    }
+
+    private void CheckAttack(ref PlanActions planaction)
+    {
+        if (planaction.ThisActionType == ActionType.Attack)
+        {
+            new Actions(planaction.CurrentChess, planaction.CurrentPlayer).Attack(planaction.TargetSlot);
         }
     }
 

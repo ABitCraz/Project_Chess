@@ -2,10 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RaycastInGame : MonoBehaviour
+public class RaycastInGame : Singleton<RaycastInGame>
 {
     public List<PlanActions> ActionList = new();
     public GameObject StatusSet;
@@ -30,10 +31,16 @@ public class RaycastInGame : MonoBehaviour
     bool ispickingtarget = false;
     bool isdrawingtarget = false;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         loadedsave ??= StartCoroutine(LoadSave());
         InitializedButtons();
+    }
+
+    private void Start()
+    {
+        CurrentPlayer.PlayerNo = PhotonNetwork.LocalPlayer.ActorNumber;
     }
 
     private void Update()

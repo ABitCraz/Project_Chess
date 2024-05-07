@@ -36,6 +36,9 @@ public class NetworkEventManager : SingletonPunCallbacks<NetworkEventManager>, I
             case EventCode.RoundState:
                 ReceiveRoundState(photonEvent);
                 break;
+            case EventCode.EndGame:
+                ReceiveEndGame(photonEvent);
+                break;
         }
     }
 
@@ -88,6 +91,16 @@ public class NetworkEventManager : SingletonPunCallbacks<NetworkEventManager>, I
         }
     }
 
+    private void ReceiveEndGame(EventData eventData)
+    {
+        Dictionary<byte, object> tmp_EndGameData =
+            (Dictionary<byte, object>)eventData.CustomData;
+        Photon.Realtime.Player tmp_winner = (Photon.Realtime.Player) tmp_EndGameData[0]; 
+        Debug.Log("收到结束游戏");
+        Debug.Log(" 获胜者ID"+ tmp_winner.ActorNumber);
+        GameController.GetInstance().EndGame(tmp_winner);
+    }
+    
     #endregion
 
 
@@ -124,7 +137,7 @@ public class NetworkEventManager : SingletonPunCallbacks<NetworkEventManager>, I
     /// <summary>
     /// 发送对局状态
     /// </summary>
-    /// <param name="set">状态代码（0-房间重置或者创建, 1-从机确认可以开始，2-对局开始，3-对局结束，4-回合结束,5,游戏结束）</param>
+    /// <param name="set">状态代码（0-房间重置或者创建, 1-从机确认可以开始，2-对局开始，3-对局结束）</param>
     public void SendRoundState(int set)
     {
         Dictionary<byte, object> tmp_RoundState = new Dictionary<byte, object>();
@@ -137,6 +150,27 @@ public class NetworkEventManager : SingletonPunCallbacks<NetworkEventManager>, I
         PhotonNetwork.RaiseEvent(
             (byte)EventCode.RoundState,
             tmp_RoundState,
+            tmp_RaiseEventOptions,
+            tmp_SendOptions
+        );
+    }
+
+    /// <summary>
+    /// 当游戏逻辑（权威端）判断游戏结束调用
+    /// </summary>
+    /// <param name="winner">胜者（photon player）</param>
+    public void SendEndGame(Photon.Realtime.Player  winner)
+    {
+        Dictionary<byte, object> tmp_endGameData = new Dictionary<byte, object>();
+        tmp_endGameData.Add(0,winner);
+        RaiseEventOptions tmp_RaiseEventOptions = new RaiseEventOptions()
+        {
+            Receivers = ReceiverGroup.All
+        };
+        SendOptions tmp_SendOptions = SendOptions.SendReliable;
+        PhotonNetwork.RaiseEvent(
+            (byte)EventCode.EndGame,
+            tmp_endGameData,
             tmp_RaiseEventOptions,
             tmp_SendOptions
         );

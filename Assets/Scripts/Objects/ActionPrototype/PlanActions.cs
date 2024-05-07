@@ -8,7 +8,7 @@ public class PlanActions
 {
     public ActionType ThisActionType;
     public Vector2Int TargetPosition;
-    public Chess CurrentChess;
+    public Vector2Int CurrentSlotPosition;
     public Player CurrentPlayer;
     public SlotMap CurrentSlotMap;
     public Vector2Int[] PositionToRouteInPlan;
@@ -17,13 +17,13 @@ public class PlanActions
     public PlanActions(
         Vector2Int targetposition,
         ActionType actiontype,
-        Chess originchess,
+        Slot originslot,
         Player currentplayer
     )
     {
         this.TargetPosition = targetposition;
         this.CurrentPlayer = currentplayer;
-        this.CurrentChess = originchess;
+        this.CurrentSlotPosition = originslot.Position;
         this.ThisActionType = actiontype;
     }
 

@@ -19,6 +19,7 @@ public class GameController : Singleton<GameController>
     public bool masterActionReady = false;
     public bool customerActionReady = false;
     public bool customerRoundBeginReady = false;
+    Actions action = new();
 
     protected override void Awake()
     {
@@ -135,8 +136,9 @@ public class GameController : Singleton<GameController>
                         statement += 1;
                         break;
                 }
-                yield return i;
             }
+            statement = 0;
+            yield return i;
         }
         RoundEnd();
     }
@@ -158,7 +160,7 @@ public class GameController : Singleton<GameController>
     {
         if (planaction.ThisActionType == ActionType.Hold)
         {
-            new Actions(planaction.CurrentChess, planaction.CurrentPlayer).Hold();
+            Slot CurrentSlot = save.SlotMap.FullSlotDictionary[planaction.CurrentSlotPosition];
         }
     }
 
@@ -176,8 +178,9 @@ public class GameController : Singleton<GameController>
                     save.SlotMap.FullSlotDictionary[planaction.PositionToRouteInPlan[i]]
                 );
             }
-            new Actions(planaction.CurrentChess, planaction.CurrentPlayer).Alert(cachedslot);
-            ChessesOnAlert.Add(planaction.CurrentChess);
+            Slot currentslot = save.SlotMap.FullSlotDictionary[planaction.CurrentSlotPosition];
+            action.Alert(cachedslot, ref currentslot);
+            ChessesOnAlert.Add(currentslot.Chess);
         }
     }
 
@@ -185,10 +188,9 @@ public class GameController : Singleton<GameController>
     {
         if (planaction.ThisActionType == ActionType.Attack)
         {
-            Slot cachedslot = save.SlotMap.FullSlotDictionary[planaction.TargetPosition];
-            new Actions(planaction.CurrentChess, planaction.CurrentPlayer).Attack(
-                ref cachedslot
-            );
+            Slot currentslot = save.SlotMap.FullSlotDictionary[planaction.CurrentSlotPosition];
+            Slot targetslot = save.SlotMap.FullSlotDictionary[planaction.TargetPosition];
+            action.Attack(ref currentslot, ref targetslot);
         }
     }
 
@@ -196,7 +198,8 @@ public class GameController : Singleton<GameController>
     {
         if (planaction.ThisActionType == ActionType.Repair)
         {
-            new Actions(planaction.CurrentChess, planaction.CurrentPlayer).Repair();
+            Slot currentslot = save.SlotMap.FullSlotDictionary[planaction.CurrentSlotPosition];
+            action.Repair(ref currentslot);
         }
     }
 
@@ -218,8 +221,9 @@ public class GameController : Singleton<GameController>
                 );
             }
             foreach (
-                bool result in new Actions(planaction.CurrentChess, planaction.CurrentPlayer).Move(
-                    cachedslot
+                bool result in action.Move(
+                    cachedslot,
+                    save.SlotMap.FullSlotDictionary[planaction.CurrentSlotPosition]
                 )
             )
             {
@@ -227,8 +231,9 @@ public class GameController : Singleton<GameController>
             }
             if (planaction.ThisActionType == ActionType.Alert)
             {
-                new Actions(planaction.CurrentChess, planaction.CurrentPlayer).Alert(cachedslot);
-                ChessesOnAlert.Add(planaction.CurrentChess);
+                Slot currentslot = save.SlotMap.FullSlotDictionary[planaction.CurrentSlotPosition];
+                action.Alert(cachedslot, ref currentslot);
+                ChessesOnAlert.Add(currentslot.Chess);
             }
         }
         else if (planaction.ThisActionType == ActionType.Push)
@@ -240,11 +245,8 @@ public class GameController : Singleton<GameController>
                     save.SlotMap.FullSlotDictionary[planaction.PositionToRouteInPlan[i]]
                 );
             }
-            foreach (
-                bool result in new Actions(planaction.CurrentChess, planaction.CurrentPlayer).Move(
-                    cachedslot
-                )
-            )
+            Slot currentslot = save.SlotMap.FullSlotDictionary[planaction.CurrentSlotPosition];
+            foreach (bool result in action.Move(cachedslot, currentslot))
             {
                 CallAlarm(ref planaction);
             }
@@ -255,7 +257,11 @@ public class GameController : Singleton<GameController>
     {
         for (int i = 0; i < ChessesOnAlert.Count; i++)
         {
-            new Actions(planaction.CurrentChess, planaction.CurrentPlayer).Alarm();
+            action.Alarm(
+                ref ChessesOnAlert[i].TheSlotStepOn,
+                ref save.SlotMap,
+                ref planaction.CurrentPlayer
+            );
         }
     }
 }

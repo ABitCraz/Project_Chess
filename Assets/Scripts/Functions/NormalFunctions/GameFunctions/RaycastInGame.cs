@@ -165,7 +165,10 @@ public class RaycastInGame : Singleton<RaycastInGame>
         }
         for (int i = 0; i < ActionList.Count; i++)
         {
-            if (ActionList[i].CurrentChess == slot.Chess)
+            if (
+                save.SlotMap.FullSlotDictionary[ActionList[i].CurrentSlotPosition].Chess
+                == slot.Chess
+            )
             {
                 return;
             }
@@ -291,7 +294,7 @@ public class RaycastInGame : Singleton<RaycastInGame>
     private void GiveButtonActions(Slot slot)
     {
         CleanUpButtonFunctions();
-        PlanActions planaction = new(slot.Position, ActionType.Attack, slot.Chess, CurrentPlayer);
+        PlanActions planaction = new(slot.Position, ActionType.Attack, slot, CurrentPlayer);
         ActionDropdown.transform
             .GetChild(1)
             .GetComponent<Button>()

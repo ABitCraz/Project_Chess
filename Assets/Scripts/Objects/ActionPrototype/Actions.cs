@@ -6,20 +6,9 @@ using UnityEngine;
 
 public class Actions
 {
-    public Vector2Int TargetPosition;
-    public Chess CurrentChess;
-    public Chess TargetChess;
-    public Player CurrentPlayer;
-    public SlotMap CurrentSlotMap;
-    SlotCalculator slotcalculator;
+    SlotCalculator slotcalculator = new();
 
-    public Actions(Chess originchess, Player currentplayer)
-    {
-        this.CurrentPlayer = currentplayer;
-        this.CurrentChess = originchess;
-    }
-
-    public void Hold()
+    public void Hold(Chess CurrentChess)
     {
         Debug.Log("Holding");
         if (CurrentChess == null)
@@ -30,9 +19,11 @@ public class Actions
         Debug.Log("Hold End");
     }
 
-    public void Attack(ref Slot targetslot)
+    public void Attack(ref Slot currentslot, ref Slot targetslot)
     {
         Debug.Log("Attacking");
+        Chess TargetChess = targetslot.Chess ?? null;
+        Chess CurrentChess = currentslot.Chess ?? null;
         if (targetslot.Chess != null)
         {
             TargetChess = targetslot.Chess;
@@ -51,7 +42,7 @@ public class Actions
             * (
                 CurrentChess.AttackPoint
                     * CurrentChess.TheSlotStepOn.Landscape.AttackEffectPercent
-                    * TypeAttackPercent()
+                    * TypeAttackPercent(CurrentChess, TargetChess)
                     / 100
                 - TargetChess.DefensePoint
                     * TargetChess.TheSlotStepOn.Landscape.DefenceEffectPercent
@@ -81,7 +72,7 @@ public class Actions
                 * (
                     TargetChess.AttackPoint
                         * TargetChess.TheSlotStepOn.Landscape.AttackEffectPercent
-                        * TypeAttackPercent()
+                        * TypeAttackPercent(TargetChess, CurrentChess)
                         / 100
                     - CurrentChess.DefensePoint
                         * CurrentChess.TheSlotStepOn.Landscape.DefenceEffectPercent
@@ -136,11 +127,14 @@ public class Actions
         }
     }
 
-    public IEnumerable<bool> Move(List<Slot> route)
+    public IEnumerable<bool> Move(List<Slot> route, Slot currentslot)
     {
         Debug.Log("Moving");
+        Chess CurrentChess = currentslot.Chess ?? null;
         while (route.Count > 0)
         {
+            Debug.Log(route[0].Position.x + " " + route[0].Position.y);
+            Debug.Log(CurrentChess);
             if (CurrentChess == null)
             {
                 break;
@@ -161,9 +155,10 @@ public class Actions
         Debug.Log("Move End");
     }
 
-    public void Alert(List<Slot> route)
+    public void Alert(List<Slot> route, ref Slot currentslot)
     {
         Debug.Log("Alerting");
+        Chess CurrentChess = currentslot.Chess ?? null;
         if (CurrentChess == null)
         {
             return;
@@ -176,8 +171,9 @@ public class Actions
         Debug.Log("Alert End");
     }
 
-    public void Alarm()
+    public void Alarm(ref Slot currentslot, ref SlotMap CurrentSlotMap, ref Player CurrentPlayer)
     {
+        Chess CurrentChess = currentslot.Chess ?? null;
         Debug.Log("Alarming");
         Slot[] slotinrange = slotcalculator.CalculateSlotInAttackRange(
             ref CurrentChess.TheSlotStepOn,
@@ -199,10 +195,10 @@ public class Actions
                 && CurrentChess.AlertCounterBackTime > 0
             )
             {
-                TargetChess = slotinrange[i].Chess;
+                Chess TargetChess = slotinrange[i].Chess;
                 if (!CurrentChess.AttackedChessOnAlert.Contains(TargetChess))
                 {
-                    Attack(ref slotinrange[i]);
+                    Attack(ref currentslot, ref slotinrange[i]);
                     CurrentChess.AttackedChessOnAlert.Add(TargetChess);
                 }
                 if (CurrentChess == null)
@@ -215,8 +211,14 @@ public class Actions
         Debug.Log("Alarm End");
     }
 
-    public IEnumerable<bool> Push(List<Slot> route)
+    public IEnumerable<bool> Push(
+        List<Slot> route,
+        Slot currentslot,
+        SlotMap CurrentSlotMap,
+        Player CurrentPlayer
+    )
     {
+        Chess CurrentChess = currentslot.Chess ?? null;
         Debug.Log("Pushing");
         CurrentChess.IsStanding = false;
         CurrentChess.IsMoving = true;
@@ -231,7 +233,7 @@ public class Actions
             {
                 if (slotinrange[j].Chess != null && slotinrange[j].Chess.Owner != CurrentPlayer)
                 {
-                    Attack(ref slotinrange[j]);
+                    Attack(ref currentslot, ref slotinrange[j]);
                 }
             }
             CurrentChess.MoveToAnotherSlot(route[0]);
@@ -242,9 +244,10 @@ public class Actions
         Debug.Log("Push End");
     }
 
-    public void Repair()
+    public void Repair(ref Slot currentslot)
     {
         Debug.Log("Repairing");
+        Chess CurrentChess = currentslot.Chess ?? null;
         if (CurrentChess == null)
         {
             return;
@@ -264,7 +267,7 @@ public class Actions
         Debug.Log("Reinfore End");
     }
 
-    public int TypeAttackPercent()
+    public int TypeAttackPercent(Chess CurrentChess, Chess TargetChess)
     {
         ChessType currenttype = CurrentChess.ChessType;
         ChessType targettype = TargetChess.ChessType;

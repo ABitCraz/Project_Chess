@@ -29,12 +29,18 @@ public class Chess : BasicUnit, IChess
             Resources.Load(ResourcePaths.TargetAnimators[ChessType]) as RuntimeAnimatorController;
     }
 
-    public void MoveToAnotherSlot(Slot targetSlot)
+    public void MoveToAnotherSlot(Slot targetslot)
     {
-        TheSlotStepOn.Chess = null;
-        TheSlotStepOn = targetSlot;
-        targetSlot.Chess = this;
-        UnitGameObject.transform.position = targetSlot.FactPosition;
+        if (TheSlotStepOn != null)
+        {
+            TheSlotStepOn.Chess = null;
+        }
+        if (targetslot.Chess == null)
+        {
+            TheSlotStepOn = targetslot;
+            targetslot.Chess = this;
+            this.PutToSlotPosition(ref targetslot.SlotGameObject);
+            this.UnitGameObject.transform.SetParent(targetslot.SlotGameObject.transform);
+        }
     }
-
 }

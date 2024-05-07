@@ -32,6 +32,7 @@ public class RaycastInGame : Singleton<RaycastInGame>
 
     private void Awake()
     {
+        base.Awake();
         loadedsave ??= StartCoroutine(LoadSave());
         InitializedButtons();
     }

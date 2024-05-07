@@ -11,8 +11,6 @@ using UnityTemplateProjects.Tools;
 
 public class NetworkEventManager : SingletonPunCallbacks<NetworkEventManager>, IOnEventCallback
 {
-    
-    
     private void OnEnable()
     {
         PhotonNetwork.AddCallbackTarget(this);

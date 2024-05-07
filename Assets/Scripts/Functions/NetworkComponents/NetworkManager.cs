@@ -9,6 +9,10 @@ using UnityEngine.UIElements;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
+    private void Awake()
+    {
+        DontDestroyOnLoad(this.gameObject);
+    }
 
     public TextMeshProUGUI roomNum;
     

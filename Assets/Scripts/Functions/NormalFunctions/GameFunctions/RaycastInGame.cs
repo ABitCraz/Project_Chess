@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RaycastInGame : MonoBehaviour
+public class RaycastInGame : Singleton<RaycastInGame>
 {
     public List<PlanActions> ActionList = new();
     public GameObject StatusSet;

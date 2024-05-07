@@ -58,83 +58,48 @@ public class GameController : Singleton<GameController>
         }
     }
 
+    public void BeginTheRound()
+    {
+        foreach (int a in RoundBegin())
+        {
+            Debug.Log(a);
+            statement += 1;
+        }
+    }
+
     public IEnumerable<int> RoundBegin()
     {
+        Debug.Log(MasterActionList.Count);
+        Debug.Log(CustomerActionList.Count);
         for (int i = 0; i < 3; i++)
         {
-            PlanActions mp;
-            try
-            {
-                mp = MasterActionList[i];
-            }
-            catch (Exception)
-            {
-                mp = null;
-            }
-            PlanActions ca;
-            try
-            {
-                ca = CustomerActionList[i];
-            }
-            catch (Exception)
-            {
-                ca = null;
-            }
+            PlanActions mp = MasterActionList[i];
+            PlanActions ca = CustomerActionList[i];
             switch (statement)
             {
                 case 0:
-                    if (mp != null)
-                    {
-                        CheckHold(ref mp);
-                    }
-                    if (ca != null)
-                    {
-                        CheckHold(ref ca);
-                    }
+                    CheckHold(ref mp);
+                    CheckHold(ref ca);
                     statement += 1;
                     break;
                 case 1:
-                    if (mp != null)
-                    {
-                        CheckAlert(ref mp);
-                    }
-                    if (ca != null)
-                    {
-                        CheckAlert(ref ca);
-                    }
+                    CheckAlert(ref mp);
+                    CheckAlert(ref ca);
                     statement += 1;
                     break;
                 case 2:
-                    if (mp != null)
-                    {
-                        CheckAttack(ref mp);
-                    }
-                    if (ca != null)
-                    {
-                        CheckAttack(ref ca);
-                    }
+                    CheckAttack(ref mp);
+                    CheckAttack(ref ca);
                     statement += 1;
                     break;
                 case 3:
-                    if (mp != null)
-                    {
-                        CheckRepair(ref mp);
-                    }
-                    if (ca != null)
-                    {
-                        CheckRepair(ref ca);
-                    }
+                    CheckRepair(ref mp);
+                    CheckRepair(ref ca);
                     statement += 1;
                     break;
                 case 4:
-                    if (mp != null)
-                    {
-                        CheckAlertMovePush(ref mp);
-                    }
-                    if (ca != null)
-                    {
-                        CheckAlertMovePush(ref ca);
-                    }
+                    CheckAlertMovePush(ref mp);
+                    CheckAlertMovePush(ref ca);
                     break;
             }
             yield return i;
@@ -174,7 +139,9 @@ public class GameController : Singleton<GameController>
     {
         if (planaction.ThisActionType == ActionType.Attack)
         {
-            new Actions(planaction.CurrentChess, planaction.CurrentPlayer).Attack(planaction.TargetSlot);
+            new Actions(planaction.CurrentChess, planaction.CurrentPlayer).Attack(
+                planaction.TargetSlot
+            );
         }
     }
 

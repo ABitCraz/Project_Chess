@@ -21,15 +21,18 @@ public class Actions
 
     public void Hold()
     {
+        Debug.Log("Holding");
         if (CurrentChess == null)
         {
             return;
         }
         CurrentChess.IsStanding = true;
+        Debug.Log("Hold End");
     }
 
     public void Attack(Slot targetslot)
     {
+        Debug.Log("Attacking");
         if (targetslot.Chess != null)
         {
             TargetChess = targetslot.Chess;
@@ -97,6 +100,7 @@ public class Actions
                 CurrentChess = null;
             }
         }
+        Debug.Log("Attack End");
     }
 
     private void AttackChangedLandscape(ref Slot targetslot)
@@ -134,6 +138,7 @@ public class Actions
 
     public IEnumerable<bool> Move(Slot[] route)
     {
+        Debug.Log("Moving");
         List<Slot> slotsonroute = route.ToList<Slot>();
         while (slotsonroute.Count > 0)
         {
@@ -154,10 +159,12 @@ public class Actions
             yield return false;
         }
         yield return true;
+        Debug.Log("Move End");
     }
 
     public void Alert(Slot[] route)
     {
+        Debug.Log("Alerting");
         if (CurrentChess == null)
         {
             return;
@@ -167,10 +174,12 @@ public class Actions
             CurrentChess.IsStanding = true;
         }
         CurrentChess.OnAlert = true;
+        Debug.Log("Alert End");
     }
 
     public void Alarm()
     {
+        Debug.Log("Alarming");
         Slot[] slotinrange = slotcalculator.CalculateSlotInAttackRange(
             ref CurrentChess.TheSlotStepOn,
             ref CurrentSlotMap.FullSlotDictionary,
@@ -203,21 +212,13 @@ public class Actions
                 CurrentChess.AlertCounterBackTime--;
             }
         }
+        Debug.Log("Alarm End");
     }
 
     public IEnumerable<bool> Push(Slot[] route)
     {
+        Debug.Log("Pushing");
         List<Slot> slotsonroute = route.ToList<Slot>();
-        CurrentChess.CurrentAction = ActionType.Push;
-        int ActionPrice = 300;
-        if (CurrentPlayer.Resource <= ActionPrice)
-        {
-            yield return true;
-        }
-        else
-        {
-            CurrentPlayer.Resource -= ActionPrice;
-        }
         CurrentChess.IsStanding = false;
         CurrentChess.IsMoving = true;
         while (slotsonroute.Count > 0)
@@ -239,10 +240,12 @@ public class Actions
             yield return false;
         }
         yield return true;
+        Debug.Log("Push End");
     }
 
     public void Repair()
     {
+        Debug.Log("Repairing");
         if (CurrentChess == null)
         {
             return;
@@ -252,11 +255,14 @@ public class Actions
         {
             CurrentChess.HealthPoint = 10;
         }
+        Debug.Log("Repair End");
     }
 
     public void Reinforce(ref Slot reinforceslot, ChessType reinforcechesstype)
     {
+        Debug.Log("Reinforing");
         reinforceslot.InitializeOrSwapChess(reinforcechesstype);
+        Debug.Log("Reinfore End");
     }
 
     public int TypeAttackPercent()

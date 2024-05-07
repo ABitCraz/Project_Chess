@@ -80,11 +80,8 @@ public class NetworkEventManager : SingletonPunCallbacks<NetworkEventManager>, I
                 }
                 break;
             case 2:
-                foreach (var a in GameController.GetInstance().RoundBegin())
-                {
-                    GameController.GetInstance().statement += 1;
-                }
                 Debug.Log("开始回合动");
+                GameController.GetInstance().BeginTheRound();
                 break;
             default:
                 break;

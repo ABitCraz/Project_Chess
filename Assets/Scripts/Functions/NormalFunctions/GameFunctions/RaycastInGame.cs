@@ -159,7 +159,7 @@ public class RaycastInGame : Singleton<RaycastInGame>
         {
             return;
         }
-        if (slot.Chess == null || ActionList.Count > 3)
+        if (slot.Chess == null || ActionList.Count >= 3)
         {
             return;
         }
@@ -290,6 +290,7 @@ public class RaycastInGame : Singleton<RaycastInGame>
 
     private void GiveButtonActions(Slot slot)
     {
+        CleanUpButtonFunctions();
         PlanActions planaction = new(slot.Position, ActionType.Attack, slot.Chess, CurrentPlayer);
         ActionDropdown.transform
             .GetChild(1)
@@ -314,7 +315,7 @@ public class RaycastInGame : Singleton<RaycastInGame>
                     ispickingtarget = false;
                     targetslot = null;
                     CleanUpMap();
-                    CleanUpButtonFunctions();
+                    return;
                 };
             });
         ActionDropdown.transform
@@ -337,10 +338,11 @@ public class RaycastInGame : Singleton<RaycastInGame>
                         ActionList.Add(planaction.Move(moveroute.ToArray()));
                         PickAnEmptyActionUnitAndFillIt(slot.Chess.ChessType, ActionType.Move);
                     }
+                    Debug.Log(ActionList.Count);
                     isdrawingtarget = false;
                     CleanUpMap();
                     moveroute = new();
-                    CleanUpButtonFunctions();
+                    return;
                 };
             });
         ActionDropdown.transform
@@ -366,7 +368,7 @@ public class RaycastInGame : Singleton<RaycastInGame>
                     isdrawingtarget = false;
                     CleanUpMap();
                     moveroute = new();
-                    CleanUpButtonFunctions();
+                    return;
                 };
             });
         ActionDropdown.transform
@@ -389,7 +391,7 @@ public class RaycastInGame : Singleton<RaycastInGame>
                     isdrawingtarget = false;
                     CleanUpMap();
                     moveroute = new();
-                    CleanUpButtonFunctions();
+                    return;
                 };
             });
         ActionDropdown.transform
@@ -401,7 +403,7 @@ public class RaycastInGame : Singleton<RaycastInGame>
                 ActionList.Add(planaction.Repair());
                 PickAnEmptyActionUnitAndFillIt(slot.Chess.ChessType, ActionType.Repair);
                 ActionDropdown.SetActive(false);
-                CleanUpButtonFunctions();
+                return;
             });
         ActionDropdown.transform
             .GetChild(6)
@@ -412,18 +414,20 @@ public class RaycastInGame : Singleton<RaycastInGame>
                 ActionList.Add(planaction.Hold());
                 PickAnEmptyActionUnitAndFillIt(slot.Chess.ChessType, ActionType.Hold);
                 ActionDropdown.SetActive(false);
-                CleanUpButtonFunctions();
+                return;
             });
     }
 
     private void CleanUpButtonFunctions()
     {
-        ActionDropdown.transform.GetChild(1).GetComponent<Button>().onClick.RemoveAllListeners();
-        ActionDropdown.transform.GetChild(2).GetComponent<Button>().onClick.RemoveAllListeners();
-        ActionDropdown.transform.GetChild(3).GetComponent<Button>().onClick.RemoveAllListeners();
-        ActionDropdown.transform.GetChild(4).GetComponent<Button>().onClick.RemoveAllListeners();
-        ActionDropdown.transform.GetChild(5).GetComponent<Button>().onClick.RemoveAllListeners();
-        ActionDropdown.transform.GetChild(6).GetComponent<Button>().onClick.RemoveAllListeners();
+        ActionDropdown.transform.GetChild(1).gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
+        ActionDropdown.transform.GetChild(2).gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
+        ActionDropdown.transform.GetChild(3).gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
+        ActionDropdown.transform.GetChild(4).gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
+        ActionDropdown.transform.GetChild(5).gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
+        ActionDropdown.transform.GetChild(6).gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
+        EndDrawing = null;
+        EndPicking = null;
     }
 
     private GameObject PickAnEmptyActionUnitAndFillIt(ChessType chesstype, ActionType actiontype)

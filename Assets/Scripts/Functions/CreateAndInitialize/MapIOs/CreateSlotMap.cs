@@ -4,7 +4,6 @@ using UnityEngine;
 using TMPro;
 using System;
 using UnityEngine.UI;
-using UnityEditor.SceneManagement;
 
 public class CreateSlotMap : MonoBehaviour
 {

@@ -20,11 +20,11 @@ public class UIFadeInOut : MonoBehaviour
             for (int i = 0; i < callMenus.Count; i++)
             {
                 var target = callMenus[i];
-                target.CallMenuButton.GetComponent<Button>().onClick.AddListener(() =>
+                /*target.CallMenuButton.GetComponent<Button>().onClick.AddListener(() =>
                 {
                     StartCoroutine(FadeIn(target.TargetPanel.GetComponent<CanvasGroup>()));
                     StartCoroutine(FadeOut(target.PrevPanel.GetComponent<CanvasGroup>()));
-                });
+                });*/
             }
         }
     }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -35,6 +36,11 @@ public class RaycastInGame : Singleton<RaycastInGame>
         base.Awake();
         loadedsave ??= StartCoroutine(LoadSave());
         InitializedButtons();
+    }
+
+    private void Start()
+    {
+        CurrentPlayer.PlayerNo = PhotonNetwork.LocalPlayer.ActorNumber;
     }
 
     private void Update()

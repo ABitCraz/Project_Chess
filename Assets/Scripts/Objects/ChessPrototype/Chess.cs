@@ -34,6 +34,7 @@ public class Chess : BasicUnit, IChess
         TheSlotStepOn.Chess = null;
         TheSlotStepOn = targetSlot;
         targetSlot.Chess = this;
+        UnitGameObject.transform.position = targetSlot.FactPosition;
     }
 
 }

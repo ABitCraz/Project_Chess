@@ -28,13 +28,16 @@ public class Actions
         CurrentChess.IsStanding = true;
     }
 
-    public void Attack()
+    public void Attack(Slot targetslot)
     {
+        if (targetslot.Chess != null)
+        {
+            TargetChess = targetslot.Chess;
+        }
         if (CurrentChess == null)
         {
             return;
         }
-        CurrentChess.CurrentAction = ActionType.Attack;
         if (TargetChess == null)
         {
             return;
@@ -57,37 +60,75 @@ public class Actions
             damage /= 2;
         }
 
-        TargetChess.HealthPoint -= damage;
-        if (TargetChess.HealthPoint <= 0)
+        AttackChangedLandscape(ref targetslot);
+
+        if (TargetChess != null)
         {
-            TargetChess.UnitGameObject.SetActive(false);
-            TargetChess = null;
-            return;
+            TargetChess.HealthPoint -= damage;
+            if (TargetChess.HealthPoint <= 0)
+            {
+                TargetChess.UnitGameObject.SetActive(false);
+                TargetChess = null;
+                return;
+            }
+
+            int counterback = (int)(
+                TargetChess.HealthPoint
+                / 10
+                * (
+                    TargetChess.AttackPoint
+                        * TargetChess.TheSlotStepOn.Landscape.AttackEffectPercent
+                        * TypeAttackPercent()
+                        / 100
+                    - CurrentChess.DefensePoint
+                        * CurrentChess.TheSlotStepOn.Landscape.DefenceEffectPercent
+                )
+                / 100
+            );
+            if (!TargetChess.IsStanding)
+            {
+                counterback /= 2;
+            }
+
+            AttackChangedLandscape(ref targetslot);
+            CurrentChess.HealthPoint -= counterback;
+            if (CurrentChess.HealthPoint <= 0)
+            {
+                CurrentChess = null;
+            }
         }
+    }
 
-        int counterback = (int)(
-            TargetChess.HealthPoint
-            / 10
-            * (
-                TargetChess.AttackPoint
-                    * TargetChess.TheSlotStepOn.Landscape.AttackEffectPercent
-                    * TypeAttackPercent()
-                    / 100
-                - CurrentChess.DefensePoint
-                    * CurrentChess.TheSlotStepOn.Landscape.DefenceEffectPercent
-            )
-            / 100
-        );
-        if (!TargetChess.IsStanding)
+    private void AttackChangedLandscape(ref Slot targetslot)
+    {
+        if (targetslot.Landscape != null)
         {
-            counterback /= 2;
-        }
+            switch (targetslot.Landscape.LandscapeType)
+            {
+                case LandscapeType.Wildlessness:
+                    Wildlessness targetwln = targetslot.Landscape as Wildlessness;
+                    if (!targetwln.IsSandstorming)
+                    {
+                        targetwln.IsSandstorming = true;
+                    }
+                    break;
+                case LandscapeType.Desert:
 
-        CurrentChess.HealthPoint -= counterback;
-
-        if (CurrentChess.HealthPoint <= 0)
-        {
-            CurrentChess = null;
+                    Desert targetdesert = targetslot.Landscape as Desert;
+                    if (!targetdesert.IsQuicksand)
+                    {
+                        targetdesert.IsQuicksand = true;
+                    }
+                    break;
+                case LandscapeType.Ruin:
+                    Ruin targetruin = targetslot.Landscape as Ruin;
+                    targetruin.GetAttacked(ref targetslot);
+                    break;
+                case LandscapeType.Ancient:
+                    Ruin targetancient = targetslot.Landscape as Ruin;
+                    targetancient.GetAttacked(ref targetslot);
+                    break;
+            }
         }
     }
 
@@ -121,7 +162,6 @@ public class Actions
         {
             return;
         }
-        CurrentChess.CurrentAction = ActionType.Alert;
         if (route.Length <= 0)
         {
             CurrentChess.IsStanding = true;
@@ -131,39 +171,36 @@ public class Actions
 
     public void Alarm()
     {
-        if (CurrentChess.CurrentAction == ActionType.Alert)
+        Slot[] slotinrange = slotcalculator.CalculateSlotInAttackRange(
+            ref CurrentChess.TheSlotStepOn,
+            ref CurrentSlotMap.FullSlotDictionary,
+            ref CurrentSlotMap.MapSize
+        );
+        for (int i = 0; i < slotinrange.Length; i++)
         {
-            Slot[] slotinrange = slotcalculator.CalculateSlotInAttackRange(
-                ref CurrentChess.TheSlotStepOn,
-                ref CurrentSlotMap.FullSlotDictionary,
-                ref CurrentSlotMap.MapSize
-            );
-            for (int i = 0; i < slotinrange.Length; i++)
+            if (CurrentChess.AlertCounterBackTime <= 0)
             {
-                if (CurrentChess.AlertCounterBackTime <= 0)
+                CurrentChess.AttackedChessOnAlert.Clear();
+                break;
+            }
+            if (
+                slotinrange[i].Chess != null
+                && slotinrange[i].Chess.Owner != CurrentPlayer
+                && slotinrange[i].Chess.IsMoving == true
+                && CurrentChess.AlertCounterBackTime > 0
+            )
+            {
+                TargetChess = slotinrange[i].Chess;
+                if (!CurrentChess.AttackedChessOnAlert.Contains(TargetChess))
                 {
-                    CurrentChess.AttackedChessOnAlert.Clear();
-                    break;
+                    Attack(slotinrange[i]);
+                    CurrentChess.AttackedChessOnAlert.Add(TargetChess);
                 }
-                if (
-                    slotinrange[i].Chess != null
-                    && slotinrange[i].Chess.Owner != CurrentPlayer
-                    && slotinrange[i].Chess.IsMoving == true
-                    && CurrentChess.AlertCounterBackTime > 0
-                )
+                if (CurrentChess == null)
                 {
-                    TargetChess = slotinrange[i].Chess;
-                    if (!CurrentChess.AttackedChessOnAlert.Contains(TargetChess))
-                    {
-                        Attack();
-                        CurrentChess.AttackedChessOnAlert.Add(TargetChess);
-                    }
-                    if (CurrentChess == null)
-                    {
-                        return;
-                    }
-                    CurrentChess.AlertCounterBackTime--;
+                    return;
                 }
+                CurrentChess.AlertCounterBackTime--;
             }
         }
     }
@@ -194,7 +231,7 @@ public class Actions
             {
                 if (slotinrange[j].Chess != null && slotinrange[j].Chess.Owner != CurrentPlayer)
                 {
-                    Attack();
+                    Attack(slotinrange[j]);
                 }
             }
             CurrentChess.MoveToAnotherSlot(route[0]);
@@ -204,40 +241,22 @@ public class Actions
         yield return true;
     }
 
-    public bool Repair()
+    public void Repair()
     {
-        CurrentChess.CurrentAction = ActionType.Repair;
-        int ActionPrice = 300;
-        if (CurrentPlayer.Resource <= ActionPrice)
+        if (CurrentChess == null)
         {
-            return false;
-        }
-        else
-        {
-            CurrentPlayer.Resource -= ActionPrice;
+            return;
         }
         CurrentChess.HealthPoint += 5;
         if (CurrentChess.HealthPoint > 10)
         {
             CurrentChess.HealthPoint = 10;
         }
-        return true;
     }
 
-    public bool Reinforce(ref Slot reinforceslot, ChessType reinforcechesstype)
+    public void Reinforce(ref Slot reinforceslot, ChessType reinforcechesstype)
     {
-        CurrentChess.CurrentAction = ActionType.Reinforce;
-        int ActionPrice = 300 + CurrentPlayer.ChessCostDictionary[reinforcechesstype];
-        if (CurrentPlayer.Resource < ActionPrice)
-        {
-            reinforceslot.InitializeOrSwapChess(reinforcechesstype);
-            return false;
-        }
-        if (reinforceslot.Chess != null)
-        {
-            return true;
-        }
-        return false;
+        reinforceslot.InitializeOrSwapChess(reinforcechesstype);
     }
 
     public int TypeAttackPercent()

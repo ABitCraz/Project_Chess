@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
@@ -18,9 +19,8 @@ public class GameController : Singleton<GameController>
     public bool masterActionReady = false;
     public bool customerActionReady = false;
     public bool customerRoundBeginReady = false;
-    
-    
-    private void Awake()
+
+    protected override void Awake()
     {
         base.Awake();
         ConfirmButton.GetComponent<Button>().onClick.AddListener(LetUsBegin);
@@ -30,12 +30,17 @@ public class GameController : Singleton<GameController>
 
     private void LetUsBegin()
     {
-        if (isRoundBegin) { return; }
-        
+        if (isRoundBegin)
+        {
+            return;
+        }
+
         this.GetComponent<RaycastInGame>().IsInControl = false;
         isRoundBegin = true;
         Debug.Log(NetworkEventManager.IsInitialized);
-        NetworkEventManager.GetInstance().SendPlayerActionEvent(RaycastInGame.GetInstance().ActionList);
+        NetworkEventManager
+            .GetInstance()
+            .SendPlayerActionEvent(RaycastInGame.GetInstance().ActionList);
         StartCoroutine(WaitToStart());
     }
 
@@ -57,28 +62,79 @@ public class GameController : Singleton<GameController>
     {
         for (int i = 0; i < 3; i++)
         {
-            PlanActions mp = MasterActionList[i];
-            PlanActions ca = CustomerActionList[i];
+            PlanActions mp;
+            try
+            {
+                mp = MasterActionList[i];
+            }
+            catch (Exception)
+            {
+                mp = null;
+            }
+            PlanActions ca;
+            try
+            {
+                ca = CustomerActionList[i];
+            }
+            catch (Exception)
+            {
+                ca = null;
+            }
             switch (statement)
             {
                 case 0:
-                    CheckHold(ref mp);
-                    CheckHold(ref ca);
+                    if (mp != null)
+                    {
+                        CheckHold(ref mp);
+                    }
+                    if (ca != null)
+                    {
+                        CheckHold(ref ca);
+                    }
                     statement += 1;
                     break;
                 case 1:
-                    CheckAlert(ref mp);
-                    CheckAlert(ref ca);
+                    if (mp != null)
+                    {
+                        CheckAlert(ref mp);
+                    }
+                    if (ca != null)
+                    {
+                        CheckAlert(ref ca);
+                    }
                     statement += 1;
                     break;
                 case 2:
-                    CheckRepair(ref mp);
-                    CheckRepair(ref ca);
+                    if (mp != null)
+                    {
+                        CheckAttack(ref mp);
+                    }
+                    if (ca != null)
+                    {
+                        CheckAttack(ref ca);
+                    }
                     statement += 1;
                     break;
                 case 3:
-                    CheckAlertMovePush(ref mp);
-                    CheckAlertMovePush(ref ca);
+                    if (mp != null)
+                    {
+                        CheckRepair(ref mp);
+                    }
+                    if (ca != null)
+                    {
+                        CheckRepair(ref ca);
+                    }
+                    statement += 1;
+                    break;
+                case 4:
+                    if (mp != null)
+                    {
+                        CheckAlertMovePush(ref mp);
+                    }
+                    if (ca != null)
+                    {
+                        CheckAlertMovePush(ref ca);
+                    }
                     break;
             }
             yield return i;
@@ -94,7 +150,7 @@ public class GameController : Singleton<GameController>
         customerActionReady = false;
         customerRoundBeginReady = false;
     }
-    
+
     private void CheckHold(ref PlanActions planaction)
     {
         if (planaction.ThisActionType == ActionType.Hold)
@@ -111,6 +167,14 @@ public class GameController : Singleton<GameController>
                 planaction.RouteInPlan
             );
             ChessesOnAlert.Add(planaction.CurrentChess);
+        }
+    }
+
+    private void CheckAttack(ref PlanActions planaction)
+    {
+        if (planaction.ThisActionType == ActionType.Attack)
+        {
+            new Actions(planaction.CurrentChess, planaction.CurrentPlayer).Attack(planaction.TargetSlot);
         }
     }
 

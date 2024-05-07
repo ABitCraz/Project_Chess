@@ -9,27 +9,26 @@ using EventCode = Tools.EventCode;
 using Tools;
 using UnityTemplateProjects.Tools;
 
-public class NetworkEventManager : SingletonPunCallbacks<NetworkEventManager>,IOnEventCallback
+public class NetworkEventManager : SingletonPunCallbacks<NetworkEventManager>, IOnEventCallback
 {
     protected override void Awake()
     {
         base.Awake();
     }
 
-    private void OnEnable()
+    public override void OnEnable()
     {
         PhotonNetwork.AddCallbackTarget(this);
     }
 
-    private void OnDisable()
+    public override void OnDisable()
     {
         PhotonNetwork.RemoveCallbackTarget(this);
     }
 
-    
     public void OnEvent(EventData photonEvent)
     {
-        switch ((EventCode) photonEvent.Code)
+        switch ((EventCode)photonEvent.Code)
         {
             case EventCode.ActionSend:
                 ReceivePlayerAction(photonEvent);
@@ -40,20 +39,19 @@ public class NetworkEventManager : SingletonPunCallbacks<NetworkEventManager>,IO
         }
     }
 
-
-
     #region reciever
 
     private void ReceivePlayerAction(EventData eventData)
     {
-
         Dictionary<byte, object> tmp_actionData = (Dictionary<byte, object>)eventData.CustomData;
         Photon.Realtime.Player sender = (Photon.Realtime.Player)tmp_actionData[0];
         Debug.Log("收到action消息 from" + sender.ActorNumber);
-        List<PlanActions> tmp_actionsList = new (); 
+        List<PlanActions> tmp_actionsList = new();
         for (int i = 1; i < tmp_actionData.Count; i++)
         {
-            tmp_actionsList.Add(JsonUtility.FromJson<PlanActions>((string)tmp_actionData[Convert.ToByte(i)])); 
+            tmp_actionsList.Add(
+                JsonUtility.FromJson<PlanActions>((string)tmp_actionData[Convert.ToByte(i)])
+            );
         }
 
         if (sender.IsMasterClient)
@@ -70,9 +68,10 @@ public class NetworkEventManager : SingletonPunCallbacks<NetworkEventManager>,IO
 
     private void ReceiveRoundState(EventData eventData)
     {
-        Dictionary<byte, object> tmp_roundStateData = (Dictionary<byte, object>)eventData.CustomData;
+        Dictionary<byte, object> tmp_roundStateData =
+            (Dictionary<byte, object>)eventData.CustomData;
         Debug.Log("收到round消息:" + tmp_roundStateData[0]);
-        switch ((int) tmp_roundStateData[0])
+        switch ((int)tmp_roundStateData[0])
         {
             case 1:
                 if (PhotonNetwork.LocalPlayer.IsMasterClient)
@@ -81,9 +80,9 @@ public class NetworkEventManager : SingletonPunCallbacks<NetworkEventManager>,IO
                 }
                 break;
             case 2:
-                foreach (var a in GameController.GetInstance(). RoundBegin())
+                foreach (var a in GameController.GetInstance().RoundBegin())
                 {
-                    GameController.GetInstance().RoundBegin();
+                    GameController.GetInstance().statement += 1;
                 }
                 Debug.Log("开始回合动");
                 break;
@@ -93,7 +92,7 @@ public class NetworkEventManager : SingletonPunCallbacks<NetworkEventManager>,IO
     }
 
     #endregion
-    
+
 
     #region Sender
 
@@ -103,18 +102,26 @@ public class NetworkEventManager : SingletonPunCallbacks<NetworkEventManager>,IO
         {
             return;
         }
-        
+
         Dictionary<byte, object> tmp_actionData = new Dictionary<byte, object>();
-        
-        tmp_actionData.Add(0,PhotonNetwork.LocalPlayer);
+
+        tmp_actionData.Add(0, PhotonNetwork.LocalPlayer);
         for (int i = 1; i < actionsList.Count; i++)
         {
-            tmp_actionData.Add(Convert.ToByte(i) , JsonUtility.ToJson(actionsList[i]));
+            tmp_actionData.Add(Convert.ToByte(i), JsonUtility.ToJson(actionsList[i]));
         }
-        
-        RaiseEventOptions tmp_RaiseEventOptions = new RaiseEventOptions() {Receivers = ReceiverGroup.All};
+
+        RaiseEventOptions tmp_RaiseEventOptions = new RaiseEventOptions()
+        {
+            Receivers = ReceiverGroup.All
+        };
         SendOptions tmp_SendOptions = SendOptions.SendReliable;
-        PhotonNetwork.RaiseEvent((byte) EventCode.ActionSend, tmp_actionData, tmp_RaiseEventOptions, tmp_SendOptions);
+        PhotonNetwork.RaiseEvent(
+            (byte)EventCode.ActionSend,
+            tmp_actionData,
+            tmp_RaiseEventOptions,
+            tmp_SendOptions
+        );
     }
 
     /// <summary>
@@ -124,15 +131,18 @@ public class NetworkEventManager : SingletonPunCallbacks<NetworkEventManager>,IO
     public void SendRoundState(int set)
     {
         Dictionary<byte, object> tmp_RoundState = new Dictionary<byte, object>();
-        tmp_RoundState.Add(0,set);
-        RaiseEventOptions tmp_RaiseEventOptions = new RaiseEventOptions() {Receivers = ReceiverGroup.All};
+        tmp_RoundState.Add(0, set);
+        RaiseEventOptions tmp_RaiseEventOptions = new RaiseEventOptions()
+        {
+            Receivers = ReceiverGroup.All
+        };
         SendOptions tmp_SendOptions = SendOptions.SendReliable;
-        PhotonNetwork.RaiseEvent((byte) EventCode.RoundState, tmp_RoundState, tmp_RaiseEventOptions, tmp_SendOptions);
+        PhotonNetwork.RaiseEvent(
+            (byte)EventCode.RoundState,
+            tmp_RoundState,
+            tmp_RaiseEventOptions,
+            tmp_SendOptions
+        );
     }
     #endregion
-    
-    
-    
-    
-    
 }

@@ -31,7 +31,7 @@ public class RaycastInGame : Singleton<RaycastInGame>
     bool ispickingtarget = false;
     bool isdrawingtarget = false;
 
-    private void Awake()
+    protected override void Awake()
     {
         base.Awake();
         loadedsave ??= StartCoroutine(LoadSave());

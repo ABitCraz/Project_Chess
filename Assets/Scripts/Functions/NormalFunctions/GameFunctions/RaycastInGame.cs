@@ -14,7 +14,7 @@ public class RaycastInGame : Singleton<RaycastInGame>
     public GameObject ActionDropdown;
     public GameObject PlanContainer;
     public GameObject LeftBar;
-    public Player CurrentPlayer;
+    public Player CurrentPlayer = new();
     public bool IsInControl = true;
     public SavingDatum save;
     public ChessType PutChessType;
@@ -26,7 +26,7 @@ public class RaycastInGame : Singleton<RaycastInGame>
     Ray mouseray;
     SlotStatusShow sss = new();
     Coroutine loadedsave = null;
-    bool isactiondropdown = false;
+    bool isactiondropdown;
     List<Slot> moveroute = new();
     Coroutine drawroutecoroutine;
     Coroutine picktargetcoroutine;
@@ -91,71 +91,146 @@ public class RaycastInGame : Singleton<RaycastInGame>
     private void OnShowThoseVisiable()
     {
         int count = ActionList.Count;
-        Vector2 plancontainerrt = PlanContainer.GetComponent<RectTransform>().anchoredPosition;
         switch (count)
         {
             case <= 0:
-                if (plancontainerrt.x < 230)
+                for (int i = 0; i < ActionUnits.Count; i++)
                 {
-                    PlanContainer.GetComponent<RectTransform>().anchoredPosition = new Vector2(
-                        plancontainerrt.x + 1,
-                        plancontainerrt.y
-                    );
-                }
-                else if (plancontainerrt.x > 230)
-                {
-                    PlanContainer.GetComponent<RectTransform>().anchoredPosition = new Vector2(
-                        plancontainerrt.x - 1,
-                        plancontainerrt.y
-                    );
+                    if (ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.x < 80)
+                    {
+                        ActionUnits[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(
+                            ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.x + 1,
+                            ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.y
+                        );
+                    }
+                    else if (ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.x > 80)
+                    {
+                        PlanContainer.GetComponent<RectTransform>().anchoredPosition = new Vector2(
+                            ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.x - 1,
+                            ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.y
+                        );
+                    }
                 }
                 break;
             case 1:
-                if (plancontainerrt.x < 75)
+                for (int i = 0; i < ActionUnits.Count; i++)
                 {
-                    PlanContainer.GetComponent<RectTransform>().anchoredPosition = new Vector2(
-                        plancontainerrt.x + 1,
-                        plancontainerrt.y
-                    );
-                }
-                else if (plancontainerrt.x > 75)
-                {
-                    PlanContainer.GetComponent<RectTransform>().anchoredPosition = new Vector2(
-                        plancontainerrt.x - 1,
-                        plancontainerrt.y
-                    );
+                    if (i > 0)
+                    {
+                        if (ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.x > 80)
+                        {
+                            ActionUnits[i].GetComponent<RectTransform>().anchoredPosition =
+                                new Vector2(
+                                    ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.x
+                                        + 1,
+                                    ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.y
+                                );
+                        }
+                        else if (
+                            ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.x > 80
+                        )
+                        {
+                            ActionUnits[i].GetComponent<RectTransform>().anchoredPosition =
+                                new Vector2(
+                                    ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.x
+                                        - 1,
+                                    ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.y
+                                );
+                        }
+                    }
+                    else
+                    {
+                        if (ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.x < -50)
+                        {
+                            ActionUnits[i].GetComponent<RectTransform>().anchoredPosition =
+                                new Vector2(
+                                    ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.x
+                                        + 1,
+                                    ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.y
+                                );
+                        }
+                        else if (
+                            ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.x > -50
+                        )
+                        {
+                            ActionUnits[i].GetComponent<RectTransform>().anchoredPosition =
+                                new Vector2(
+                                    ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.x
+                                        - 1,
+                                    ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.y
+                                );
+                        }
+                    }
                 }
                 break;
             case 2:
-                if (plancontainerrt.x < -75)
+                for (int i = 0; i < ActionUnits.Count; i++)
                 {
-                    PlanContainer.GetComponent<RectTransform>().anchoredPosition = new Vector2(
-                        plancontainerrt.x + 1,
-                        plancontainerrt.y
-                    );
-                }
-                else if (plancontainerrt.x > -75)
-                {
-                    PlanContainer.GetComponent<RectTransform>().anchoredPosition = new Vector2(
-                        plancontainerrt.x - 1,
-                        plancontainerrt.y
-                    );
+                    if (i > 1)
+                    {
+                        if (ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.x > 80)
+                        {
+                            ActionUnits[i].GetComponent<RectTransform>().anchoredPosition =
+                                new Vector2(
+                                    ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.x
+                                        + 1,
+                                    ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.y
+                                );
+                        }
+                        else if (
+                            ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.x > 80
+                        )
+                        {
+                            ActionUnits[i].GetComponent<RectTransform>().anchoredPosition =
+                                new Vector2(
+                                    ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.x
+                                        - 1,
+                                    ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.y
+                                );
+                        }
+                    }
+                    else
+                    {
+                        if (ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.x < -50)
+                        {
+                            ActionUnits[i].GetComponent<RectTransform>().anchoredPosition =
+                                new Vector2(
+                                    ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.x
+                                        + 1,
+                                    ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.y
+                                );
+                        }
+                        else if (
+                            ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.x > -50
+                        )
+                        {
+                            ActionUnits[i].GetComponent<RectTransform>().anchoredPosition =
+                                new Vector2(
+                                    ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.x
+                                        - 1,
+                                    ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.y
+                                );
+                        }
+                    }
                 }
                 break;
             case >= 3:
-                if (plancontainerrt.x < -245)
+                for (int i = 0; i < ActionUnits.Count; i++)
                 {
-                    PlanContainer.GetComponent<RectTransform>().anchoredPosition = new Vector2(
-                        plancontainerrt.x + 1,
-                        plancontainerrt.y
-                    );
-                }
-                else if (plancontainerrt.x > -245)
-                {
-                    PlanContainer.GetComponent<RectTransform>().anchoredPosition = new Vector2(
-                        plancontainerrt.x - 1,
-                        plancontainerrt.y
-                    );
+                    if (ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.x < -50)
+                    {
+                        ActionUnits[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(
+                            ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.x + 1,
+                            ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.y
+                        );
+                    }
+                    else if (ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.x > -50)
+                    {
+                        ActionUnits[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(
+                            ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.x - 1,
+                            ActionUnits[i].GetComponent<RectTransform>().anchoredPosition.y
+                        );
+                    }
                 }
                 break;
         }
@@ -564,8 +639,9 @@ public class RaycastInGame : Singleton<RaycastInGame>
         ActionUnits.Add(PlanContainer.transform.GetChild(0).gameObject);
         ActionUnits.Add(PlanContainer.transform.GetChild(1).gameObject);
         ActionUnits.Add(PlanContainer.transform.GetChild(2).gameObject);
-        clear = PlanContainer.transform.GetChild(3).gameObject;
-        clear.GetComponent<Button>().onClick.AddListener(RestoreAll);
+        ActionUnits[0].transform.GetChild(2).GetComponent<Button>().onClick.AddListener(RestoreAll);
+        ActionUnits[1].transform.GetChild(2).GetComponent<Button>().onClick.AddListener(RestoreAll);
+        ActionUnits[2].transform.GetChild(2).GetComponent<Button>().onClick.AddListener(RestoreAll);
     }
 
     private void RestoreAll()

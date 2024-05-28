@@ -43,4 +43,9 @@ public class Chess : BasicUnit, IChess
             this.UnitGameObject.transform.SetParent(targetslot.SlotGameObject.transform);
         }
     }
+
+    public void TakeBrake()
+    {
+        this.CurrentAction = ActionType.Hold;
+    }
 }

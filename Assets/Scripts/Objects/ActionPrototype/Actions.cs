@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Actions
@@ -47,7 +48,13 @@ public class Actions
                 )
                 / 100
             );
-            if (!CurrentChess.IsStanding)
+            if (
+                !CurrentChess.IsStanding
+                && (
+                    CurrentChess.ChessType == ChessType.Mortar
+                    || CurrentChess.ChessType == ChessType.Artillery
+                )
+            )
             {
                 damage /= 2;
             }
@@ -119,6 +126,11 @@ public class Actions
                     break;
             }
         }
+    }
+
+    public IEnumerator<bool> MoveAttack(List<Slot> route,Slot currentslot)
+    {
+        yield return false;
     }
 
     public IEnumerable<bool> Move(List<Slot> route, Slot currentslot)
@@ -213,11 +225,16 @@ public class Actions
     )
     {
         Chess CurrentChess = currentslot.Chess ?? null;
+        CurrentChess.CurrentAction = ActionType.Push;
         Debug.Log("Pushing");
         CurrentChess.IsStanding = false;
         CurrentChess.IsMoving = true;
         while (route.Count > 0)
         {
+            if(CurrentChess.CurrentAction==ActionType.Hold)
+            {
+                route.Clear();
+            }
             Slot[] slotinrange = slotcalculator.CalculateSlotInAttackRange(
                 ref CurrentChess.TheSlotStepOn,
                 ref CurrentSlotMap.FullSlotDictionary,
@@ -228,6 +245,23 @@ public class Actions
                 if (slotinrange[j].Chess != null && slotinrange[j].Chess.Owner != CurrentPlayer)
                 {
                     Attack(ref currentslot, ref slotinrange[j]);
+                }
+            }
+            if(route[0].Chess!=null)
+            {
+                Slot forwardslot = route[0];
+                Attack(ref CurrentChess.TheSlotStepOn,ref forwardslot);
+                if(CurrentChess.HealthPoint<route[0].Chess.HealthPoint)
+                {
+                    route.Clear();
+                }
+                if(CurrentChess.HealthPoint==route[0].Chess.HealthPoint)
+                {
+                    route.Clear();
+                }
+                if(CurrentChess.HealthPoint>route[0].Chess.HealthPoint)
+                {
+                    route[0].Chess.TakeBrake();
                 }
             }
             CurrentChess.MoveToAnotherSlot(route[0]);
@@ -261,7 +295,11 @@ public class Actions
         Debug.Log("Reinfore End");
     }
 
-    public void PlanActions(ref Slot reinforceslot,ChessType reinforcechesstype,ref Player currentplayer)
+    public void PlanActions(
+        ref Slot reinforceslot,
+        ChessType reinforcechesstype,
+        ref Player currentplayer
+    )
     {
         Debug.Log("Placing");
         reinforceslot.InitializeOrSwapChess(reinforcechesstype);

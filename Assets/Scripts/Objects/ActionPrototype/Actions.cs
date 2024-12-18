@@ -7,8 +7,6 @@ using UnityEngine;
 
 public class Actions
 {
-    SlotCalculator slotcalculator = new();
-
     public void Hold(Chess CurrentChess)
     {
         Debug.Log("Holding");
@@ -44,7 +42,7 @@ public class Actions
                         * TypeAttackPercent(CurrentChess, TargetChess)
                         / 100
                     - TargetChess.DefensePoint
-                        * TargetChess.TheSlotStepOn.Landscape.DefenceEffectPercent
+                        * TargetChess.TheSlotStepOn.Landscape.DefenseEffectPercent
                 )
                 / 100
             );
@@ -80,7 +78,7 @@ public class Actions
                         * TypeAttackPercent(TargetChess, CurrentChess)
                         / 100
                     - CurrentChess.DefensePoint
-                        * CurrentChess.TheSlotStepOn.Landscape.DefenceEffectPercent
+                        * CurrentChess.TheSlotStepOn.Landscape.DefenseEffectPercent
                 )
                 / 100
             );
@@ -101,11 +99,11 @@ public class Actions
         {
             switch (targetslot.Landscape.LandscapeType)
             {
-                case LandscapeType.Wildlessness:
-                    Wildlessness targetwln = targetslot.Landscape as Wildlessness;
-                    if (!targetwln.IsSandstorming)
+                case LandscapeType.Wilderness:
+                    Wilderness targetwln = targetslot.Landscape as Wilderness;
+                    if (!targetwln.IsSandStorming)
                     {
-                        targetwln.IsSandstorming = true;
+                        targetwln.IsSandStorming = true;
                     }
                     break;
                 case LandscapeType.Desert:
@@ -128,7 +126,7 @@ public class Actions
         }
     }
 
-    public IEnumerator<bool> MoveAttack(List<Slot> route,Slot currentslot)
+    public IEnumerator<bool> MoveAttack(List<Slot> route, Slot currentslot)
     {
         yield return false;
     }
@@ -181,7 +179,7 @@ public class Actions
     {
         Chess CurrentChess = currentslot.Chess ?? null;
         Debug.Log("Alarming");
-        Slot[] slotinrange = slotcalculator.CalculateSlotInAttackRange(
+        Slot[] slotinrange = SlotCalculator.CalculateSlotInAttackRange(
             ref CurrentChess.TheSlotStepOn,
             ref CurrentSlotMap.FullSlotDictionary,
             ref CurrentSlotMap.MapSize
@@ -231,11 +229,11 @@ public class Actions
         CurrentChess.IsMoving = true;
         while (route.Count > 0)
         {
-            if(CurrentChess.CurrentAction==ActionType.Hold)
+            if (CurrentChess.CurrentAction == ActionType.Hold)
             {
                 route.Clear();
             }
-            Slot[] slotinrange = slotcalculator.CalculateSlotInAttackRange(
+            Slot[] slotinrange = SlotCalculator.CalculateSlotInAttackRange(
                 ref CurrentChess.TheSlotStepOn,
                 ref CurrentSlotMap.FullSlotDictionary,
                 ref CurrentSlotMap.MapSize
@@ -247,21 +245,21 @@ public class Actions
                     Attack(ref currentslot, ref slotinrange[j]);
                 }
             }
-            if(route[0].Chess!=null)
+            if (route[0].Chess != null)
             {
                 Slot forwardslot = route[0];
-                Attack(ref CurrentChess.TheSlotStepOn,ref forwardslot);
-                if(CurrentChess.HealthPoint<route[0].Chess.HealthPoint)
+                Attack(ref CurrentChess.TheSlotStepOn, ref forwardslot);
+                if (CurrentChess.HealthPoint < route[0].Chess.HealthPoint)
                 {
                     route.Clear();
                 }
-                if(CurrentChess.HealthPoint==route[0].Chess.HealthPoint)
+                if (CurrentChess.HealthPoint == route[0].Chess.HealthPoint)
                 {
                     route.Clear();
                 }
-                if(CurrentChess.HealthPoint>route[0].Chess.HealthPoint)
+                if (CurrentChess.HealthPoint > route[0].Chess.HealthPoint)
                 {
-                    route[0].Chess.TakeBrake();
+                    route[0].Chess.CurrentAction = ActionType.Hold;
                 }
             }
             CurrentChess.MoveToAnotherSlot(route[0]);

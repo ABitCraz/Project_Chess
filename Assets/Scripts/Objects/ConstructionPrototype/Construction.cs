@@ -1,20 +1,28 @@
 using UnityEngine;
 
-public class Construction : BasicUnit, IConstruction
+public abstract class Construction : BasicUnit, IConstruction
 {
     public string ConstructionName;
     public ConstructionType ConstructionType;
     public int ConstructionHealth;
+    public bool CanBeCaptured;
+    public int CaptureProgress = 0;
+    public int BuildDifficulty;
+    public int BuildProgress = 0;
 
-    public void LoadConstructionSprite()
+    public override void LoadSpriteAndAnimation()
     {
-        SwapSprite(EssenitalDatumLoader.SpriteDictionary[ConstructionType]);
+        LoadSprite(EssentialDatumLoader.SpriteDictionary[ConstructionType]);
         this.UnitGameObject.GetComponent<Animator>().runtimeAnimatorController =
-            Resources.Load(ResourcePaths.TargetAnimators[ConstructionType]) as RuntimeAnimatorController;
+            Resources.Load(ResourcePaths.TargetAnimators[ConstructionType])
+            as RuntimeAnimatorController;
     }
 
-    public virtual void ChessStepOff(ref Chess stepchess){}
-    public virtual void ChessStepOn(ref Chess stepchess){}
-    public virtual void LandscapeDestoryedOn(ref Landscape plantlandscape){}
-    public virtual void LandscapePlantOn(ref Landscape plantlandscape){}
+    public virtual void ChessStepOff(ref Chess step_chess) { }
+
+    public virtual void ChessStepOn(ref Chess step_chess) { }
+
+    public virtual void LandscapeDestroyedOn(ref Landscape plant_landscape) { }
+
+    public virtual void LandscapePlantOn(ref Landscape plant_landscape) { }
 }

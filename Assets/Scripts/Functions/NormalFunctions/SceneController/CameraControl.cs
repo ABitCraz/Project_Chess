@@ -8,12 +8,12 @@ using System;
 
 public class CameraControl : MonoBehaviour
 {
-    Camera maincamera;
+    Camera main_camera;
     float speed = 2.5f;
 
     private void Awake()
     {
-        maincamera = Camera.main;
+        main_camera = Camera.main;
     }
 
     private void Update()
@@ -32,23 +32,23 @@ public class CameraControl : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
         {
-            maincamera.transform.Translate(speed * Time.deltaTime * Vector2.left, Space.Self);
+            main_camera.transform.Translate(speed * Time.deltaTime * Vector2.left, Space.Self);
         }
         if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
         {
-            maincamera.transform.Translate(speed * Time.deltaTime * Vector2.right, Space.Self);
+            main_camera.transform.Translate(speed * Time.deltaTime * Vector2.right, Space.Self);
         }
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
         {
-            maincamera.transform.Translate(speed * Time.deltaTime * Vector2.up, Space.Self);
+            main_camera.transform.Translate(speed * Time.deltaTime * Vector2.up, Space.Self);
         }
         if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
         {
-            maincamera.transform.Translate(speed * Time.deltaTime * Vector2.down, Space.Self);
+            main_camera.transform.Translate(speed * Time.deltaTime * Vector2.down, Space.Self);
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
-            maincamera.transform.position = new Vector3(0, 0, -10);
+            main_camera.transform.position = new Vector3(0, 0, -10);
             speed = 2.5f;
         }
     }

@@ -7,6 +7,6 @@ public class Heavy : Chess
 
         this.Movement = 3;
         this.AttackRange = new int[]{1,2};
-        this.Vision = 2;
+        this.VisionInRange = 2;
     }
 }

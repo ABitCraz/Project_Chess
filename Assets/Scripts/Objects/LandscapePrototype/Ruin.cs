@@ -6,13 +6,13 @@ public class Ruin : Landscape
         this.LandscapeType = LandscapeType.Ruin;
 
         this.MovementPrice = 2;
-        this.DefenceEffectPercent = 150;
-        this.EffectVision = -1;
+        this.DefenseEffectPercent = 150;
+        this.VisionRangeEffectInteger = -1;
         this.IsTroopersOnly = true;
     }
 
     public void GetAttacked(ref Slot attackslot)
     {
-        attackslot.InitializeOrSwapLandscape(LandscapeType.Wildlessness);
+        attackslot.InitializeOrSwapLandscape(LandscapeType.Wilderness);
     }
 }

@@ -52,5 +52,8 @@
         "Temp/": true
     },
     "dotnet.preferCSharpExtension": true,
-    "dotnet.defaultSolution": "Project_Chess.sln"
+    "dotnet.defaultSolution": "Project_Chess.sln",
+    "cSpell.words": [
+        "Behaviour"
+    ]
 }

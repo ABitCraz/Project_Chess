@@ -1,4 +1,1 @@
-public interface IChess
-{
-    public abstract void LoadChessSprite();
-}
+public interface IChess : IBasic { }

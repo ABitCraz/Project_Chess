@@ -7,7 +7,7 @@ public class Desert : Landscape
         this.LandscapeType = LandscapeType.Desert;
 
         this.MovementPrice = 2;
-        this.DefenceEffectPercent = 50;
+        this.DefenseEffectPercent = 50;
         this.IsTroopersOnly = true;
     }
 }

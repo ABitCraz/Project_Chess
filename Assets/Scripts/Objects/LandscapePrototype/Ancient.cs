@@ -6,13 +6,13 @@ public class Ancient : Landscape
         this.LandscapeType = LandscapeType.Ancient;
 
         this.MovementPrice = 2;
-        this.DefenceEffectPercent = 150;
-        this.EffectVision = -1;
+        this.DefenseEffectPercent = 150;
+        this.VisionRangeEffectInteger = -1;
         this.IsTroopersOnly = true;
     }
 
-    public void GetAttacked(ref Slot attackslot)
+    public void GetAttacked(ref Slot attack_slot)
     {
-        attackslot.InitializeOrSwapLandscape(LandscapeType.Wildlessness);
+        attack_slot.InitializeOrSwapLandscape(LandscapeType.Wilderness);
     }
 }

@@ -4,29 +4,29 @@ using UnityEngine;
 
 public class KeepSpriteErect
 {
-    public void KeepErect(ref SlotMap currentmap,GameObject cameraobject)
+    public static void KeepErect(ref SlotMap current_map, GameObject camera_object)
     {
-        List<GameObject> wholespritegos = new();
-        Slot[] cm = currentmap.FullSlotMap;
+        List<GameObject> whole_sprite_gos = new();
+        Slot[] cm = current_map.FullSlotMap;
         for (int i = 0; i < cm.Length; i++)
         {
             if (cm[i].Landscape != null)
             {
-                wholespritegos.Add(cm[i].Landscape.UnitGameObject);
+                whole_sprite_gos.Add(cm[i].Landscape.UnitGameObject);
             }
             if (cm[i].Construction != null)
             {
-                wholespritegos.Add(cm[i].Construction.UnitGameObject);
+                whole_sprite_gos.Add(cm[i].Construction.UnitGameObject);
             }
             if (cm[i].Chess != null)
             {
-                wholespritegos.Add(cm[i].Chess.UnitGameObject);
+                whole_sprite_gos.Add(cm[i].Chess.UnitGameObject);
             }
         }
-        
-        for(int i=0;i<wholespritegos.Count;i++)
+
+        for (int i = 0; i < whole_sprite_gos.Count; i++)
         {
-            wholespritegos[i].transform.rotation = cameraobject.transform.rotation;
+            whole_sprite_gos[i].transform.rotation = camera_object.transform.rotation;
         }
     }
 }

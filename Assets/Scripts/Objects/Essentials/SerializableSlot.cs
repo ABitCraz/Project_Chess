@@ -12,38 +12,38 @@ public class SerializableSlot
     public Vector3 FactPosition;
     public Player Chess_Owner;
 
-    public SerializableSlot(Slot swapslot)
+    public SerializableSlot(Slot swap_slot)
     {
-        if (swapslot.Landscape != null)
+        if (swap_slot.Landscape != null)
         {
-            this.S_LandscapeType = swapslot.Landscape.LandscapeType;
+            this.S_LandscapeType = swap_slot.Landscape.LandscapeType;
         }
-        if (swapslot.Construction != null)
+        if (swap_slot.Construction != null)
         {
-            this.S_ConstructionType = swapslot.Construction.ConstructionType;
+            this.S_ConstructionType = swap_slot.Construction.ConstructionType;
         }
-        if (swapslot.Chess != null)
+        if (swap_slot.Chess != null)
         {
-            this.S_ChessType = swapslot.Chess.ChessType;
-            this.Chess_HealthPoint = swapslot.Chess.HealthPoint;
-            this.Chess_Owner = swapslot.Chess.Owner;
+            this.S_ChessType = swap_slot.Chess.ChessType;
+            this.Chess_HealthPoint = swap_slot.Chess.HealthPoint;
+            this.Chess_Owner = swap_slot.Chess.Owner;
         }
-        this.MapPosition = swapslot.Position;
-        this.FactPosition = swapslot.FactPosition;
+        this.MapPosition = swap_slot.Position;
+        this.FactPosition = swap_slot.FactPosition;
     }
 
-    public Slot SwitchToNormalSlot()
+    public Slot SerializableSlotSwitchToNormalSlot()
     {
-        Slot swapslot = new(S_LandscapeType, S_ConstructionType, S_ChessType)
+        Slot swap_slot = new(S_LandscapeType, S_ConstructionType, S_ChessType)
         {
             Position = MapPosition,
             FactPosition = FactPosition
         };
-        if (swapslot.Chess != null)
+        if (swap_slot.Chess != null)
         {
-            swapslot.Chess.HealthPoint = Chess_HealthPoint;
-            swapslot.Chess.Owner = Chess_Owner;
+            swap_slot.Chess.HealthPoint = Chess_HealthPoint;
+            swap_slot.Chess.Owner = Chess_Owner;
         }
-        return swapslot;
+        return swap_slot;
     }
 }

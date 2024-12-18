@@ -13,14 +13,15 @@ public class City : Construction
     {
         return CaptureState switch
         {
+            -1 => "无人占领",
             0 => "{captureFactor}占领中",
             1 => "{captureFactor}已占领",
             _ => ""
         };
     }
 
-    public void CityCapturing(Player capturedplayer)
+    public void CityCapturing(Player captured_player)
     {
-        capturedplayer.Resource += 100;
+        captured_player.Resource += 100;
     }
 }

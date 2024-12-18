@@ -7,6 +7,6 @@ public class AA_Infantry : Chess
 
         this.Movement = 3;
         this.AttackRange = new int[] { 0, 1 };
-        this.Vision = 3;
+        this.VisionInRange = 3;
     }
 }

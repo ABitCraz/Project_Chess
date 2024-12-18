@@ -5,25 +5,15 @@ using UnityEngine;
 
 public class LoadTargetMap : MonoBehaviour
 {
-    SaveAndLoad snl = new();
     public SlotMap LoadedMap;
     public string MapFileName;
     public SavingDatum save;
-    KeepSpriteErect kse = new();
     public bool IsLoadDone = false;
 
     public void Start()
     {
         LoadMap();
         ChangeCamera();
-    }
-
-    public void Update()
-    {
-        if (save.SlotMap != null)
-        {
-            kse.KeepErect(ref save.SlotMap, Camera.main.gameObject);
-        }
     }
 
     private void ChangeCamera()
@@ -34,35 +24,36 @@ public class LoadTargetMap : MonoBehaviour
         c.transform.position = new Vector3(8, -8f, c.transform.position.z);
     }
 
-    private void LoadMap()
+    private async void LoadMap()
     {
         try
         {
-            save = snl.LoadMapJSONFile(MapFileName);
+            save = await new SaveAndLoad(MapFileName).LoadMapJSONFileAsync();
             List<SerializableSlot> s_slots = save.SaveSlots;
             if ((s_slots.Count > 0) && (s_slots != null))
             {
-                GameObject createdmap = new("SlotMap");
-                createdmap.AddComponent<MapControl>();
-                createdmap.AddComponent<SlotMapComponent>().thisSlotMap = save.SlotMap;
-                save.SlotMap.SlotMapGameObject = createdmap;
-                List<Slot> wholeslot = new();
+                GameObject created_map = new("SlotMap");
+                created_map.AddComponent<MapControl>();
+                created_map.AddComponent<SlotMapComponent>().thisSlotMap = save.SlotMap;
+                save.SlotMap.SlotMapGameObject = created_map;
+                List<Slot> whole_slot = new();
                 for (int i = 0; i < s_slots.Count; i++)
                 {
-                    Slot loadedslot = s_slots[i].SwitchToNormalSlot();
-                    GameObject loadedslotgameobject = Instantiate(
+                    Slot loaded_slot = s_slots[i].SerializableSlotSwitchToNormalSlot();
+                    GameObject loaded_slot_gameobject = Instantiate(
                         Resources.Load(ResourcePaths.Resources[Prefab.Slot]) as GameObject
                     );
-                    loadedslotgameobject.GetComponent<SlotComponent>().thisSlot = loadedslot;
-                    loadedslotgameobject.GetComponent<SlotComponent>().thisSlot.SlotGameObject = loadedslotgameobject;
-                    loadedslotgameobject.transform.position = loadedslot.FactPosition;
-                    loadedslotgameobject.transform.SetParent(createdmap.transform);
-                    SlotLoader.LoadGameObjectFromType(ref loadedslotgameobject);
-                    save.SlotMap.FullSlotDictionary.Add(s_slots[i].MapPosition, loadedslot);
-                    wholeslot.Add(loadedslot);
+                    loaded_slot_gameobject.GetComponent<SlotComponent>().thisSlot = loaded_slot;
+                    loaded_slot_gameobject.GetComponent<SlotComponent>().thisSlot.SlotGameObject =
+                        loaded_slot_gameobject;
+                    loaded_slot_gameobject.transform.position = loaded_slot.FactPosition;
+                    loaded_slot_gameobject.transform.SetParent(created_map.transform);
+                    SlotLoader.LoadGameObject(ref loaded_slot_gameobject);
+                    save.SlotMap.FullSlotDictionary.Add(s_slots[i].MapPosition, loaded_slot);
+                    whole_slot.Add(loaded_slot);
                 }
-                save.SlotMap.FullSlotMap = wholeslot.ToArray();
-                save.SlotMap.SlotMapGameObject = createdmap;
+                save.SlotMap.FullSlotMap = whole_slot.ToArray();
+                save.SlotMap.SlotMapGameObject = created_map;
             }
         }
         catch (Exception except)

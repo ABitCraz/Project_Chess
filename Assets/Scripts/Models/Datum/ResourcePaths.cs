@@ -9,7 +9,7 @@ public class ResourcePaths
             { Prefab.Slot, "Prefabs/Basics/Slot" },
             { Prefab.Landscape, "Prefabs/Basics/Landscape" },
             { Prefab.Construction, "Prefabs/Basics/Construction" },
-            { Prefab.Chess, "Prefabs/Basics/Chess" }
+            { Prefab.Chess, "Prefabs/Basics/Chess" },
         };
     public static readonly Dictionary<UI, string> UIPrefabs =
         new() { { UI.SlotDropDown, "Prefabs/UIs/SlotDropDown" } };
@@ -17,12 +17,12 @@ public class ResourcePaths
         new()
         {
             //LandscapeTypes
-            { LandscapeType.Ancient, "Images/Sprites/Landscape/L_Anicent" },
+            { LandscapeType.Ancient, "Images/Sprites/Landscape/L_Ancient" },
             { LandscapeType.Canyon, "Images/Sprites/Landscape/L_Canyon" },
             { LandscapeType.Desert, "Images/Sprites/Landscape/L_Desert" },
-            { LandscapeType.Highground, "Images/Sprites/Landscape/L_Highground" },
+            { LandscapeType.HighGround, "Images/Sprites/Landscape/L_HighGround" },
             { LandscapeType.Ruin, "Images/Sprites/Landscape/L_Ruin" },
-            { LandscapeType.Wildlessness, "Images/Sprites/Landscape/L_Wildlessness" },
+            { LandscapeType.Wilderness, "Images/Sprites/Landscape/L_Wilderness" },
             //ConstructionTypes
             { ConstructionType.City, "Images/Sprites/Construction/L_City" },
             //ChessTypes
@@ -35,7 +35,7 @@ public class ResourcePaths
             { ChessType.Commander, "Images/Sprites/Chess/Commander/S_General" },
             { ActionType.Attack, "Images/UIs/ORDERattack" },
             { ActionType.Move, "Images/UIs/ORDERmove" },
-            { ActionType.Alert, "Images/UIs/ORDERoverwatch" },
+            { ActionType.Alert, "Images/UIs/ORDEROverWatch" },
             { ActionType.Push, "Images/UIs/ORDERpush" },
             { ActionType.Repair, "Images/UIs/ORDERrepair" },
             { ActionType.Hold, "Images/UIs/ORDERrepair" },
@@ -46,12 +46,12 @@ public class ResourcePaths
         new()
         {
             //LandscapeTypes
-            { LandscapeType.Ancient, "Images/Sprites/Landscape/L_Anicent" },
+            { LandscapeType.Ancient, "Images/Sprites/Landscape/L_Ancient" },
             { LandscapeType.Canyon, "Images/Sprites/Landscape/L_Canyon" },
             { LandscapeType.Desert, "Images/Sprites/Landscape/L_Desert" },
-            { LandscapeType.Highground, "Images/Sprites/Landscape/L_Highground" },
+            { LandscapeType.HighGround, "Images/Sprites/Landscape/L_HighGround" },
             { LandscapeType.Ruin, "Images/Sprites/Landscape/L_Ruin" },
-            { LandscapeType.Wildlessness, "Images/Sprites/Landscape/L_Wildlessness" },
+            { LandscapeType.Wilderness, "Images/Sprites/Landscape/L_Wilderness" },
             //ConstructionTypes
             { ConstructionType.City, "Images/Sprites/Construction/L_City" },
             //ChessTypes

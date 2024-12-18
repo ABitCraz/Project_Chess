@@ -14,7 +14,7 @@ public class SavingDatum
         SaveSlots = new();
         for (int i = 0; i < SlotMap.FullSlotMap.Length; i++)
         {
-            SaveSlots.Add(SlotMap.FullSlotMap[i].SwapToSerializableSlot());
+            SaveSlots.Add(SlotMap.FullSlotMap[i].NormalSlotSwapToSerializableSlot());
         }
         return SaveSlots;
     }

@@ -1,13 +1,11 @@
-public class Highground : Landscape
+public class HighGround : Landscape
 {
-    public Highground()
+    public HighGround()
     {
         this.LandscapeName = "高地";
-        this.LandscapeType = LandscapeType.Highground;
-        this.EffectRange = -1;
-
+        this.LandscapeType = LandscapeType.HighGround;
         this.MovementPrice = 2;
-        this.EffectRange = 1;
-        this.EffectVision = 2;
+        this.RangeEffectInteger = 1;
+        this.VisionRangeEffectPercentage = 200;
     }
 }

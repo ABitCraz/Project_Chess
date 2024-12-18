@@ -1,56 +1,39 @@
+using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class SlotCalculator
+public static class SlotCalculator
 {
-    Chess MovingChess = new();
-
-    public int CalculateDistance(ref Slot originslot, ref Slot targetslot)
+    public static int CalculateDistance(ref Slot origin_slot, ref Slot target_slot)
     {
-        int distance =
-            Mathf.Abs(originslot.Position.x - targetslot.Position.x)
-            + Mathf.Abs(originslot.Position.y - targetslot.Position.y);
+        int distance = (int)Mathf.Round(Mathf.Abs(origin_slot.Position.x - target_slot.Position.x) + Mathf.Abs(origin_slot.Position.y - target_slot.Position.y));
         return distance;
     }
 
-    public List<Vector2Int> CalculateWholePositions(Vector2Int originpos, int distance)
+    public static int CalculateDistance(int[] origin_slot, int[] target_slot)
     {
-        List<Vector2Int> targetpositions = new();
-        for (int i = 0; i <= distance; i++)
-        {
-            for (int j = 0; j <= distance - i; j++)
-            {
-                if ((j == 0) && (i == 0))
-                {
-                    targetpositions.Add(new Vector2Int(originpos.x, originpos.y));
-                    continue;
-                }
-                targetpositions.Add(new Vector2Int(originpos.x + i, originpos.y + j));
-                targetpositions.Add(new Vector2Int(originpos.x + i, originpos.y - j));
-                targetpositions.Add(new Vector2Int(originpos.x - i, originpos.y + j));
-                targetpositions.Add(new Vector2Int(originpos.x - i, originpos.y - j));
-            }
-        }
-        List<Vector2Int> distinctpositions = new();
-        for (int i = 0; i < targetpositions.Count; i++)
-        {
-            Vector2Int unique = targetpositions[i];
-            for (int j = 0; j < distinctpositions.Count; j++)
-            {
-                if (unique.Equals(distinctpositions[j]))
-                {
-                    unique = new Vector2Int(-1, -1);
-                }
-            }
-            if (unique.x != -1)
-            {
-                distinctpositions.Add(unique);
-            }
-        }
-        return distinctpositions;
+        int distance = (int)Mathf.Round(Mathf.Abs(origin_slot[0] - target_slot[0]) + Mathf.Abs(origin_slot[1] - target_slot[1]));
+        return distance;
     }
 
-    public List<Vector2Int> BoundaryFilter(ref List<Vector2Int> positions, int xmax, int ymax)
+    public static List<Vector2Int> CalculateAllPositionsInRange(Vector2Int origin_position, int distance)
+    {
+        List<Vector2Int> target_positions = new();
+        for (int i = origin_position.x - distance; i < origin_position.x + distance; i++)
+        {
+            for (int j = origin_position.y - distance; j < origin_position.y + distance; j++)
+            {
+                if (CalculateDistance(new[] { origin_position.x, origin_position.y }, new[] { i, j }) <= distance)
+                {
+                    target_positions.Add(new Vector2Int(i, j));
+                }
+            }
+        }
+        return target_positions;
+    }
+
+    public static List<Vector2Int> BoundaryFilter(ref List<Vector2Int> positions, int xmax, int ymax)
     {
         for (int i = 0; i < positions.Count; i++)
         {
@@ -68,10 +51,7 @@ public class SlotCalculator
         return positions;
     }
 
-    private void RemoveEveryPositionFromAnother(
-        ref List<Vector2Int> origin,
-        ref List<Vector2Int> target
-    )
+    public static List<Vector2Int> RemoveEveryPositionFromAnother(ref List<Vector2Int> origin, ref List<Vector2Int> target)
     {
         for (int i = 0; i < origin.Count; i++)
         {
@@ -85,167 +65,73 @@ public class SlotCalculator
                 }
             }
         }
+        return origin;
     }
 
-    public Vector2Int[] CalculateEveryPositionInDistance(
-        Vector2Int originpos,
-        int mindistance,
-        int maxdistance,
-        int xmax,
-        int ymax
-    )
+    public static Vector2Int[] CalculateValidPositionInDistance(Vector2Int origin_position, int in_range, int blind_range, int xmax, int ymax)
     {
-        List<Vector2Int> maxpositions = CalculateWholePositions(originpos, maxdistance);
-        List<Vector2Int> minpositions = CalculateWholePositions(originpos, mindistance);
-        RemoveEveryPositionFromAnother(ref maxpositions, ref minpositions);
-        List<Vector2Int> result = BoundaryFilter(ref maxpositions, xmax, ymax);
-        return result.ToArray();
+        List<Vector2Int> in_range_positions = CalculateAllPositionsInRange(origin_position, in_range);
+        List<Vector2Int> blind_range_positions = CalculateAllPositionsInRange(origin_position, blind_range);
+        List<Vector2Int> available_positions = RemoveEveryPositionFromAnother(ref in_range_positions, ref blind_range_positions);
+        List<Vector2Int> valid_range = BoundaryFilter(ref available_positions, xmax, ymax);
+        return valid_range.ToArray();
     }
 
-    public Vector2Int[] CalculateEveryPositionInDistance(
-        Vector2Int originpos,
-        int distance,
-        int xmax,
-        int ymax
-    )
+    public static Slot[] CalculateSlotInVisionRange(ref Slot origin_slot, ref Dictionary<Vector2Int, Slot> slot_dictionary, ref Vector2Int map_size)
     {
-        List<Vector2Int> maxpositions = CalculateWholePositions(originpos, distance);
-        List<Vector2Int> result = BoundaryFilter(ref maxpositions, xmax, ymax);
-        return result.ToArray();
+        Chess current_chess = origin_slot.Chess;
+        Landscape current_landscape = origin_slot.Landscape;
+        int in_range = (current_chess.VisionInRange + current_landscape.VisionRangeEffectInteger) * current_landscape.VisionRangeEffectPercentage / 100;
+        int blind_range = (current_chess.VisionBlindRange + current_landscape.VisionRangeEffectInteger) * current_landscape.VisionRangeEffectPercentage / 100;
+        in_range = in_range < 0 ? 0 : in_range;
+        blind_range = blind_range < 0 ? 0 : blind_range;
+        Vector2Int[] in_range_position = CalculateValidPositionInDistance(origin_slot.Position, in_range, blind_range, map_size[0], map_size[1]);
+        List<Slot> get_slots = new();
+        for (int i = 0; i < in_range_position.Length; i++)
+        {
+            Slot target_slot = slot_dictionary[in_range_position[i]];
+            if (target_slot.Landscape.IsOvershadowed) continue;
+            get_slots.Add(target_slot);
+        }
+        return get_slots.ToArray();
     }
 
-    public Slot[] CalculateSlotInAttackRange(
-        ref Slot originslot,
-        ref Dictionary<Vector2Int, Slot> slotdictionary,
-        ref Vector2Int mapsize
-    )
+    public static Slot[] CalculateSlotInAttackRange(ref Slot origin_slot, ref Dictionary<Vector2Int, Slot> slot_dictionary, ref Vector2Int map_size)
     {
-        if (originslot.Chess == null)
+        Chess current_chess = origin_slot.Chess;
+        Landscape current_landscape = origin_slot.Landscape;
+        int in_range = (current_chess.AttackRange[0] + current_landscape.AttackRangeEffectInteger) * current_landscape.AttackRangeEffectPercentage / 100;
+        int blind_range = (current_chess.AttackRange[1] + current_landscape.AttackRangeEffectInteger) * current_landscape.AttackRangeEffectPercentage / 100;
+        in_range = in_range < 0 ? 0 : in_range;
+        blind_range = blind_range < 0 ? 0 : blind_range;
+        Vector2Int[] in_range_position = CalculateValidPositionInDistance(origin_slot.Position, in_range, blind_range, map_size[0], map_size[1]);
+        List<Slot> get_slots = new();
+        for (int i = 0; i < in_range_position.Length; i++)
         {
-            return null;
+            get_slots.Add(slot_dictionary[in_range_position[i]]);
         }
-        Chess attackchess = originslot.Chess;
-        Landscape steplandscape = originslot.Landscape;
-        int minrange = attackchess.AttackRange[0] + steplandscape.EffectRange;
-        int maxrange = attackchess.AttackRange[1] + steplandscape.EffectRange;
-        minrange = minrange < 0 ? 0 : minrange;
-        maxrange = maxrange < 0 ? 0 : maxrange;
-        Vector2Int[] inrangepos = CalculateEveryPositionInDistance(
-            originslot.Position,
-            minrange,
-            maxrange,
-            mapsize[0],
-            mapsize[1]
-        );
-        List<Slot> getslots = new();
-        for (int i = 0; i < inrangepos.Length; i++)
-        {
-            Slot targetslot = slotdictionary[inrangepos[i]];
-            getslots.Add(targetslot);
-        }
-        return getslots.ToArray();
+        return get_slots.ToArray();
     }
 
-    public Slot[] CalculateSlotInVisionRange(
-        ref Slot originslot,
-        ref Dictionary<Vector2Int, Slot> slotdictionary,
-        ref Vector2Int mapsize
+    public static Slot[] CalculateSlotInMovementRange(
+        ref Slot origin_slot,
+        ref Dictionary<Vector2Int, Slot> slot_dictionary,
+        ref Vector2Int map_size
     )
     {
-        Chess attackchess = originslot.Chess;
-        Landscape steplandscape = originslot.Landscape;
-        int visionrange = attackchess.Vision + steplandscape.EffectVision;
-        visionrange = visionrange < 0 ? 0 : visionrange;
-        Vector2Int[] inrangepos = CalculateEveryPositionInDistance(
-            originslot.Position,
-            0,
-            visionrange,
-            mapsize[0],
-            mapsize[1]
-        );
-        List<Slot> getslots = new();
-        for (int i = 0; i < inrangepos.Length; i++)
+        Vector2Int[] in_range_pos = CalculateValidPositionInDistance(origin_slot.Position, 1, 0, map_size[0], map_size[1]);
+        List<Slot> get_slots = new();
+        for (int i = 0; i < in_range_pos.Length; i++)
         {
-            Slot targetslot = slotdictionary[inrangepos[i]];
-            if (
-                targetslot.Landscape != null
-                && targetslot.Landscape.LandscapeType == LandscapeType.Wildlessness
-            )
+            Slot target_slot = slot_dictionary[in_range_pos[i]];
+            Chess current_chess = target_slot.Chess;
+            Landscape current_landscape = target_slot.Landscape;
+            int movement_remain = (current_chess.Movement + current_landscape.MovementAddonInteger) * current_landscape.MovementAddonPercentage / 100;
+            if (current_landscape.MovementPrice <= movement_remain)
             {
-                Wildlessness thiswln = targetslot.Landscape as Wildlessness;
-                if (thiswln.IsSandstorming)
-                {
-                    continue;
-                }
+                get_slots.Add(target_slot);
             }
-            getslots.Add(targetslot);
         }
-        return getslots.ToArray();
-    }
-
-    public Slot[] CalculateSlotInMovementRange(
-        ref Slot originslot,
-        ref Dictionary<Vector2Int, Slot> slotdictionary,
-        ref Vector2Int mapsize
-    )
-    {
-        Vector2Int[] inrangepos = CalculateEveryPositionInDistance(
-            originslot.Position,
-            0,
-            1,
-            mapsize[0],
-            mapsize[1]
-        );
-        List<Slot> getslots = new();
-        Chess currentchess;
-        if (originslot.Chess != null)
-        {
-            currentchess = originslot.Chess;
-            MovingChess.Movement = currentchess.Movement;
-        }
-        else
-        {
-            currentchess = MovingChess;
-        }
-        for (int i = 0; i < inrangepos.Length; i++)
-        {
-            Slot targetslot = slotdictionary[inrangepos[i]];
-            if (targetslot.Landscape.LandscapeType == LandscapeType.Canyon)
-            {
-                continue;
-            }
-            if (targetslot.Landscape.LandscapeType == LandscapeType.Desert)
-            {
-                Desert targetdesert = targetslot.Landscape as Desert;
-                if (targetdesert.IsQuicksand == true)
-                {
-                    continue;
-                }
-            }
-            if (
-                targetslot.Landscape.IsTroopersOnly == true
-                && (
-                    currentchess.ChessType != ChessType.AA_Infantry
-                    || currentchess.ChessType != ChessType.Infantry
-                )
-            )
-            {
-                continue;
-            }
-            if (MovingChess.Movement - targetslot.Landscape.MovementPrice < 0)
-            {
-                continue;
-            }
-            else
-            {
-                MovingChess.Movement -= targetslot.Landscape.MovementPrice;
-            }
-            if (targetslot.Chess != null)
-            {
-                continue;
-            }
-            getslots.Add(targetslot);
-        }
-        return getslots.ToArray();
+        return get_slots.ToArray();
     }
 }

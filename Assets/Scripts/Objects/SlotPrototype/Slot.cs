@@ -20,28 +20,28 @@ public class Slot
         this.Chess = null;
     }
 
-    public Slot(LandscapeType newlandscape)
+    public Slot(LandscapeType new_landscape)
     {
-        InitializeOrSwapLandscape(newlandscape);
+        InitializeOrSwapLandscape(new_landscape);
     }
 
-    public Slot(LandscapeType newlandscape, ConstructionType newconstruction)
+    public Slot(LandscapeType new_landscape, ConstructionType new_construction)
     {
-        InitializeOrSwapLandscape(newlandscape);
-        InitializeOrSwapConstruction(newconstruction);
+        InitializeOrSwapLandscape(new_landscape);
+        InitializeOrSwapConstruction(new_construction);
     }
 
-    public Slot(LandscapeType newlandscape, ChessType newchess)
+    public Slot(LandscapeType new_landscape, ChessType new_chess)
     {
-        InitializeOrSwapLandscape(newlandscape);
-        InitializeOrSwapChess(newchess);
+        InitializeOrSwapLandscape(new_landscape);
+        InitializeOrSwapChess(new_chess);
     }
 
-    public Slot(LandscapeType newlandscape, ConstructionType newconstruction, ChessType newchess)
+    public Slot(LandscapeType new_landscape, ConstructionType new_construction, ChessType new_chess)
     {
-        InitializeOrSwapLandscape(newlandscape);
-        InitializeOrSwapConstruction(newconstruction);
-        InitializeOrSwapChess(newchess);
+        InitializeOrSwapLandscape(new_landscape);
+        InitializeOrSwapConstruction(new_construction);
+        InitializeOrSwapChess(new_chess);
     }
 
     public void InitializeOrSwapLandscape(LandscapeType landscape)
@@ -53,11 +53,11 @@ public class Slot
         }
         switch (landscape)
         {
-            case LandscapeType.Wildlessness:
-                this.Landscape = new Wildlessness();
+            case LandscapeType.Wilderness:
+                this.Landscape = new Wilderness();
                 break;
-            case LandscapeType.Highground:
-                this.Landscape = new Highground();
+            case LandscapeType.HighGround:
+                this.Landscape = new HighGround();
                 break;
             case LandscapeType.Ancient:
                 this.Landscape = new Ancient();
@@ -155,7 +155,7 @@ public class Slot
         }
     }
 
-    public SerializableSlot SwapToSerializableSlot()
+    public SerializableSlot NormalSlotSwapToSerializableSlot()
     {
         return new SerializableSlot(this);
     }

@@ -2,8 +2,8 @@
 public enum LandscapeType
 {
     Empty,
-    Wildlessness,
-    Highground,
+    Wilderness,
+    HighGround,
     Ancient,
     Ruin,
     Desert,

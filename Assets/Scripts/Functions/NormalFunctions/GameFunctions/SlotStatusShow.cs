@@ -6,61 +6,56 @@ using TMPro;
 
 public class SlotStatusShow
 {
-    SlotCalculator slotcalc = new();
-    Slot previousattackslot;
-    Slot previousvisionslot;
+    Slot previous_attack_slot;
+    Slot previous_vision_slot;
 
-    public void ShowStatus(ref Slot currentslot, ref GameObject showset)
+    public void ShowStatus(ref Slot current_slot, ref GameObject showset)
     {
-        if (currentslot.Landscape == null)
+        if (current_slot.Landscape == null)
         {
             showset.transform.GetChild(0).gameObject.SetActive(false);
         }
         else
         {
             showset.transform.GetChild(0).gameObject.SetActive(true);
-            showset.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = currentslot
+            showset.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = current_slot
                 .Landscape
                 .UnitSprite;
-            showset.transform.GetChild(0).GetChild(1).GetComponent<TMP_Text>().text = currentslot
+            showset.transform.GetChild(0).GetChild(1).GetComponent<TMP_Text>().text = current_slot
                 .Landscape
                 .LandscapeName;
         }
 
-        if (currentslot.Construction == null)
+        if (current_slot.Construction == null)
         {
             showset.transform.GetChild(1).gameObject.SetActive(false);
         }
         else
         {
             showset.transform.GetChild(1).gameObject.SetActive(true);
-            showset.transform.GetChild(1).GetChild(0).GetComponent<Image>().sprite = currentslot
+            showset.transform.GetChild(1).GetChild(0).GetComponent<Image>().sprite = current_slot
                 .Construction
                 .UnitSprite;
-            showset.transform.GetChild(1).GetChild(1).GetComponent<TMP_Text>().text = currentslot
+            showset.transform.GetChild(1).GetChild(1).GetComponent<TMP_Text>().text = current_slot
                 .Construction
                 .ConstructionName;
         }
 
-        if (currentslot.Chess == null)
+        if (current_slot.Chess == null)
         {
             showset.transform.GetChild(2).gameObject.SetActive(false);
         }
         else
         {
             showset.transform.GetChild(2).gameObject.SetActive(true);
-            showset.transform.GetChild(2).GetChild(0).GetComponent<Image>().sprite = currentslot
-                .Chess
-                .UnitSprite;
-            showset.transform.GetChild(2).GetChild(1).GetComponent<TMP_Text>().text = currentslot
-                .Chess
-                .ChessName;
+            showset.transform.GetChild(2).GetChild(0).GetComponent<Image>().sprite = current_slot.Chess.UnitSprite;
+            showset.transform.GetChild(2).GetChild(1).GetComponent<TMP_Text>().text = current_slot.Chess.ChessName;
         }
     }
 
     public Slot[] ShowAttackRange(Slot currentslot, SlotMap slotmap)
     {
-        if (previousattackslot != null && previousattackslot != currentslot)
+        if (previous_attack_slot != null && previous_attack_slot != currentslot)
         {
             for (int i = 0; i < slotmap.FullSlotMap.Length; i++)
             {
@@ -69,8 +64,8 @@ public class SlotStatusShow
                     .UnfocusingActions();
             }
         }
-        previousattackslot = currentslot;
-        Slot[] slotsinattackrange = slotcalc.CalculateSlotInAttackRange(
+        previous_attack_slot = currentslot;
+        Slot[] slotsinattackrange = SlotCalculator.CalculateSlotInAttackRange(
             ref currentslot,
             ref slotmap.FullSlotDictionary,
             ref slotmap.MapSize
@@ -85,7 +80,7 @@ public class SlotStatusShow
 
     public Slot[] ShowVisionRange(Slot currentslot, SlotMap slotmap)
     {
-        if (previousvisionslot != null && previousvisionslot != currentslot)
+        if (previous_vision_slot != null && previous_vision_slot != currentslot)
         {
             for (int i = 0; i < slotmap.FullSlotMap.Length; i++)
             {
@@ -94,8 +89,8 @@ public class SlotStatusShow
                     .UnfocusingActions();
             }
         }
-        previousvisionslot = currentslot;
-        Slot[] slotsinattackrange = slotcalc.CalculateSlotInVisionRange(
+        previous_vision_slot = currentslot;
+        Slot[] slotsinattackrange = SlotCalculator.CalculateSlotInVisionRange(
             ref currentslot,
             ref slotmap.FullSlotDictionary,
             ref slotmap.MapSize
@@ -110,7 +105,7 @@ public class SlotStatusShow
 
     public Slot[] ShowMovementRange(Slot currentslot, SlotMap slotmap)
     {
-        Slot[] slotsinattackrange = slotcalc.CalculateSlotInMovementRange(
+        Slot[] slotsinattackrange = SlotCalculator.CalculateSlotInMovementRange(
             ref currentslot,
             ref slotmap.FullSlotDictionary,
             ref slotmap.MapSize

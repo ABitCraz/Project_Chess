@@ -1,9 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using TMPro;
 using System.Text;
+using TMPro;
+using UnityEngine;
 
 public class RaycastUIs
 {
@@ -44,8 +44,8 @@ public class RaycastUIs
     {
         Slot thisslot = hitslot.GetComponent<SlotComponent>().thisSlot;
 
-        TMP_Dropdown landscapedropdown = slotdropdown.transform
-            .GetChild(0)
+        TMP_Dropdown landscapedropdown = slotdropdown
+            .transform.GetChild(0)
             .GetComponent<TMP_Dropdown>();
         if (thisslot.Landscape != null)
         {
@@ -56,8 +56,8 @@ public class RaycastUIs
             landscapedropdown.value = 0;
         }
 
-        TMP_Dropdown constructiondropdown = slotdropdown.transform
-            .GetChild(1)
+        TMP_Dropdown constructiondropdown = slotdropdown
+            .transform.GetChild(1)
             .GetComponent<TMP_Dropdown>();
         if (thisslot.Construction != null)
         {
@@ -68,8 +68,8 @@ public class RaycastUIs
             constructiondropdown.value = 0;
         }
 
-        TMP_Dropdown chessdropdown = slotdropdown.transform
-            .GetChild(2)
+        TMP_Dropdown chessdropdown = slotdropdown
+            .transform.GetChild(2)
             .GetComponent<TMP_Dropdown>();
         if (thisslot.Chess != null)
         {
@@ -135,8 +135,8 @@ public class RaycastUIs
     {
         Slot thisslot = hitslot.GetComponent<SlotComponent>().thisSlot;
 
-        TMP_Dropdown landscapedropdown = slotdropdown.transform
-            .GetChild(0)
+        TMP_Dropdown landscapedropdown = slotdropdown
+            .transform.GetChild(0)
             .GetComponent<TMP_Dropdown>();
         landscapedropdown.onValueChanged.AddListener(
             (int index) =>
@@ -151,7 +151,7 @@ public class RaycastUIs
                     )
                     {
                         GameObject CreatedObject = MonoBehaviour.Instantiate(
-                            EssenitalDatumLoader.GameObjectDictionary[Prefab.Landscape]
+                            EssentialDatumLoader.GameObjectDictionary[Prefab.Landscape]
                         );
                         thisslot.Landscape.UnitGameObject = CreatedObject;
                         Landscape targetlandscape = CreatedObject
@@ -161,14 +161,14 @@ public class RaycastUIs
                         targetlandscape.PutToSlotPosition(ref hitslot);
                         CreatedObject.transform.SetParent(hitslot.transform);
                         CreatedObject.transform.localPosition = new Vector3(0, 0, 0.2f);
-                        thisslot.Landscape.LoadLandscapeSprite();
+                        //thisslot.Landscape.LoadSprite();
                     }
                 }
             }
         );
 
-        TMP_Dropdown constructiondropdown = slotdropdown.transform
-            .GetChild(1)
+        TMP_Dropdown constructiondropdown = slotdropdown
+            .transform.GetChild(1)
             .GetComponent<TMP_Dropdown>();
         constructiondropdown.onValueChanged.AddListener(
             (int index) =>
@@ -186,7 +186,7 @@ public class RaycastUIs
                     )
                     {
                         GameObject CreatedObject = MonoBehaviour.Instantiate(
-                            EssenitalDatumLoader.GameObjectDictionary[Prefab.Construction]
+                            EssentialDatumLoader.GameObjectDictionary[Prefab.Construction]
                         );
                         thisslot.Construction.UnitGameObject = CreatedObject;
                         Construction targetconstruction = CreatedObject
@@ -197,14 +197,14 @@ public class RaycastUIs
                         CreatedObject.transform.SetParent(hitslot.transform);
                         CreatedObject.transform.localScale *= 0.85f;
                         CreatedObject.transform.localPosition = new Vector3(0, 0, 0.4f);
-                        thisslot.Construction.LoadConstructionSprite();
+                        //thisslot.Construction.LoadConstructionSprite();
                     }
                 }
             }
         );
 
-        TMP_Dropdown chessdropdown = slotdropdown.transform
-            .GetChild(2)
+        TMP_Dropdown chessdropdown = slotdropdown
+            .transform.GetChild(2)
             .GetComponent<TMP_Dropdown>();
         chessdropdown.onValueChanged.AddListener(
             (int index) =>
@@ -219,7 +219,7 @@ public class RaycastUIs
                     )
                     {
                         GameObject CreatedObject = MonoBehaviour.Instantiate(
-                            EssenitalDatumLoader.GameObjectDictionary[Prefab.Chess]
+                            EssentialDatumLoader.GameObjectDictionary[Prefab.Chess]
                         );
                         thisslot.Chess.UnitGameObject = CreatedObject;
                         Chess targetchess = CreatedObject.GetComponent<ChessComponent>().thisChess;
@@ -228,7 +228,7 @@ public class RaycastUIs
                         CreatedObject.transform.SetParent(hitslot.transform);
                         CreatedObject.transform.localScale *= 0.7f;
                         CreatedObject.transform.localPosition = new Vector3(0, 0, 0.6f);
-                        thisslot.Chess.LoadChessSprite();
+                        //thisslot.Chess.LoadSprite();
                     }
                 }
             }

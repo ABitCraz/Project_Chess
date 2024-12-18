@@ -1,65 +1,71 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class SlotLoader
 {
-    public static void LoadGameObjectFromType(ref GameObject slotobject)
+    public static void LoadGameObject(ref GameObject slot_object)
     {
-        Slot slot = slotobject.GetComponent<SlotComponent>().thisSlot;
-        if (
-            slot.Landscape != null
-            && slot.Landscape.LandscapeType.GetType() == typeof(LandscapeType)
-        )
+        Slot slot = slot_object.GetComponent<SlotComponent>().thisSlot;
+        InitializeLandscape(ref slot, ref slot_object);
+        InitializeConstruction(ref slot, ref slot_object);
+        InitializeChess(ref slot, ref slot_object);
+    }
+
+    private static void InitializeLandscape(ref Slot init_slot, ref GameObject slot_object)
+    {
+        if (init_slot.Landscape != null)
         {
-            GameObject CreatedObject = MonoBehaviour.Instantiate(
-                EssenitalDatumLoader.GameObjectDictionary[Prefab.Landscape]
+            GameObject created_object = MonoBehaviour.Instantiate(
+                EssentialDatumLoader.GameObjectDictionary[Prefab.Landscape]
             );
-            slot.Landscape.UnitSprite = CreatedObject.GetComponent<SpriteRenderer>().sprite;
-            slot.Landscape.UnitGameObject = CreatedObject;
-            Landscape targetlandscape = CreatedObject
+            Landscape target_landscape = created_object
                 .GetComponent<LandscapeComponent>()
-                .thisLandscape;
-            targetlandscape = slot.Landscape;
-            targetlandscape.PutToSlotPosition(ref slotobject);
-            targetlandscape.LoadLandscapeSprite();
-            CreatedObject.transform.SetParent(slotobject.transform);
-            CreatedObject.transform.localPosition = new Vector3(0, 0, 0.2f);
+                .thisLandscape = init_slot.Landscape;
+            init_slot.Landscape.UnitSprite = created_object.GetComponent<SpriteRenderer>().sprite;
+            init_slot.Landscape.UnitGameObject = created_object;
+            target_landscape.PutToSlotPosition(ref slot_object);
+            target_landscape.LoadSpriteAndAnimation();
+            created_object.transform.SetParent(slot_object.transform);
+            created_object.transform.localPosition = new Vector3(0, 0, 0.2f);
         }
-        if (
-            slot.Construction != null
-            && slot.Construction.ConstructionType.GetType() == typeof(ConstructionType)
-        )
+    }
+
+    private static void InitializeConstruction(ref Slot init_slot, ref GameObject slot_object)
+    {
+        if (init_slot.Construction != null)
         {
-            GameObject CreatedObject = MonoBehaviour.Instantiate(
-                EssenitalDatumLoader.GameObjectDictionary[Prefab.Construction]
+            GameObject created_object = MonoBehaviour.Instantiate(
+                EssentialDatumLoader.GameObjectDictionary[Prefab.Construction]
             );
-            slot.Construction.UnitSprite = CreatedObject.GetComponent<SpriteRenderer>().sprite;
-            slot.Construction.UnitGameObject = CreatedObject;
-            Construction targetconstruction = CreatedObject
+            Construction target_construction = created_object
                 .GetComponent<ConstructionComponent>()
-                .thisConstruction;
-            targetconstruction = slot.Construction;
-            targetconstruction.PutToSlotPosition(ref slotobject);
-            targetconstruction.LoadConstructionSprite();
-            CreatedObject.transform.localScale *= 0.85f;
-            CreatedObject.transform.SetParent(slotobject.transform);
-            CreatedObject.transform.localPosition = new Vector3(0, 0, 0.4f);
+                .thisConstruction = init_slot.Construction;
+            init_slot.Construction.UnitSprite = created_object
+                .GetComponent<SpriteRenderer>()
+                .sprite;
+            init_slot.Construction.UnitGameObject = created_object;
+            target_construction.PutToSlotPosition(ref slot_object);
+            target_construction.LoadSpriteAndAnimation();
+            created_object.transform.SetParent(slot_object.transform);
+            created_object.transform.localPosition = new Vector3(0, 0, 0.4f);
         }
-        if (slot.Chess != null && slot.Chess.ChessType.GetType() == typeof(ChessType))
+    }
+
+    private static void InitializeChess(ref Slot init_slot, ref GameObject slot_object)
+    {
+        if (init_slot.Chess != null)
         {
-            GameObject CreatedObject = MonoBehaviour.Instantiate(
-                EssenitalDatumLoader.GameObjectDictionary[Prefab.Chess]
+            GameObject created_object = MonoBehaviour.Instantiate(
+                EssentialDatumLoader.GameObjectDictionary[Prefab.Chess]
             );
-            slot.Chess.UnitSprite = CreatedObject.GetComponent<SpriteRenderer>().sprite;
-            slot.Chess.UnitGameObject = CreatedObject;
-            Chess targetchess = CreatedObject.GetComponent<ChessComponent>().thisChess;
-            targetchess = slot.Chess;
-            targetchess.PutToSlotPosition(ref slotobject);
-            targetchess.LoadChessSprite();
-            CreatedObject.transform.localScale *= 0.7f;
-            CreatedObject.transform.SetParent(slotobject.transform);
-            CreatedObject.transform.localPosition = new Vector3(0, 0, 0.6f);
+            Chess target_chess = created_object.GetComponent<ChessComponent>().thisChess =
+                init_slot.Chess;
+            init_slot.Chess.UnitSprite = created_object.GetComponent<SpriteRenderer>().sprite;
+            init_slot.Chess.UnitGameObject = created_object;
+            target_chess.PutToSlotPosition(ref slot_object);
+            target_chess.LoadSpriteAndAnimation();
+            created_object.transform.SetParent(slot_object.transform);
+            created_object.transform.localPosition = new Vector3(0, 0, 0.6f);
         }
     }
 }

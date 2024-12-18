@@ -1,4 +1,1 @@
-public interface ILandscape
-{
-    public abstract void LoadLandscapeSprite();
-}
+public interface ILandscape : IBasic { }

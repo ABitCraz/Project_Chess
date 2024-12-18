@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Chess : BasicUnit, IChess
+public abstract class Chess : BasicUnit, IChess
 {
     public string ChessName;
     public ChessType ChessType;
@@ -11,7 +11,8 @@ public class Chess : BasicUnit, IChess
     public float DefensePoint = 10f;
     public int Movement;
     public int[] AttackRange;
-    public int Vision;
+    public int VisionInRange;
+    public int VisionBlindRange = -1;
     public int TakeDamagePercent = 100;
     public ActionType CurrentAction = ActionType.Hold;
     public List<Chess> AttackedChessOnAlert = new();
@@ -21,31 +22,32 @@ public class Chess : BasicUnit, IChess
     public Player Owner;
     public bool IsStanding = true;
     public bool IsMoving = true;
+    public bool IsCloaking = false;
 
-    public void LoadChessSprite()
+    public Chess()
     {
-        SwapSprite(EssenitalDatumLoader.SpriteDictionary[ChessType]);
+        this.CurrentAction = ActionType.Hold;
+    }
+
+    public override void LoadSpriteAndAnimation()
+    {
+        LoadSprite(EssentialDatumLoader.SpriteDictionary[ChessType]);
         this.UnitGameObject.GetComponent<Animator>().runtimeAnimatorController =
             Resources.Load(ResourcePaths.TargetAnimators[ChessType]) as RuntimeAnimatorController;
     }
 
-    public void MoveToAnotherSlot(Slot targetslot)
+    public void MoveToAnotherSlot(Slot target_slot)
     {
         if (TheSlotStepOn != null)
         {
             TheSlotStepOn.Chess = null;
         }
-        if (targetslot.Chess == null)
+        if (target_slot.Chess == null)
         {
-            TheSlotStepOn = targetslot;
-            targetslot.Chess = this;
-            this.PutToSlotPosition(ref targetslot.SlotGameObject);
-            this.UnitGameObject.transform.SetParent(targetslot.SlotGameObject.transform);
+            TheSlotStepOn = target_slot;
+            target_slot.Chess = this;
+            this.PutToSlotPosition(ref target_slot.SlotGameObject);
+            this.UnitGameObject.transform.SetParent(target_slot.SlotGameObject.transform);
         }
-    }
-
-    public void TakeBrake()
-    {
-        this.CurrentAction = ActionType.Hold;
     }
 }

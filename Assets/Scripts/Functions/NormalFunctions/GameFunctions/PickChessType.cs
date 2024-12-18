@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PickChessType : MonoBehaviour
 {
-    public ChessType slottype;
+    public ChessType slot_type;
 
     public void Awake()
     {
@@ -13,7 +13,7 @@ public class PickChessType : MonoBehaviour
             .onClick.AddListener(() =>
             {
                 RaycastInGame.GetInstance().ReadyForDrop();
-                RaycastInGame.GetInstance().PutChessType = slottype;
+                RaycastInGame.GetInstance().PutChessType = slot_type;
             });
     }
 }

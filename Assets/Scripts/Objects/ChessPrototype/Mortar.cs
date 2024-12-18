@@ -7,6 +7,6 @@ public class Mortar : Chess
 
         this.Movement = 3;
         this.AttackRange = new int[]{2,3};
-        this.Vision = 3;
+        this.VisionInRange = 3;
     }
 }

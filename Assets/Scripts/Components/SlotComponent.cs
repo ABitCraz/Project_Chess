@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class SlotComponent : MonoBehaviour
 {
-    public Slot thisSlot = new(LandscapeType.Wildlessness);
+    public Slot thisSlot = new(LandscapeType.Wilderness);
     public GameObject SlotContainer;
     public bool IsAttackFocusing = false;
     public bool IsVisionFocusing = false;
@@ -26,8 +26,8 @@ public class SlotComponent : MonoBehaviour
             int speed = 5;
             for (int i = 0; i < speed; i++)
             {
-                bool isdone = scf.ColorFadingInTargetColor(this.gameObject, 32, 0);
-                if (isdone)
+                bool is_done = scf.ColorFadingInTargetColor(this.gameObject, 32, 0);
+                if (is_done)
                 {
                     break;
                 }

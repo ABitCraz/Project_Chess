@@ -1,4 +1,1 @@
-public interface IConstruction
-{
-    public abstract void LoadConstructionSprite();
-}
+public interface IConstruction : IBasic { }

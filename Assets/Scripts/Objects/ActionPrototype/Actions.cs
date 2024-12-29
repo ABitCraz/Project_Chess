@@ -146,7 +146,7 @@ public class Actions
             CurrentChess.CurrentAction = ActionType.Move;
             CurrentChess.IsStanding = false;
             CurrentChess.IsMoving = true;
-            CurrentChess.MoveToAnotherSlot(route[0]);
+            //CurrentChess.MoveToAnotherSlot(route[0]);
             route.RemoveAt(0);
             if (route.Count <= 0)
             {
@@ -262,7 +262,7 @@ public class Actions
                     route[0].Chess.CurrentAction = ActionType.Hold;
                 }
             }
-            CurrentChess.MoveToAnotherSlot(route[0]);
+            //CurrentChess.MoveToAnotherSlot(route[0]);
             route.RemoveAt(0);
             yield return false;
         }

@@ -11,7 +11,7 @@ public class RaycastUIs
 
     public void SlotOnHover(GameObject hitslot, GameObject statusshow)
     {
-        hitslot.transform.GetChild(0).gameObject.SetActive(true);
+        /*hitslot.transform.GetChild(0).gameObject.SetActive(true);
         ShootTheMouseRay.endHoverActions += () =>
         {
             hitslot.transform.GetChild(0).gameObject.SetActive(false);
@@ -19,12 +19,12 @@ public class RaycastUIs
         if (statusshow.TryGetComponent<TMP_Text>(out _))
         {
             ShowSlotStats(hitslot, statusshow);
-        }
+        }*/
     }
 
     public void SlotOnClick(GameObject hitslot, GameObject slotdropdown)
     {
-        if (Input.GetMouseButtonDown(0))
+        /*if (Input.GetMouseButtonDown(0))
         {
             hitslot.transform.GetChild(1).gameObject.SetActive(true);
             ShootTheMouseRay.endHoverActions += () =>
@@ -34,10 +34,10 @@ public class RaycastUIs
             if (slotdropdown.CompareTag("DropDown"))
             {
                 LoadSlotToDropdown(hitslot, slotdropdown);
-                RefillDropdownEvents(hitslot, slotdropdown);
+                //RefillDropdownEvents(hitslot, slotdropdown);
                 ShowSlotDropdown(slotdropdown);
             }
-        }
+        }*/
     }
 
     public void LoadSlotToDropdown(GameObject hitslot, GameObject slotdropdown)
@@ -96,39 +96,6 @@ public class RaycastUIs
         {
             slotdropdown.GetComponent<RectTransform>().position = Input.mousePosition;
         }
-        ShootTheMouseRay.endClickActions += () =>
-        {
-            slotdropdown.SetActive(false);
-        };
-    }
-
-    public void ShowSlotStats(GameObject hitslot, GameObject statusshow)
-    {
-        TMP_Text showtext = statusshow.GetComponent<TMP_Text>();
-        if (!statusshow.activeSelf)
-        {
-            statusshow.SetActive(true);
-        }
-        Slot thisslot = hitslot.GetComponent<SlotComponent>().thisSlot;
-        status.Clear();
-        if (thisslot.Landscape != null)
-        {
-            status.Append("地形:").Append(thisslot.Landscape.LandscapeName).Append("\n");
-        }
-        if (thisslot.Construction != null)
-        {
-            status.Append("建筑:").Append(thisslot.Construction.ConstructionName).Append("\n");
-        }
-        if (thisslot.Chess != null)
-        {
-            status.Append("单位:").Append(thisslot.Chess.ChessName);
-        }
-        showtext.text = status.ToString();
-        ShootTheMouseRay.endHoverActions += () =>
-        {
-            showtext.text = "";
-            statusshow.SetActive(false);
-        };
     }
 
     public void RefillDropdownEvents(GameObject hitslot, GameObject slotdropdown)

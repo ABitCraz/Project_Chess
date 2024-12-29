@@ -91,13 +91,16 @@ public class MapFileLoader : MonoBehaviour
         created_map.AddComponent<MapControl>();
         created_map.AddComponent<SlotMapComponent>().thisSlotMap = save.SlotMap;
         save.SlotMap.SlotMapGameObject = created_map;
-        save.SlotMap.FullSlotMap = InitializeMapSlots(serialized_slots.ToArray(), ref created_map);
+        save.SlotMap.FullSlotMap = await InitializeMapSlots(
+            serialized_slots.ToArray(),
+            created_map
+        );
         save.SlotMap.SlotMapGameObject = created_map;
     }
 
-    private Slot[] InitializeMapSlots(
+    private async Awaitable<Slot[]> InitializeMapSlots(
         SerializableSlot[] serialized_slots_array,
-        ref GameObject created_map
+        GameObject created_map
     )
     {
         List<Slot> slots = new();
@@ -108,14 +111,20 @@ public class MapFileLoader : MonoBehaviour
             GameObject loaded_slot_gameobject = Instantiate(
                 Resources.Load(ResourcePaths.Resources[Prefab.Slot]) as GameObject
             );
-            loaded_slot_gameobject.GetComponent<SlotComponent>().thisSlot = loaded_slot;
-            loaded_slot_gameobject.GetComponent<SlotComponent>().thisSlot.SlotGameObject =
-                loaded_slot_gameobject;
-            loaded_slot_gameobject.transform.position = loaded_slot.FactPosition;
-            loaded_slot_gameobject.transform.SetParent(created_map.transform);
-            SlotLoader.LoadGameObject(ref loaded_slot_gameobject);
-            save.SlotMap.FullSlotDictionary.Add(serialized_slots_array[i].MapPosition, loaded_slot);
-            slots.Add(loaded_slot);
+            await Task.Run(() =>
+            {
+                loaded_slot_gameobject.GetComponent<SlotComponent>().thisSlot = loaded_slot;
+                loaded_slot_gameobject.GetComponent<SlotComponent>().thisSlot.SlotGameObject =
+                    loaded_slot_gameobject;
+                loaded_slot_gameobject.transform.position = loaded_slot.FactPosition;
+                loaded_slot_gameobject.transform.SetParent(created_map.transform);
+                SlotLoader.LoadGameObject(ref loaded_slot_gameobject);
+                save.SlotMap.FullSlotDictionary.Add(
+                    serialized_slots_array[i].MapPosition,
+                    loaded_slot
+                );
+                slots.Add(loaded_slot);
+            });
         }
         return slots.ToArray();
     }

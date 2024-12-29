@@ -1,88 +1,64 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ShootTheMouseRay : MonoBehaviour
 {
-    Ray MouseRay;
-    GameObject hitobject;
-    public GameObject slotdropdown;
-    public GameObject statusshow;
-    public delegate void EndActions();
-    public static event EndActions endClickActions;
-    public static event EndActions endHoverActions;
-    GameObject previoushover;
-    GameObject[] paramlist;
-    public bool Isdropdownoff;
-    bool israyshootnothing = true;
+    Vector3 mouse_position;
+    Ray mouse_ray;
+    readonly RaycastHit[] all_raycast_hit = new RaycastHit[128];
 
     private void Update()
     {
-        MouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        israyshootnothing = GetMouseRayCastHit(ref MouseRay);
-        if (israyshootnothing)
+        mouse_ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        mouse_position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        GetMouseRayCastHit(ref mouse_ray);
+        if (Input.GetMouseButtonDown((int)MouseButton.Right))
         {
-            EndTheHoverActions();
-        }
-        if (Input.GetMouseButtonDown(1))
-        {
-            EndTheClickActions();
+            DoDisableActions();
         }
     }
 
-    private bool GetMouseRayCastHit(ref Ray mouseray)
+    private void GetMouseRayCastHit(ref Ray mouse_ray)
     {
-        if (Physics.Raycast(mouseray, out RaycastHit hit) && (hit.collider.gameObject != null))
+        int raycast_hit_count = Physics.RaycastNonAlloc(mouse_ray, all_raycast_hit);
+        GameObject[] all_hit_game_objects = new GameObject[128];
+        if (raycast_hit_count > 0)
         {
-            GameObject hitobject = hit.collider.gameObject;
-            if (previoushover != null && hitobject != previoushover)
+            for (int i = 0; i < raycast_hit_count; i++)
             {
-                EndTheHoverActions();
+                if (all_hit_game_objects != null)
+                    all_hit_game_objects[i] = all_raycast_hit[i].collider.gameObject;
             }
-            previoushover = hitobject;
-            if (Input.GetMouseButtonDown(0))
+            if (all_hit_game_objects.Length > 0)
             {
-                if (!Isdropdownoff)
+                SwitchHitToDifferentKinds(ref all_hit_game_objects);
+            }
+        }
+    }
+
+    private void SwitchHitToDifferentKinds(ref GameObject[] hit_game_objects)
+    {
+        int hit_game_object_count = hit_game_objects.Length;
+        for (int i = 0; i < hit_game_object_count; i++)
+            if (hit_game_objects[i] != null)
+            {
+                switch (hit_game_objects[i].tag)
                 {
-                    paramlist = new GameObject[] { hitobject, slotdropdown };
-                    Isdropdownoff = true;
-                    endClickActions += () =>
-                    {
-                        Isdropdownoff = false;
-                    };
+                    case "Slot":
+                        TheSlotDropdown.GetTargetSlotGameObjectFromRaycasts.Invoke(
+                            ref hit_game_objects[i]
+                        );
+                        TheSlotStatus.ShowTargetSlotStatus.Invoke(ref hit_game_objects[i]);
+                        break;
                 }
             }
-            else
-            {
-                paramlist = new GameObject[] { hitobject, statusshow };
-            }
-            UIHit(ref paramlist);
-            return false;
-        }
-        return true;
     }
 
-    public void UIHit(ref GameObject[] hitobject)
+    private void DoDisableActions()
     {
-        RaycastUIs rui = new();
-        switch (hitobject[0].tag)
-        {
-            case "Slot":
-                rui.SlotOnHover(hitobject[0], hitobject[1]);
-                rui.SlotOnClick(hitobject[0], hitobject[1]);
-                break;
-        }
-    }
-
-    private void EndTheClickActions()
-    {
-        endClickActions?.Invoke();
-        endClickActions = null;
-    }
-
-    private void EndTheHoverActions()
-    {
-        endHoverActions?.Invoke();
-        endHoverActions = null;
+        TheSlotDropdown.DisableDropdownGameObject.Invoke();
+        TheSlotStatus.DisableStatusGameObject.Invoke();
     }
 }

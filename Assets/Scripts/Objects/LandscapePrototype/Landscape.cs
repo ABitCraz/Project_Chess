@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class Landscape : BasicUnit, ILandscape
+public class Landscape : BasicUnit, ILandscape
 {
     public string LandscapeName;
     public int MovementPrice = 0;
@@ -27,6 +27,8 @@ public abstract class Landscape : BasicUnit, ILandscape
 
     public override void LoadSpriteAndAnimation()
     {
+        if (this.LandscapeType == LandscapeType.Empty)
+            return;
         LoadSprite(EssentialDatumLoader.SpriteDictionary[LandscapeType]);
         this.UnitGameObject.GetComponent<Animator>().runtimeAnimatorController =
             Resources.Load(ResourcePaths.TargetAnimators[LandscapeType])

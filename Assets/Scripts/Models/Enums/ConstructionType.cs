@@ -1,6 +1,6 @@
 [System.Serializable]
 public enum ConstructionType
 {
-    Empty,
-    City
+    Empty = 0,
+    City = 1,
 }

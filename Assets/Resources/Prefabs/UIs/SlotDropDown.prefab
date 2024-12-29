@@ -101,6 +101,7 @@ GameObject:
   - component: {fileID: 4225213612809652824}
   - component: {fileID: 1352178075188437892}
   - component: {fileID: 4136848338648185882}
+  - component: {fileID: -3097476819905569570}
   m_Layer: 5
   m_Name: SlotDropDown
   m_TagString: Untagged
@@ -184,18 +185,34 @@ MonoBehaviour:
   m_ItemText: {fileID: 7452723708754650183}
   m_ItemImage: {fileID: 0}
   m_Value: 0
+  m_MultiSelect: 0
   m_Options:
     m_Options:
     - m_Text: "\u5730\u5F62"
       m_Image: {fileID: 0}
+      m_Color: {r: 1, g: 1, b: 1, a: 1}
     - m_Text: "\u5175\u79CD"
       m_Image: {fileID: 0}
+      m_Color: {r: 1, g: 1, b: 1, a: 1}
     - m_Text: "\u5EFA\u7B51"
       m_Image: {fileID: 0}
+      m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
   m_AlphaFadeSpeed: 0.15
+--- !u!114 &-3097476819905569570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4853549418769903544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ddf8303a8ad6eb4dbcc552003d18c3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6671992518514254392
 GameObject:
   m_ObjectHideFlags: 0
@@ -340,15 +357,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 00000000
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0

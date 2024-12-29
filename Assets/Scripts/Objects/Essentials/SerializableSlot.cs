@@ -34,16 +34,7 @@ public class SerializableSlot
 
     public Slot SerializableSlotSwitchToNormalSlot()
     {
-        Slot swap_slot = new(S_LandscapeType, S_ConstructionType, S_ChessType)
-        {
-            Position = MapPosition,
-            FactPosition = FactPosition
-        };
-        if (swap_slot.Chess != null)
-        {
-            swap_slot.Chess.HealthPoint = Chess_HealthPoint;
-            swap_slot.Chess.Owner = Chess_Owner;
-        }
+        Slot swap_slot = new() { Position = MapPosition, FactPosition = FactPosition };
         return swap_slot;
     }
 }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class Construction : BasicUnit, IConstruction
+public class Construction : BasicUnit, IConstruction
 {
     public string ConstructionName;
     public ConstructionType ConstructionType;
@@ -12,6 +12,8 @@ public abstract class Construction : BasicUnit, IConstruction
 
     public override void LoadSpriteAndAnimation()
     {
+        if (this.ConstructionType == ConstructionType.Empty)
+            return;
         LoadSprite(EssentialDatumLoader.SpriteDictionary[ConstructionType]);
         this.UnitGameObject.GetComponent<Animator>().runtimeAnimatorController =
             Resources.Load(ResourcePaths.TargetAnimators[ConstructionType])

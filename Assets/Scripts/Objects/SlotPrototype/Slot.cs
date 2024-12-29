@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class Slot
@@ -6,53 +7,27 @@ public class Slot
     public const string SlotTagName = "Slot";
     public const string LandscapeContainerTagName = "LandscapeContainer";
     public const string LandscapeTypeTagName = "LandscapeType";
-    public Landscape Landscape;
-    public Chess Chess;
-    public Construction Construction;
+    public Landscape Landscape { get; private set; }
+    public Chess Chess { get; private set; }
+    public Construction Construction { get; private set; }
     public Vector2Int Position;
     public Vector3 FactPosition;
     public GameObject SlotGameObject;
 
     public Slot()
     {
-        this.Landscape = null;
-        this.Construction = null;
-        this.Chess = null;
+        this.Landscape = new Landscape() { LandscapeType = LandscapeType.Empty };
+        this.Construction = new Construction() { ConstructionType = ConstructionType.Empty };
+        this.Chess = new Chess() { ChessType = ChessType.Empty };
     }
 
-    public Slot(LandscapeType new_landscape)
+    public void InitializeOrSwapLandscape(LandscapeType target_landscape)
     {
-        InitializeOrSwapLandscape(new_landscape);
-    }
-
-    public Slot(LandscapeType new_landscape, ConstructionType new_construction)
-    {
-        InitializeOrSwapLandscape(new_landscape);
-        InitializeOrSwapConstruction(new_construction);
-    }
-
-    public Slot(LandscapeType new_landscape, ChessType new_chess)
-    {
-        InitializeOrSwapLandscape(new_landscape);
-        InitializeOrSwapChess(new_chess);
-    }
-
-    public Slot(LandscapeType new_landscape, ConstructionType new_construction, ChessType new_chess)
-    {
-        InitializeOrSwapLandscape(new_landscape);
-        InitializeOrSwapConstruction(new_construction);
-        InitializeOrSwapChess(new_chess);
-    }
-
-    public void InitializeOrSwapLandscape(LandscapeType landscape)
-    {
-        GameObject LastGameObject = null;
-        if (this.Landscape != null)
+        switch (target_landscape)
         {
-            LastGameObject = this.Landscape.UnitGameObject;
-        }
-        switch (landscape)
-        {
+            case LandscapeType.Empty:
+                this.Landscape = new Landscape() { LandscapeType = LandscapeType.Empty };
+                break;
             case LandscapeType.Wilderness:
                 this.Landscape = new Wilderness();
                 break;
@@ -71,55 +46,36 @@ public class Slot
             case LandscapeType.Canyon:
                 this.Landscape = new Canyon();
                 break;
-            default:
-                if ((this.Landscape != null) && (this.Landscape.UnitGameObject != null))
-                {
-                    MonoBehaviour.Destroy(this.Landscape.UnitGameObject);
-                }
-                this.Landscape = null;
-                break;
         }
-        if (this.Landscape != null)
-        {
-            this.Landscape.UnitGameObject = LastGameObject;
-        }
+        this.Landscape.LoadSpriteAndAnimation();
     }
 
-    public void InitializeOrSwapConstruction(ConstructionType construction)
+    public void InitializeOrSwapConstruction(ConstructionType target_construction)
     {
-        GameObject LastGameObject = null;
-        if (this.Construction != null)
+        switch (target_construction)
         {
-            LastGameObject = this.Construction.UnitGameObject;
-        }
-        switch (construction)
-        {
+            case ConstructionType.Empty:
+                this.Construction = new Construction()
+                {
+                    ConstructionType = ConstructionType.Empty,
+                };
+                break;
             case ConstructionType.City:
                 this.Construction = new City();
                 break;
             default:
-                if ((this.Construction != null) && (this.Construction.UnitGameObject != null))
-                {
-                    MonoBehaviour.Destroy(this.Construction.UnitGameObject);
-                }
-                this.Construction = null;
                 break;
         }
-        if (this.Construction != null)
-        {
-            this.Construction.UnitGameObject = LastGameObject;
-        }
+        this.Construction.LoadSpriteAndAnimation();
     }
 
-    public void InitializeOrSwapChess(ChessType chess)
+    public void InitializeOrSwapChess(ChessType target_chess)
     {
-        GameObject LastGameObject = null;
-        if (this.Chess != null)
+        switch (target_chess)
         {
-            LastGameObject = this.Chess.UnitGameObject;
-        }
-        switch (chess)
-        {
+            case ChessType.Empty:
+                this.Chess = new Chess() { ChessType = ChessType.Empty };
+                break;
             case ChessType.Infantry:
                 this.Chess = new Infantry();
                 break;
@@ -142,17 +98,53 @@ public class Slot
                 this.Chess = new Commander();
                 break;
             default:
-                if ((this.Chess != null) && (this.Chess.UnitGameObject != null))
-                {
-                    MonoBehaviour.Destroy(this.Chess.UnitGameObject);
-                }
-                this.Chess = null;
                 break;
         }
-        if (this.Chess != null)
-        {
-            this.Chess.UnitGameObject = LastGameObject;
-        }
+        this.Chess.LoadSpriteAndAnimation();
+    }
+
+    public void GenerateCurrentLandscapeGameObject()
+    {
+        if (Landscape.UnitGameObject != null)
+            MonoBehaviour.Destroy(Landscape.UnitGameObject);
+        GameObject new_landscape = MonoBehaviour.Instantiate(
+            EssentialDatumLoader.GameObjectDictionary[Prefab.Landscape]
+        );
+        SlotLoader.LoadGameObject(ref new_landscape);
+    }
+
+    public void GenerateCurrentConstructionGameObject()
+    {
+        if (Construction.UnitGameObject != null)
+            MonoBehaviour.Destroy(Construction.UnitGameObject);
+        GameObject new_construction = MonoBehaviour.Instantiate(
+            EssentialDatumLoader.GameObjectDictionary[Prefab.Construction]
+        );
+        SlotLoader.LoadGameObject(ref new_construction);
+    }
+
+    public void GenerateCurrentChessGameObject()
+    {
+        if (Chess.UnitGameObject != null)
+            MonoBehaviour.Destroy(Chess.UnitGameObject);
+        GameObject new_chess = MonoBehaviour.Instantiate(
+            EssentialDatumLoader.GameObjectDictionary[Prefab.Chess]
+        );
+        SlotLoader.LoadGameObject(ref new_chess);
+    }
+
+    public void ChessMoveIn(Slot origin_slot, Chess target_chess)
+    {
+        origin_slot.Chess = new Chess() { ChessType = ChessType.Empty };
+        this.Chess = target_chess;
+        target_chess.TheSlotStepOn = this;
+    }
+
+    public void ChessMoveOut(Slot target_slot, Chess target_chess)
+    {
+        target_slot.Chess = target_chess;
+        this.Chess = new Chess() { ChessType = ChessType.Empty };
+        target_chess.TheSlotStepOn = target_slot;
     }
 
     public SerializableSlot NormalSlotSwapToSerializableSlot()

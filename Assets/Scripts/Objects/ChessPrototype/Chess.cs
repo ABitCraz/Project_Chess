@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Chess : BasicUnit, IChess
+public class Chess : BasicUnit, IChess
 {
     public string ChessName;
     public ChessType ChessType;
@@ -31,23 +31,10 @@ public abstract class Chess : BasicUnit, IChess
 
     public override void LoadSpriteAndAnimation()
     {
+        if (this.ChessType == ChessType.Empty)
+            return;
         LoadSprite(EssentialDatumLoader.SpriteDictionary[ChessType]);
         this.UnitGameObject.GetComponent<Animator>().runtimeAnimatorController =
             Resources.Load(ResourcePaths.TargetAnimators[ChessType]) as RuntimeAnimatorController;
-    }
-
-    public void MoveToAnotherSlot(Slot target_slot)
-    {
-        if (TheSlotStepOn != null)
-        {
-            TheSlotStepOn.Chess = null;
-        }
-        if (target_slot.Chess == null)
-        {
-            TheSlotStepOn = target_slot;
-            target_slot.Chess = this;
-            this.PutToSlotPosition(ref target_slot.SlotGameObject);
-            this.UnitGameObject.transform.SetParent(target_slot.SlotGameObject.transform);
-        }
     }
 }

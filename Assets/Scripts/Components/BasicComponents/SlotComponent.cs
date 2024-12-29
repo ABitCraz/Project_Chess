@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class SlotComponent : MonoBehaviour
 {
-    public Slot thisSlot = new(LandscapeType.Wilderness);
+    public Slot thisSlot = new();
     public GameObject SlotContainer;
     public bool IsAttackFocusing = false;
     public bool IsVisionFocusing = false;
@@ -12,12 +12,12 @@ public class SlotComponent : MonoBehaviour
     public bool IsDropFocusing = false;
     public bool IsUnfocusing = true;
     readonly SpriteColorFunctions scf = new();
-    SlotUpdateBehaviour.SlotUpdateActions AttackFocusingActions;
-    SlotUpdateBehaviour.SlotUpdateActions VisionFocusingActions;
-    SlotUpdateBehaviour.SlotUpdateActions MoveFocusingActions;
-    SlotUpdateBehaviour.SlotUpdateActions RouteFocusingActions;
-    SlotUpdateBehaviour.SlotUpdateActions DropFocusingActions;
-    public SlotUpdateBehaviour.SlotUpdateActions UnfocusingActions;
+    ObjectActions.SlotUpdateActions AttackFocusingActions;
+    ObjectActions.SlotUpdateActions VisionFocusingActions;
+    ObjectActions.SlotUpdateActions MoveFocusingActions;
+    ObjectActions.SlotUpdateActions RouteFocusingActions;
+    ObjectActions.SlotUpdateActions DropFocusingActions;
+    public ObjectActions.SlotUpdateActions UnfocusingActions;
 
     private void Awake()
     {
@@ -143,7 +143,7 @@ public class SlotComponent : MonoBehaviour
             {
                 RouteFocusingActions();
             }
-            if(IsDropFocusing)
+            if (IsDropFocusing)
             {
                 DropFocusingActions();
             }

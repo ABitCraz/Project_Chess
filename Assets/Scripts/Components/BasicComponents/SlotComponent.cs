@@ -12,16 +12,10 @@ public class SlotComponent : MonoBehaviour
     public bool IsDropFocusing = false;
     public bool IsUnfocusing = true;
     readonly SpriteColorFunctions scf = new();
-    ObjectActions.SlotUpdateActions AttackFocusingActions;
-    ObjectActions.SlotUpdateActions VisionFocusingActions;
-    ObjectActions.SlotUpdateActions MoveFocusingActions;
-    ObjectActions.SlotUpdateActions RouteFocusingActions;
-    ObjectActions.SlotUpdateActions DropFocusingActions;
-    public ObjectActions.SlotUpdateActions UnfocusingActions;
 
     private void Awake()
     {
-        AttackFocusingActions += () =>
+        /*AttackFocusingActions += () =>
         {
             int speed = 5;
             for (int i = 0; i < speed; i++)
@@ -101,7 +95,7 @@ public class SlotComponent : MonoBehaviour
             IsRouteFocusing = false;
             IsDropFocusing = false;
             bool isdone = scf.ColorFadingToNormal(this.gameObject, 4);
-        };
+        };*/
     }
 
     private void FixedUpdate()
@@ -123,29 +117,29 @@ public class SlotComponent : MonoBehaviour
             IsMovingFocusing = false;
             IsRouteFocusing = false;
             IsDropFocusing = false;
-            UnfocusingActions();
+            //UnfocusingActions();
         }
         else
         {
             if (IsAttackFocusing)
             {
-                AttackFocusingActions();
+                //AttackFocusingActions();
             }
             if (IsVisionFocusing)
             {
-                VisionFocusingActions();
+                //VisionFocusingActions();
             }
             if (IsMovingFocusing)
             {
-                MoveFocusingActions();
+                //MoveFocusingActions();
             }
             if (IsRouteFocusing)
             {
-                RouteFocusingActions();
+                //RouteFocusingActions();
             }
             if (IsDropFocusing)
             {
-                DropFocusingActions();
+                //DropFocusingActions();
             }
         }
     }

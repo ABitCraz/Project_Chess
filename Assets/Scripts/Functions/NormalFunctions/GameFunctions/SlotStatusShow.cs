@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class SlotStatusShow
 {
@@ -48,8 +48,12 @@ public class SlotStatusShow
         else
         {
             showset.transform.GetChild(2).gameObject.SetActive(true);
-            showset.transform.GetChild(2).GetChild(0).GetComponent<Image>().sprite = current_slot.Chess.UnitSprite;
-            showset.transform.GetChild(2).GetChild(1).GetComponent<TMP_Text>().text = current_slot.Chess.ChessName;
+            showset.transform.GetChild(2).GetChild(0).GetComponent<Image>().sprite = current_slot
+                .Chess
+                .UnitSprite;
+            showset.transform.GetChild(2).GetChild(1).GetComponent<TMP_Text>().text = current_slot
+                .Chess
+                .ChessName;
         }
     }
 
@@ -59,9 +63,7 @@ public class SlotStatusShow
         {
             for (int i = 0; i < slotmap.FullSlotMap.Length; i++)
             {
-                slotmap.FullSlotMap[i].SlotGameObject
-                    .GetComponent<SlotComponent>()
-                    .UnfocusingActions();
+                //slotmap.FullSlotMap[i].SlotGameObject.GetComponent<SlotComponent>().UnfocusingActions();
             }
         }
         previous_attack_slot = currentslot;
@@ -84,9 +86,7 @@ public class SlotStatusShow
         {
             for (int i = 0; i < slotmap.FullSlotMap.Length; i++)
             {
-                slotmap.FullSlotMap[i].SlotGameObject
-                    .GetComponent<SlotComponent>()
-                    .UnfocusingActions();
+                //slotmap.FullSlotMap[i].SlotGameObject.GetComponent<SlotComponent>().UnfocusingActions();
             }
         }
         previous_vision_slot = currentslot;

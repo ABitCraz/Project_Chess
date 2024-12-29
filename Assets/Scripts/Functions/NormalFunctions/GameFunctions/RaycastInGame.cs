@@ -49,8 +49,9 @@ public class RaycastInGame : Singleton<RaycastInGame>
             {
                 if (save.SlotMap.FullSlotMap[i].Position.x < 2)
                 {
-                    save.SlotMap.FullSlotMap[i].SlotGameObject
-                        .GetComponent<SlotComponent>()
+                    save
+                        .SlotMap.FullSlotMap[i]
+                        .SlotGameObject.GetComponent<SlotComponent>()
                         .IsDropFocusing = true;
                 }
             }
@@ -436,9 +437,7 @@ public class RaycastInGame : Singleton<RaycastInGame>
     {
         for (int i = 0; i < save.SlotMap.FullSlotMap.Length; i++)
         {
-            save.SlotMap.FullSlotMap[i].SlotGameObject
-                .GetComponent<SlotComponent>()
-                .UnfocusingActions();
+            //save.SlotMap.FullSlotMap[i].SlotGameObject.GetComponent<SlotComponent>().UnfocusingActions();
         }
     }
 
@@ -446,8 +445,8 @@ public class RaycastInGame : Singleton<RaycastInGame>
     {
         CleanUpButtonFunctions();
         PlanActions planaction = new(slot.Position, ActionType.Attack, slot, CurrentPlayer);
-        ActionDropdown.transform
-            .GetChild(1)
+        ActionDropdown
+            .transform.GetChild(1)
             .GetComponent<Button>()
             .onClick.AddListener(() =>
             {
@@ -472,8 +471,8 @@ public class RaycastInGame : Singleton<RaycastInGame>
                     return;
                 };
             });
-        ActionDropdown.transform
-            .GetChild(2)
+        ActionDropdown
+            .transform.GetChild(2)
             .GetComponent<Button>()
             .onClick.AddListener(() =>
             {
@@ -504,8 +503,8 @@ public class RaycastInGame : Singleton<RaycastInGame>
                     return;
                 };
             });
-        ActionDropdown.transform
-            .GetChild(3)
+        ActionDropdown
+            .transform.GetChild(3)
             .GetComponent<Button>()
             .onClick.AddListener(() =>
             {
@@ -535,8 +534,8 @@ public class RaycastInGame : Singleton<RaycastInGame>
                     return;
                 };
             });
-        ActionDropdown.transform
-            .GetChild(4)
+        ActionDropdown
+            .transform.GetChild(4)
             .GetComponent<Button>()
             .onClick.AddListener(() =>
             {
@@ -563,8 +562,8 @@ public class RaycastInGame : Singleton<RaycastInGame>
                     return;
                 };
             });
-        ActionDropdown.transform
-            .GetChild(5)
+        ActionDropdown
+            .transform.GetChild(5)
             .GetComponent<Button>()
             .onClick.AddListener(() =>
             {
@@ -574,8 +573,8 @@ public class RaycastInGame : Singleton<RaycastInGame>
                 ActionDropdown.SetActive(false);
                 return;
             });
-        ActionDropdown.transform
-            .GetChild(6)
+        ActionDropdown
+            .transform.GetChild(6)
             .GetComponent<Button>()
             .onClick.AddListener(() =>
             {
@@ -589,28 +588,28 @@ public class RaycastInGame : Singleton<RaycastInGame>
 
     private void CleanUpButtonFunctions()
     {
-        ActionDropdown.transform
-            .GetChild(1)
+        ActionDropdown
+            .transform.GetChild(1)
             .gameObject.GetComponent<Button>()
             .onClick.RemoveAllListeners();
-        ActionDropdown.transform
-            .GetChild(2)
+        ActionDropdown
+            .transform.GetChild(2)
             .gameObject.GetComponent<Button>()
             .onClick.RemoveAllListeners();
-        ActionDropdown.transform
-            .GetChild(3)
+        ActionDropdown
+            .transform.GetChild(3)
             .gameObject.GetComponent<Button>()
             .onClick.RemoveAllListeners();
-        ActionDropdown.transform
-            .GetChild(4)
+        ActionDropdown
+            .transform.GetChild(4)
             .gameObject.GetComponent<Button>()
             .onClick.RemoveAllListeners();
-        ActionDropdown.transform
-            .GetChild(5)
+        ActionDropdown
+            .transform.GetChild(5)
             .gameObject.GetComponent<Button>()
             .onClick.RemoveAllListeners();
-        ActionDropdown.transform
-            .GetChild(6)
+        ActionDropdown
+            .transform.GetChild(6)
             .gameObject.GetComponent<Button>()
             .onClick.RemoveAllListeners();
         EndDrawing = null;

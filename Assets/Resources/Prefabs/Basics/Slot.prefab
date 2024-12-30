@@ -186,6 +186,7 @@ GameObject:
   - component: {fileID: 3098860087255828126}
   - component: {fileID: 3701478830723415411}
   - component: {fileID: -2486079369329812223}
+  - component: {fileID: 2163942980200191155}
   m_Layer: 0
   m_Name: Slot
   m_TagString: Slot
@@ -224,13 +225,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1b4b77d2b8f6a54c8cc8f95ad7f3342, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SlotContainer: {fileID: 0}
-  IsAttackFocusing: 0
-  IsVisionFocusing: 0
-  IsMovingFocusing: 0
-  IsRouteFocusing: 0
-  IsDropFocusing: 0
-  IsUnfocusing: 0
 --- !u!212 &3701478830723415411
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -307,6 +301,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 0.2}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2163942980200191155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3438075927340334447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50e0193a0c077d14096a3b26e7951179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6571577288618967953
 GameObject:
   m_ObjectHideFlags: 0
@@ -334,7 +340,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3441642417170011438}
@@ -405,7 +411,7 @@ GameObject:
   - component: {fileID: 295271037908746768}
   - component: {fileID: 6360610161444422159}
   m_Layer: 0
-  m_Name: ChooseSlot
+  m_Name: HoverSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

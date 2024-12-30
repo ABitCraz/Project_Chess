@@ -33,7 +33,7 @@ public class Chess : BasicUnit, IChess
     {
         if (this.ChessType == ChessType.Empty)
             return;
-        LoadSprite(EssentialDatumLoader.SpriteDictionary[ChessType]);
+        LoadSprite(EssentialDatumLoaderComponent.SpriteDictionary[ChessType]);
         this.UnitGameObject.GetComponent<Animator>().runtimeAnimatorController =
             Resources.Load(ResourcePaths.TargetAnimators[ChessType]) as RuntimeAnimatorController;
     }

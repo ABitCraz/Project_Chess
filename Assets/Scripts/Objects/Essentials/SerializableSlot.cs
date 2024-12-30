@@ -31,10 +31,4 @@ public class SerializableSlot
         this.MapPosition = swap_slot.Position;
         this.FactPosition = swap_slot.FactPosition;
     }
-
-    public Slot SerializableSlotSwitchToNormalSlot()
-    {
-        Slot swap_slot = new() { Position = MapPosition, FactPosition = FactPosition };
-        return swap_slot;
-    }
 }

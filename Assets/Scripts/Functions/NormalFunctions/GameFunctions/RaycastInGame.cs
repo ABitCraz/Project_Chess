@@ -45,16 +45,6 @@ public class RaycastInGame : Singleton<RaycastInGame>
         InitializedButtons();
         ReadyForDrop += () =>
         {
-            for (int i = 0; i < save.SlotMap.FullSlotMap.Length; i++)
-            {
-                if (save.SlotMap.FullSlotMap[i].Position.x < 2)
-                {
-                    save
-                        .SlotMap.FullSlotMap[i]
-                        .SlotGameObject.GetComponent<SlotComponent>()
-                        .IsDropFocusing = true;
-                }
-            }
             isdroppingtarget = true;
             LeftBar.GetComponent<ShowLeftBar>().isleftopen = true;
             droptargetcoroutine ??= StartCoroutine(DroppingTargetSlot());
@@ -298,17 +288,7 @@ public class RaycastInGame : Singleton<RaycastInGame>
         {
             CleanUpMap();
             Slot[] previousmovableslots = sss.ShowMovementRange(currentslot, save.SlotMap);
-            for (int i = 0; i < moveroute.Count; i++)
-            {
-                moveroute[i].SlotGameObject.GetComponent<SlotComponent>().IsRouteFocusing = true;
-            }
             movableslots = sss.ShowMovementRange(currentslot, save.SlotMap);
-            for (int i = 0; i < movableslots.Length; i++)
-            {
-                if (!moveroute.Contains(movableslots[i]))
-                    movableslots[i].SlotGameObject.GetComponent<SlotComponent>().IsMovingFocusing =
-                        true;
-            }
             if (movableslots.Length <= 0)
             {
                 EndDrawing();
@@ -354,10 +334,6 @@ public class RaycastInGame : Singleton<RaycastInGame>
         CleanUpMap();
         ispickingtarget = true;
         Slot[] attackableslots = sss.ShowAttackRange(currentslot, save.SlotMap);
-        for (int i = 0; i < attackableslots.Length; i++)
-        {
-            attackableslots[i].SlotGameObject.GetComponent<SlotComponent>().IsAttackFocusing = true;
-        }
         if (attackableslots.Length <= 0)
         {
             StopCoroutine(drawroutecoroutine);
@@ -395,40 +371,6 @@ public class RaycastInGame : Singleton<RaycastInGame>
         {
             mouseray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit[] hits = Physics.RaycastAll(mouseray);
-            for (int i = 0; i < hits.Length; i++)
-            {
-                GameObject hitslot = hits[i].collider.gameObject;
-                if (
-                    hitslot.CompareTag("Slot")
-                    && hitslot.GetComponent<SlotComponent>().IsDropFocusing
-                )
-                {
-                    if (Input.GetMouseButton(0))
-                    {
-                        if (
-                            CurrentPlayer.Resource - CurrentPlayer.ChessCostDictionary[PutChessType]
-                            >= 0
-                        )
-                        {
-                            targetslot = hitslot.GetComponent<SlotComponent>().thisSlot;
-                            ActionList.Add(
-                                new PlanActions(
-                                    targetslot.Position,
-                                    ActionType.Drop,
-                                    CurrentPlayer
-                                ).DropUnit(ref targetslot.Position, PutChessType)
-                            );
-                            PickAnEmptyActionUnitAndFillIt(PutChessType, ActionType.Drop);
-                        }
-                        EndDropping?.Invoke();
-                        break;
-                    }
-                    if (Input.GetMouseButton(1))
-                    {
-                        EndDropping?.Invoke();
-                    }
-                }
-            }
             yield return new WaitForEndOfFrame();
         }
     }

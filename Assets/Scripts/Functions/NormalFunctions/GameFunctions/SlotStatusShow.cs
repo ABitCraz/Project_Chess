@@ -72,11 +72,6 @@ public class SlotStatusShow
             ref slotmap.FullSlotDictionary,
             ref slotmap.MapSize
         );
-        for (int i = 0; i < slotsinattackrange.Length; i++)
-        {
-            slotsinattackrange[i].SlotGameObject.GetComponent<SlotComponent>().IsAttackFocusing =
-                true;
-        }
         return slotsinattackrange;
     }
 
@@ -95,11 +90,6 @@ public class SlotStatusShow
             ref slotmap.FullSlotDictionary,
             ref slotmap.MapSize
         );
-        for (int i = 0; i < slotsinattackrange.Length; i++)
-        {
-            slotsinattackrange[i].SlotGameObject.GetComponent<SlotComponent>().IsVisionFocusing =
-                true;
-        }
         return slotsinattackrange;
     }
 
@@ -110,11 +100,6 @@ public class SlotStatusShow
             ref slotmap.FullSlotDictionary,
             ref slotmap.MapSize
         );
-        for (int i = 0; i < slotsinattackrange.Length; i++)
-        {
-            slotsinattackrange[i].SlotGameObject.GetComponent<SlotComponent>().IsVisionFocusing =
-                true;
-        }
         return slotsinattackrange;
     }
 }

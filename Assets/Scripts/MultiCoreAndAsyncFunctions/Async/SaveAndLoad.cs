@@ -9,11 +9,11 @@ public class SaveAndLoad
     readonly string SaveMapFilePath = Application.dataPath + "/SaveMaps";
     readonly string SaveSlotFilePath = Application.dataPath + "/SaveSlots";
     readonly string LogFilePath = Application.dataPath + "/Logs";
-    readonly string FileName;
+    readonly string fileName;
 
     public SaveAndLoad(string file_name)
     {
-        FileName = file_name;
+        fileName = file_name;
         if (!Directory.Exists(SaveMapFilePath))
         {
             Directory.CreateDirectory(SaveMapFilePath);
@@ -33,16 +33,15 @@ public class SaveAndLoad
         params bool[] cover
     )
     {
-        string full_path = SaveMapFilePath + "/" + FileName + ".serialized";
+        string full_path = SaveMapFilePath + "/" + fileName + ".serialized";
         if (File.Exists(full_path) || cover.Length > 0 || !cover[0])
         {
             await File.AppendAllTextAsync(
-                $"{LogFilePath}/WriteSerializeMapLog.txt",
+                $"{LogFilePath}WriteSerializeMapLog.txt",
                 "File Exist;\r\n"
             );
             return 0;
         }
-        ;
         FileStream fs = new(full_path, FileMode.Create);
         BinaryFormatter bf = new();
         int return_code = 0;
@@ -57,7 +56,7 @@ public class SaveAndLoad
             catch (Exception except)
             {
                 await File.AppendAllTextAsync(
-                    $"{LogFilePath}/WriteSerializeMapLog.txt",
+                    $"{LogFilePath}WriteSerializeMapLog.txt",
                     except.ToString() + "\r\n"
                 );
                 fs.Close();
@@ -66,15 +65,14 @@ public class SaveAndLoad
         return return_code;
     }
 
-    public async Awaitable<int> SaveMapJSONFileAsync(SavingDatum map_object, params bool[] cover)
+    public async Awaitable<int> SaveMapJSONFileAsync(SavingDatum map_object, bool cover)
     {
-        string full_path = SaveMapFilePath + "/" + FileName + ".json";
-        if (File.Exists(full_path) || cover.Length > 0 || !cover[0])
+        string full_path = SaveMapFilePath + "/" + fileName + ".json";
+        if (File.Exists(full_path) && !cover)
         {
             await File.AppendAllTextAsync($"{LogFilePath}/WriteJSONMapLog.txt", "File Exist;\r\n");
             return 0;
         }
-        ;
         map_object.MapToSerializeSlot();
         int return_code = 0;
         try
@@ -92,15 +90,9 @@ public class SaveAndLoad
         return return_code;
     }
 
-    public async Awaitable<int> SaveSlotFileAsync(object game_file, params bool[] cover)
+    public async Awaitable<int> SaveSlotFileAsync(object game_file, bool cover)
     {
         string full_path = SaveSlotFilePath + "/" + DateTime.Now.ToFileTimeUtc() + ".save";
-        if (File.Exists(full_path) || cover.Length > 0 || !cover[0])
-        {
-            await File.AppendAllTextAsync($"{LogFilePath}/WriteSaveSlotLog.txt", "File Exist;\r\n");
-            return 0;
-        }
-        ;
         BinaryFormatter bin_for = new();
         int return_code = 0;
         await Task.Run(async () =>
@@ -125,7 +117,7 @@ public class SaveAndLoad
 
     public async Awaitable<SavingDatum> LoadMapSerializedFileAsync()
     {
-        string full_path = SaveMapFilePath + "/" + FileName + ".serialized";
+        string full_path = SaveMapFilePath + "/" + fileName + ".serialized";
         if (!File.Exists(full_path))
         {
             await File.AppendAllTextAsync(
@@ -154,7 +146,7 @@ public class SaveAndLoad
 
     public async Awaitable<SavingDatum> LoadMapJSONFileAsync()
     {
-        string full_path = SaveMapFilePath + "/" + FileName + ".json";
+        string full_path = SaveMapFilePath + "/" + fileName + ".json";
         if (!File.Exists(full_path))
         {
             await File.AppendAllTextAsync($"{LogFilePath}/LoadJSONMapLog.txt", "File Exist;");

@@ -29,7 +29,7 @@ public class Landscape : BasicUnit, ILandscape
     {
         if (this.LandscapeType == LandscapeType.Empty)
             return;
-        LoadSprite(EssentialDatumLoader.SpriteDictionary[LandscapeType]);
+        LoadSprite(EssentialDatumLoaderComponent.SpriteDictionary[LandscapeType]);
         this.UnitGameObject.GetComponent<Animator>().runtimeAnimatorController =
             Resources.Load(ResourcePaths.TargetAnimators[LandscapeType])
             as RuntimeAnimatorController;

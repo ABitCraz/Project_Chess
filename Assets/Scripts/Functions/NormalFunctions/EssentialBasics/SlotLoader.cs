@@ -1,4 +1,5 @@
 using System;
+using UnityEditor;
 using UnityEngine;
 
 public class SlotLoader
@@ -11,12 +12,29 @@ public class SlotLoader
         InitializeChess(ref slot, ref slot_object);
     }
 
+    public static void SwapGameObject(ref GameObject slot_object, Prefab swap_type)
+    {
+        Slot slot = slot_object.GetComponent<SlotComponent>().thisSlot;
+        switch (swap_type)
+        {
+            case Prefab.Landscape:
+                InitializeLandscape(ref slot, ref slot_object);
+                break;
+            case Prefab.Construction:
+                InitializeConstruction(ref slot, ref slot_object);
+                break;
+            case Prefab.Chess:
+                InitializeChess(ref slot, ref slot_object);
+                break;
+        }
+    }
+
     private static void InitializeLandscape(ref Slot init_slot, ref GameObject slot_object)
     {
         if (init_slot.Landscape != null)
         {
             GameObject created_object = MonoBehaviour.Instantiate(
-                EssentialDatumLoader.GameObjectDictionary[Prefab.Landscape]
+                EssentialDatumLoaderComponent.GameObjectDictionary[Prefab.Landscape]
             );
             Landscape target_landscape = created_object
                 .GetComponent<LandscapeComponent>()
@@ -35,7 +53,7 @@ public class SlotLoader
         if (init_slot.Construction != null)
         {
             GameObject created_object = MonoBehaviour.Instantiate(
-                EssentialDatumLoader.GameObjectDictionary[Prefab.Construction]
+                EssentialDatumLoaderComponent.GameObjectDictionary[Prefab.Construction]
             );
             Construction target_construction = created_object
                 .GetComponent<ConstructionComponent>()
@@ -56,7 +74,7 @@ public class SlotLoader
         if (init_slot.Chess != null)
         {
             GameObject created_object = MonoBehaviour.Instantiate(
-                EssentialDatumLoader.GameObjectDictionary[Prefab.Chess]
+                EssentialDatumLoaderComponent.GameObjectDictionary[Prefab.Chess]
             );
             Chess target_chess = created_object.GetComponent<ChessComponent>().thisChess =
                 init_slot.Chess;

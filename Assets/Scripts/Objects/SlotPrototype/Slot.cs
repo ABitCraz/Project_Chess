@@ -5,8 +5,6 @@ using UnityEngine;
 public class Slot
 {
     public const string SlotTagName = "Slot";
-    public const string LandscapeContainerTagName = "LandscapeContainer";
-    public const string LandscapeTypeTagName = "LandscapeType";
     public Landscape Landscape { get; private set; }
     public Chess Chess { get; private set; }
     public Construction Construction { get; private set; }
@@ -21,8 +19,27 @@ public class Slot
         this.Chess = new Chess() { ChessType = ChessType.Empty };
     }
 
+    public Slot(SerializableSlot serialized_slot, ref GameObject slot_object)
+    {
+        this.Landscape = new Landscape() { LandscapeType = serialized_slot.S_LandscapeType };
+        this.Construction = new Construction()
+        {
+            ConstructionType = serialized_slot.S_ConstructionType,
+        };
+        this.Chess = new Chess()
+        {
+            ChessType = serialized_slot.S_ChessType,
+            HealthPoint = serialized_slot.Chess_HealthPoint,
+        };
+        this.Position = serialized_slot.MapPosition;
+        this.FactPosition = serialized_slot.FactPosition;
+        slot_object.transform.position = FactPosition;
+    }
+
     public void InitializeOrSwapLandscape(LandscapeType target_landscape)
     {
+        if (this.Landscape.UnitGameObject != null)
+            MonoBehaviour.Destroy(this.Landscape.UnitGameObject);
         switch (target_landscape)
         {
             case LandscapeType.Empty:
@@ -47,11 +64,13 @@ public class Slot
                 this.Landscape = new Canyon();
                 break;
         }
-        this.Landscape.LoadSpriteAndAnimation();
+        SlotLoader.SwapGameObject(ref this.SlotGameObject, Prefab.Landscape);
     }
 
     public void InitializeOrSwapConstruction(ConstructionType target_construction)
     {
+        if (this.Construction.UnitGameObject != null)
+            MonoBehaviour.Destroy(this.Construction.UnitGameObject);
         switch (target_construction)
         {
             case ConstructionType.Empty:
@@ -66,11 +85,13 @@ public class Slot
             default:
                 break;
         }
-        this.Construction.LoadSpriteAndAnimation();
+        SlotLoader.SwapGameObject(ref this.SlotGameObject, Prefab.Construction);
     }
 
     public void InitializeOrSwapChess(ChessType target_chess)
     {
+        if (this.Chess.UnitGameObject != null)
+            MonoBehaviour.Destroy(this.Chess.UnitGameObject);
         switch (target_chess)
         {
             case ChessType.Empty:
@@ -100,37 +121,7 @@ public class Slot
             default:
                 break;
         }
-        this.Chess.LoadSpriteAndAnimation();
-    }
-
-    public void GenerateCurrentLandscapeGameObject()
-    {
-        if (Landscape.UnitGameObject != null)
-            MonoBehaviour.Destroy(Landscape.UnitGameObject);
-        GameObject new_landscape = MonoBehaviour.Instantiate(
-            EssentialDatumLoader.GameObjectDictionary[Prefab.Landscape]
-        );
-        SlotLoader.LoadGameObject(ref new_landscape);
-    }
-
-    public void GenerateCurrentConstructionGameObject()
-    {
-        if (Construction.UnitGameObject != null)
-            MonoBehaviour.Destroy(Construction.UnitGameObject);
-        GameObject new_construction = MonoBehaviour.Instantiate(
-            EssentialDatumLoader.GameObjectDictionary[Prefab.Construction]
-        );
-        SlotLoader.LoadGameObject(ref new_construction);
-    }
-
-    public void GenerateCurrentChessGameObject()
-    {
-        if (Chess.UnitGameObject != null)
-            MonoBehaviour.Destroy(Chess.UnitGameObject);
-        GameObject new_chess = MonoBehaviour.Instantiate(
-            EssentialDatumLoader.GameObjectDictionary[Prefab.Chess]
-        );
-        SlotLoader.LoadGameObject(ref new_chess);
+        SlotLoader.SwapGameObject(ref this.SlotGameObject, Prefab.Chess);
     }
 
     public void ChessMoveIn(Slot origin_slot, Chess target_chess)

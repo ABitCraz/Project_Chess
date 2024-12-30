@@ -118,7 +118,7 @@ public class RaycastUIs
                     )
                     {
                         GameObject CreatedObject = MonoBehaviour.Instantiate(
-                            EssentialDatumLoader.GameObjectDictionary[Prefab.Landscape]
+                            EssentialDatumLoaderComponent.GameObjectDictionary[Prefab.Landscape]
                         );
                         thisslot.Landscape.UnitGameObject = CreatedObject;
                         Landscape targetlandscape = CreatedObject
@@ -153,7 +153,7 @@ public class RaycastUIs
                     )
                     {
                         GameObject CreatedObject = MonoBehaviour.Instantiate(
-                            EssentialDatumLoader.GameObjectDictionary[Prefab.Construction]
+                            EssentialDatumLoaderComponent.GameObjectDictionary[Prefab.Construction]
                         );
                         thisslot.Construction.UnitGameObject = CreatedObject;
                         Construction targetconstruction = CreatedObject
@@ -186,7 +186,7 @@ public class RaycastUIs
                     )
                     {
                         GameObject CreatedObject = MonoBehaviour.Instantiate(
-                            EssentialDatumLoader.GameObjectDictionary[Prefab.Chess]
+                            EssentialDatumLoaderComponent.GameObjectDictionary[Prefab.Chess]
                         );
                         thisslot.Chess.UnitGameObject = CreatedObject;
                         Chess targetchess = CreatedObject.GetComponent<ChessComponent>().thisChess;

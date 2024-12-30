@@ -14,7 +14,7 @@ public class Construction : BasicUnit, IConstruction
     {
         if (this.ConstructionType == ConstructionType.Empty)
             return;
-        LoadSprite(EssentialDatumLoader.SpriteDictionary[ConstructionType]);
+        LoadSprite(EssentialDatumLoaderComponent.SpriteDictionary[ConstructionType]);
         this.UnitGameObject.GetComponent<Animator>().runtimeAnimatorController =
             Resources.Load(ResourcePaths.TargetAnimators[ConstructionType])
             as RuntimeAnimatorController;

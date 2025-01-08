@@ -8,6 +8,7 @@ public class SlotSelectionComponent : MonoBehaviour
     public static GetGameObjectFromRaycasts ToggleSelectionGameObject;
     public static GetGameObjectFromRaycasts HideHoverGameObject;
     public static GameObjectAction DisableHoverAndSelectionGameObject;
+
     GameObject hover_game_object;
     GameObject selection_game_object;
 

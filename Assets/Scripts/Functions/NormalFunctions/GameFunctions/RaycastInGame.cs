@@ -25,7 +25,6 @@ public class RaycastInGame : Singleton<RaycastInGame>
     public ActionController EndDropping;
     Ray mouseray;
     SlotStatusShow sss = new();
-    Coroutine loadedsave = null;
     bool isactiondropdown;
     List<Slot> moveroute = new();
     Coroutine drawroutecoroutine;
@@ -41,7 +40,6 @@ public class RaycastInGame : Singleton<RaycastInGame>
     protected override void Awake()
     {
         base.Awake();
-        loadedsave ??= StartCoroutine(LoadSave());
         InitializedButtons();
         ReadyForDrop += () =>
         {
@@ -595,18 +593,5 @@ public class RaycastInGame : Singleton<RaycastInGame>
             ActionUnits[i].transform.GetChild(1).GetComponent<Image>().sprite = null;
         }
         GC.Collect();
-    }
-
-    IEnumerator LoadSave()
-    {
-        while (!this.GetComponent<LoadTargetMap>().IsLoadDone)
-        {
-            yield return new WaitForEndOfFrame();
-        }
-        save = this.GetComponent<LoadTargetMap>().save;
-        StopCoroutine(loadedsave);
-        loadedsave = null;
-        print("Load is Done");
-        GameController.GetInstance().save = save;
     }
 }

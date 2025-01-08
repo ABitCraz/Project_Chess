@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public interface IBasic
 {
     public abstract void LoadSpriteAndAnimation();

@@ -2,17 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static ObjectActions;
 
-public class ShootTheMouseRay : MonoBehaviour
+public class ShootMouseRay
 {
-    Ray mouse_ray;
+    public GameObjectAction MouseRayComponentUpdateAction;
+    Ray MouseRay;
     readonly RaycastHit[] all_raycast_hit = new RaycastHit[128];
-    public static bool pause_in_UI = false;
+    public bool PauseInUI = false;
+    public GameObject DropdownGameObject;
 
-    private void Update()
+    public ShootMouseRay()
     {
-        mouse_ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        GetMouseRayCastHit(ref mouse_ray);
+        MouseRayComponentUpdateAction += ShootMouseRayActionsOnUpdate;
+    }
+
+    private void ShootMouseRayActionsOnUpdate()
+    {
+        MouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        GetMouseRayCastHit(ref MouseRay);
         if (Input.GetMouseButtonDown((int)MouseButton.Right))
         {
             DoDisableClickActions();
@@ -30,7 +38,7 @@ public class ShootTheMouseRay : MonoBehaviour
                 if (all_hit_game_objects != null)
                     all_hit_game_objects[i] = all_raycast_hit[i].collider.gameObject;
             }
-            if (all_hit_game_objects.Length > 0 && !pause_in_UI)
+            if (all_hit_game_objects.Length > 0 && !PauseInUI)
             {
                 SwitchHitToDifferentKinds(ref all_hit_game_objects);
             }
@@ -51,9 +59,11 @@ public class ShootTheMouseRay : MonoBehaviour
                 switch (hit_game_objects[i].tag)
                 {
                     case "Slot":
-                        TheSlotDropdownComponent.GetTargetSlotGameObjectFromRaycasts?.Invoke(
-                            ref hit_game_objects[i]
-                        );
+                        DropdownGameObject
+                            .GetComponent<TheSlotDropdownComponent>()
+                            .slot_dropdown.GetTargetSlotGameObjectFromRaycasts?.Invoke(
+                                ref hit_game_objects[i]
+                            );
                         TheSlotStatusComponent.ShowTargetSlotStatus?.Invoke(
                             ref hit_game_objects[i]
                         );
@@ -70,10 +80,12 @@ public class ShootTheMouseRay : MonoBehaviour
 
     private void DoDisableClickActions()
     {
-        TheSlotDropdownComponent.DisableDropdownGameObject?.Invoke();
+        DropdownGameObject
+            .GetComponent<TheSlotDropdownComponent>()
+            .slot_dropdown.DisableDropdownGameObject?.Invoke();
         TheSlotStatusComponent.DisableStatusGameObject?.Invoke();
         SlotSelectionComponent.DisableHoverAndSelectionGameObject?.Invoke();
-        pause_in_UI = false;
+        PauseInUI = false;
     }
 
     private void DoDisableHoverActions() { }

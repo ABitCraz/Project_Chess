@@ -2,20 +2,18 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EssentialDatumLoader
+public static class EssentialDatumLoader
 {
-    public void ReloadDictionary(
-        ref Dictionary<Enum, GameObject> game_object_dictionary,
-        ref Dictionary<Enum, Sprite> sprite_dictionary
-    )
+    public static Dictionary<Enum, GameObject> GameObjectDictionary = new();
+    public static Dictionary<Enum, Sprite> SpriteDictionary = new();
+
+    public static void ReloadDictionary()
     {
-        game_object_dictionary = new();
-        sprite_dictionary = new();
-        LoadWholeGameObjectDictionary(ref game_object_dictionary);
-        LoadWholeSpriteDictionary(ref sprite_dictionary);
+        LoadWholeGameObjectDictionary(ref GameObjectDictionary);
+        LoadWholeSpriteDictionary(ref SpriteDictionary);
     }
 
-    private void LoadWholeGameObjectDictionary(
+    private static void LoadWholeGameObjectDictionary(
         ref Dictionary<Enum, GameObject> game_object_dictionary
     )
     {
@@ -28,7 +26,7 @@ public class EssentialDatumLoader
         }
     }
 
-    private void LoadWholeSpriteDictionary(ref Dictionary<Enum, Sprite> sprite_dictionary)
+    private static void LoadWholeSpriteDictionary(ref Dictionary<Enum, Sprite> sprite_dictionary)
     {
         for (int i = 1; i < Enum.GetNames(typeof(LandscapeType)).Length; i++)
         {

@@ -6,24 +6,15 @@ public class CreateSlotMapComponent : MonoBehaviour
 {
     CreateSlotMap create_slot_map = new();
     public GameObject MapLoaderGameObject;
-    GameObject GenerateMapButton;
-    GameObject XSlotInputGameObject;
-    GameObject YSlotInputGameObject;
+    public GameObject EssentialDatumGameObject;
 
-    private void Awake()
+    private void Start()
     {
-        GenerateMapButton = this.transform.GetChild(0).gameObject;
-        XSlotInputGameObject = this.transform.GetChild(1).gameObject;
-        YSlotInputGameObject = this.transform.GetChild(2).gameObject;
-        GenerateMapButton
-            .GetComponent<Button>()
-            .onClick.AddListener(() =>
-            {
-                create_slot_map.InitializeMapGameObject(
-                    ref MapLoaderGameObject,
-                    XSlotInputGameObject.GetComponent<TMP_InputField>().text,
-                    YSlotInputGameObject.GetComponent<TMP_InputField>().text
-                );
-            });
+        GameObject current_game_object = this.gameObject;
+        create_slot_map.CreateSlotMapComponentActionsOnStart(
+            ref current_game_object,
+            MapLoaderGameObject,
+            EssentialDatumGameObject
+        );
     }
 }

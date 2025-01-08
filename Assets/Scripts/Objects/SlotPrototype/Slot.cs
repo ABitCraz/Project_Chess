@@ -19,7 +19,10 @@ public class Slot
         this.Chess = new Chess() { ChessType = ChessType.Empty };
     }
 
-    public Slot(SerializableSlot serialized_slot, ref GameObject slot_object)
+    public Slot(
+        SerializableSlot serialized_slot,
+        ref GameObject slot_object
+    )
     {
         this.Landscape = new Landscape() { LandscapeType = serialized_slot.S_LandscapeType };
         this.Construction = new Construction()

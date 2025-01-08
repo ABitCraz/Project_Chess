@@ -111,15 +111,12 @@ public class RaycastUIs
                 landscapedropdown.onValueChanged.RemoveAllListeners();
                 if (index <= Enum.GetValues(typeof(LandscapeType)).Length)
                 {
-                    thisslot.InitializeOrSwapLandscape((LandscapeType)index);
                     if (
                         (thisslot.Landscape == null || thisslot.Landscape.UnitGameObject == null)
                         && index > 0
                     )
                     {
-                        GameObject CreatedObject = MonoBehaviour.Instantiate(
-                            EssentialDatumLoaderComponent.GameObjectDictionary[Prefab.Landscape]
-                        );
+                        GameObject CreatedObject = new();
                         thisslot.Landscape.UnitGameObject = CreatedObject;
                         Landscape targetlandscape = CreatedObject
                             .GetComponent<LandscapeComponent>()
@@ -143,7 +140,6 @@ public class RaycastUIs
                 constructiondropdown.onValueChanged.RemoveAllListeners();
                 if (index <= Enum.GetValues(typeof(ConstructionType)).Length)
                 {
-                    thisslot.InitializeOrSwapConstruction((ConstructionType)index);
                     if (
                         (
                             thisslot.Construction == null
@@ -152,9 +148,7 @@ public class RaycastUIs
                         && index > 0
                     )
                     {
-                        GameObject CreatedObject = MonoBehaviour.Instantiate(
-                            EssentialDatumLoaderComponent.GameObjectDictionary[Prefab.Construction]
-                        );
+                        GameObject CreatedObject = new();
                         thisslot.Construction.UnitGameObject = CreatedObject;
                         Construction targetconstruction = CreatedObject
                             .GetComponent<ConstructionComponent>()
@@ -165,37 +159,6 @@ public class RaycastUIs
                         CreatedObject.transform.localScale *= 0.85f;
                         CreatedObject.transform.localPosition = new Vector3(0, 0, 0.4f);
                         //thisslot.Construction.LoadConstructionSprite();
-                    }
-                }
-            }
-        );
-
-        TMP_Dropdown chessdropdown = slotdropdown
-            .transform.GetChild(2)
-            .GetComponent<TMP_Dropdown>();
-        chessdropdown.onValueChanged.AddListener(
-            (int index) =>
-            {
-                chessdropdown.onValueChanged.RemoveAllListeners();
-                if (index <= Enum.GetValues(typeof(ChessType)).Length)
-                {
-                    thisslot.InitializeOrSwapChess((ChessType)index);
-                    if (
-                        (thisslot.Chess == null || thisslot.Chess.UnitGameObject == null)
-                        && index > 0
-                    )
-                    {
-                        GameObject CreatedObject = MonoBehaviour.Instantiate(
-                            EssentialDatumLoaderComponent.GameObjectDictionary[Prefab.Chess]
-                        );
-                        thisslot.Chess.UnitGameObject = CreatedObject;
-                        Chess targetchess = CreatedObject.GetComponent<ChessComponent>().thisChess;
-                        targetchess = thisslot.Chess;
-                        targetchess.PutToSlotPosition(ref hitslot);
-                        CreatedObject.transform.SetParent(hitslot.transform);
-                        CreatedObject.transform.localScale *= 0.7f;
-                        CreatedObject.transform.localPosition = new Vector3(0, 0, 0.6f);
-                        //thisslot.Chess.LoadSprite();
                     }
                 }
             }

@@ -11,7 +11,31 @@ using UnityEngine.UI;
 
 public class CreateSlotMap
 {
-    public void InitializeMapGameObject(
+    GameObject EssentialDatumGameObject;
+
+    public void CreateSlotMapComponentActionsOnStart(
+        ref GameObject slot_map_game_object,
+        GameObject map_loader_game_object,
+        GameObject essential_datum_game_object
+    )
+    {
+        GameObject GenerateMapButton = slot_map_game_object.transform.GetChild(0).gameObject;
+        GameObject XSlotInputGameObject = slot_map_game_object.transform.GetChild(1).gameObject;
+        GameObject YSlotInputGameObject = slot_map_game_object.transform.GetChild(2).gameObject;
+        EssentialDatumGameObject = essential_datum_game_object;
+        GenerateMapButton
+            .GetComponent<Button>()
+            .onClick.AddListener(() =>
+            {
+                InitializeMapGameObject(
+                    ref map_loader_game_object,
+                    XSlotInputGameObject.GetComponent<TMP_InputField>().text,
+                    YSlotInputGameObject.GetComponent<TMP_InputField>().text
+                );
+            });
+    }
+
+    private void InitializeMapGameObject(
         ref GameObject slot_map_game_object,
         string x_count_string,
         string y_count_string
@@ -36,7 +60,6 @@ public class CreateSlotMap
         int y_count = Convert.ToInt32(y_count_string);
         SlotMap slot_map = new() { MapSize = new(x_count, y_count) };
         GameObject slot_map_go = new("SlotMap");
-        slot_map_go.AddComponent<CameraController>();
         slot_map.SlotMapGameObject = slot_map_go;
         slot_map_go.AddComponent<SlotMapComponent>().thisSlotMap = slot_map;
         slot_map_game_object.GetComponent<MapFileLoaderComponent>().map_file_loader.save.SlotMap =
@@ -47,7 +70,7 @@ public class CreateSlotMap
     private async void CreateMapAndSlotGameObjects(SlotMap slot_map)
     {
         GameObject slot_go = Resources.Load(ResourcePaths.Resources[Prefab.Slot]) as GameObject;
-        slot_go.GetComponent<SlotComponent>().thisSlot.SlotGameObject = slot_go;
+        slot_go.GetComponent<SlotComponent>().thisSlot = new() { SlotGameObject = slot_go };
         Vector3Int spawn_place = Vector3Int.zero;
         int game_map_size_x = slot_map.MapSize[0];
         int game_map_size_y = slot_map.MapSize[1];
@@ -75,10 +98,12 @@ public class CreateSlotMap
         GameObject spawned_slot = MonoBehaviour.Instantiate(slot_go);
         spawned_slot.transform.position = spawn_place;
         spawned_slot.transform.parent = slot_map.SlotMapGameObject.transform;
-        Slot this_slot = spawned_slot.GetComponent<SlotComponent>().thisSlot;
-        this_slot.SlotGameObject = spawned_slot;
-        this_slot.Position = new Vector2Int(spawn_place.x, spawn_place.y);
-        this_slot.FactPosition = spawn_place;
+        Slot this_slot = spawned_slot.GetComponent<SlotComponent>().thisSlot = new()
+        {
+            SlotGameObject = spawned_slot,
+            Position = new Vector2Int(spawn_place.x, spawn_place.y),
+            FactPosition = spawn_place,
+        };
         SlotLoader.LoadGameObject(ref spawned_slot);
         await Task.Run(() =>
         {

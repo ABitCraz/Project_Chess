@@ -10,12 +10,14 @@ public class UIFadeInOut : MonoBehaviour
 
     private void Awake()
     {
-        ExitGameButton.GetComponent<Button>().onClick.AddListener(() =>
-        {
-            Application.Quit();
-        });
+        ExitGameButton
+            .GetComponent<Button>()
+            .onClick.AddListener(() =>
+            {
+                Application.Quit();
+            });
 
-        if(callMenus.Count > 0)
+        if (callMenus.Count > 0)
         {
             for (int i = 0; i < callMenus.Count; i++)
             {
@@ -31,7 +33,7 @@ public class UIFadeInOut : MonoBehaviour
 
     IEnumerator FadeIn(CanvasGroup group)
     {
-        while(group.alpha < 1)
+        while (group.alpha < 1)
         {
             group.alpha += Time.deltaTime;
             yield return null;

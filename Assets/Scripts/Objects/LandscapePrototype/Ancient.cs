@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class Ancient : Landscape
 {
     public Ancient()
